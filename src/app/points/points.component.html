@@ -6,21 +6,27 @@
 <div class="flex flex-wrap mb-16" [class.hidden]="isHidden"> </div>
 
 <!--search tests-->
-<div class="flex flex-wrap justify-center m-2" [class.hidden]="isVisible">
-    <div class="flex flex-wrap w-9/12">
-        <input id="search" class="w-screen p-2 bg-fuchsia-800 text-white rounded-xl outline-fuchsia-800" type="text">
+<label for="search">
+    <div class="flex flex-wrap justify-center m-2" [class.hidden]="isVisible">
+        <div class="flex flex-wrap w-9/12">
+            <input id="search" class="w-screen p-2 bg-fuchsia-800 text-white rounded-xl outline-fuchsia-800" type="text" (input)="onInputChange()" [(ngModel)]="search">
+        </div>
     </div>
-</div>
+</label>
 
 <!--tests-->
 <div class="flex flex-wrap justify-center" [class.hidden]="isVisible">
     <div class="flex flex-wrap flex-col w-9/12">
-        @for (test of tests; track test.id) {
-            <div class="flex flex-wrap justify-evenly flex-row m-2">
-                <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
-                    <button id="{{test.id}}" (click)="viewPoints()" (click)="displayStudents(test.id)" (click)="selectTest(test)">{{test.name}}</button>
+        @if (searched.length > 0) {
+            @for (test of searched; track test.id) {
+                <div class="flex flex-wrap justify-evenly flex-row m-2">
+                    <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
+                        <button id="{{test.id}}" (click)="viewPoints()" (click)="displayStudents(test.id)" (click)="selectTest(test)">{{test.name}}</button>
+                    </div>
                 </div>
-            </div>
+            }
+        } @else {
+            <div class="flex flex-wrap justify-evenly flex-row m-2">No tests found.</div>
         }
     </div>
 </div>

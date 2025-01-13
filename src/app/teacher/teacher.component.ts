@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-teacher',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './teacher.component.html',
   styleUrl: './teacher.component.css'
 })
@@ -51,6 +52,7 @@ filteredStudents: Array<{ id: number; firstname: string; lastname: string; class
 
 displayStudents(classId: number): void {
   this.filteredStudents = this.students.filter(student => student.class_id === classId);
+  this.searchedStudents = [...this.filteredStudents]
 }
 
 //filter class array for needed class
@@ -58,6 +60,29 @@ selectedClass: { id: number; name: string } | null = null;
 
 selectClass(classItem: { id: number; name: string }): void {
   this.selectedClass = classItem;
+}
+
+//filter against content input field classes
+searchClasses: string = '';
+
+searchedClasses: Array<{ id: number; name: string}> = [...this.classes]
+
+onInputChangeClasses(): void {
+  this.searchedClasses = this.classes.filter(classInput =>
+            classInput.name.toLowerCase().includes(this.searchClasses.toLowerCase()));
+}
+
+//filter against content input field students
+searchStudents: string = '';
+
+searchedStudents: Array<{ id: number; firstname: string; lastname: string; class_id: number}> = []
+
+onInputChangeStudents(): void {
+  const searching = this.searchStudents.toLowerCase();
+  this.searchedStudents = this.filteredStudents.filter(student =>
+      student.firstname.toLowerCase().includes(searching) || 
+      student.lastname.toLowerCase().includes(searching)
+  );
 }
 
 }

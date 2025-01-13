@@ -18,24 +18,28 @@
 </div>
 
 <!--search student-->
-<div class="flex flex-wrap justify-center m-2" [class.hidden]="isHidden">
-    <div class="flex flex-wrap w-9/12">
-        <input class="w-screen p-2 bg-fuchsia-800 text-white rounded-xl outline-fuchsia-800" type="text">
+<label for="searchStudents">
+    <div class="flex flex-wrap justify-center m-2" [class.hidden]="isHidden">
+        <div class="flex flex-wrap w-9/12">
+            <input class="w-screen p-2 bg-fuchsia-800 text-white rounded-xl outline-fuchsia-800" type="text" (input)="onInputChangeStudents()" [(ngModel)]="searchStudents">
+        </div>
     </div>
-</div>
+</label>
 
 <!--search class-->
-<div class="flex flex-wrap justify-center m-2" [class.hidden]="isVisible">
-    <div class="flex flex-wrap w-9/12">
-        <input class="w-screen p-2 bg-fuchsia-800 text-white rounded-xl outline-fuchsia-800" type="text">
+<label for="searchClasses">
+    <div class="flex flex-wrap justify-center m-2" [class.hidden]="isVisible">
+        <div class="flex flex-wrap w-9/12">
+            <input class="w-screen p-2 bg-fuchsia-800 text-white rounded-xl outline-fuchsia-800" type="text" (input)="onInputChangeClasses()" [(ngModel)]="searchClasses">
+        </div>
     </div>
-</div>
+</label>
 
 <!--students-->
 <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
     <div class="flex flex-wrap flex-col w-9/12">
         @if (filteredStudents.length > 0) {
-            @for (filteredStudent of filteredStudents; track filteredStudent.id) {
+            @for (filteredStudent of searchedStudents; track filteredStudent.id) {
                 <div class="flex flex-wrap justify-evenly flex-row m-2">
                     <div class="w-1/6 p-2 flex justify-center self-center bg-emerald-400 text-purple-900 rounded-xl">81%</div>
                     <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
@@ -53,7 +57,7 @@
 <div class="flex flex-wrap justify-center" [class.hidden]="isVisible">
     <div class="flex flex-wrap flex-col w-9/12">
         <div class="flex flex-wrap justify-evenly gap-3 flex-row">
-            @for (class of classes; track class.id) {
+            @for (class of searchedClasses; track class.id) {
             <div class="w-1/4 p-2 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
                 <button (click)="viewStudents()" (click)="displayStudents(class.id)" (click)="selectClass(class)">{{class.name}}</button>
             </div>

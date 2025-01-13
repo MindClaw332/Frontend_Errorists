@@ -59,4 +59,14 @@ selectTest(test: { id: number; name: string }): void {
   this.selectedTest = test;
 }
 
+//filter against content input field
+search: string = '';
+
+searched: Array<{ id: number; name: string}> = [...this.tests]
+
+onInputChange(): void {
+  this.searched = this.tests.filter(test =>
+            test.name.toLowerCase().includes(this.search.toLowerCase()));
+}
+
 }
