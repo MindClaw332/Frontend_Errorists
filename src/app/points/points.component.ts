@@ -8,4 +8,17 @@ import { Component } from '@angular/core';
 })
 export class PointsComponent {
 
+isHidden = true;
+isVisible = false;
+
+viewPoints () {
+  this.isHidden = !this.isHidden;
+  this.isVisible = ! this.isVisible;
+}
+
+viewTests () {
+  this.isHidden = !this.isHidden;
+  this.isVisible = ! this.isVisible;
+}
+
 }

@@ -8,5 +8,17 @@ import { Component } from '@angular/core';
 })
 export class TeacherComponent {
 
+isHidden = true;
+isVisible = false;
+  
+viewStudents () {
+  this.isHidden = !this.isHidden;
+  this.isVisible = ! this.isVisible;
+}
+  
+viewClasses () {
+  this.isHidden = !this.isHidden;
+  this.isVisible = ! this.isVisible;
+}
 
 }
