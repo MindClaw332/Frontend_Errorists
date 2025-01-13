@@ -6,11 +6,13 @@
 <!--class/back button and edit button-->
 <div class="flex flex-wrap justify-center m-2">
     <div class="flex flex-wrap justify-between w-9/12">
+        @if (selectedClass != null) {
         <div class="w-1/6 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-            <button (click)="viewClasses()" [class.hidden]="isHidden">2ep</button>
+            <button (click)="viewClasses()" [class.hidden]="isHidden">{{selectedClass.name}}</button>
         </div>
-        <div class="w-1/6 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-            <button>Edit</button>
+        }
+        <div class="w-1/6 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl invisible">
+            <button class="invisible">Edit</button>
         </div>
     </div>
 </div>
@@ -32,57 +34,30 @@
 <!--students-->
 <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
     <div class="flex flex-wrap flex-col w-9/12">
-        <div class="flex flex-wrap justify-evenly flex-row m-2">
-            <div class="w-1/6 p-2 flex justify-center self-center bg-emerald-400 text-purple-900 rounded-xl">81%</div>
-            <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
-                <button>Larry Sears</button>
-            </div>
-        </div>
-        <div class="flex flex-wrap justify-evenly flex-row m-2">
-            <div class="w-1/6 p-2 flex justify-center self-center bg-emerald-400 text-purple-900 rounded-xl">81%</div>
-            <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
-                <button>Larry Sears</button>
-            </div>
-        </div>
-        <div class="flex flex-wrap justify-evenly flex-row m-2">
-            <div class="w-1/6 p-2 flex justify-center self-center bg-emerald-400 text-purple-900 rounded-xl">81%</div>
-            <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
-                <button>Larry Sears</button>
-            </div>
-        </div>
-        <div class="flex flex-wrap justify-evenly flex-row m-2">
-            <div class="w-1/6 p-2 flex justify-center self-center bg-emerald-400 text-purple-900 rounded-xl">81%</div>
-            <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
-                <button>Larry Sears</button>
-            </div>
-        </div>
+        @if (filteredStudents.length > 0) {
+            @for (filteredStudent of filteredStudents; track filteredStudent.id) {
+                <div class="flex flex-wrap justify-evenly flex-row m-2">
+                    <div class="w-1/6 p-2 flex justify-center self-center bg-emerald-400 text-purple-900 rounded-xl">81%</div>
+                    <div class="w-2/3 p-2 flex self-center bg-fuchsia-800 text-white rounded-xl">
+                        <button>{{filteredStudent.firstname}} {{filteredStudent.lastname}}</button>
+                    </div>
+                </div>
+            }
+        } @else {
+            <div class="flex flex-wrap justify-evenly flex-row m-2">No students found.</div>
+        }
     </div>
 </div>
 
 <!--classes-->
 <div class="flex flex-wrap justify-center" [class.hidden]="isVisible">
     <div class="flex flex-wrap flex-col w-9/12">
-        <div class="flex flex-wrap justify-evenly flex-row">
+        <div class="flex flex-wrap justify-evenly gap-3 flex-row">
+            @for (class of classes; track class.id) {
             <div class="w-1/4 p-2 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-                <button (click)="viewStudents()">03-HOUT</button>
+                <button (click)="viewStudents()" (click)="displayStudents(class.id)" (click)="selectClass(class)">{{class.name}}</button>
             </div>
-            <div class="w-1/4 p-2 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-                <button (click)="viewStudents()">03-HOUT</button>
-            </div>
-            <div class="w-1/4 p-2 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-                <button (click)="viewStudents()">03-HOUT</button>
-            </div>
-        </div>
-        <div class="flex flex-wrap justify-evenly flex-row">
-            <div class="w-1/4 p-2 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-                <button (click)="viewStudents()">03-HOUT</button>
-            </div>
-            <div class="w-1/4 p-2 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-                <button (click)="viewStudents()">03-HOUT</button>
-            </div>
-            <div class="w-1/4 p-2 flex justify-center self-center bg-fuchsia-800 text-white rounded-xl">
-                <button (click)="viewStudents()">03-HOUT</button>
-            </div>
+            }
         </div>
     </div>
 </div>
