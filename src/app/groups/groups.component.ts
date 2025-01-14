@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './groups.component.css'
 })
 export class GroupsComponent {
-
+  groups= [
+    {id: 1, name:"History",},
+    {id:2, name:"Math"},
+    {id:3, name:"Dutch"}
+  ]
 }
