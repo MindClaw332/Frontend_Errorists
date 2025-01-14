@@ -10,7 +10,7 @@ export class TestdataService {
 
   constructor() { }
 
-  async loadUsers() {
+  async loadTests() {
     const response = await fetch(this.apiurl);
     const tests = await response.json();
     if (tests) {
