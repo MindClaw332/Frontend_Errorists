@@ -1,37 +1,62 @@
-<head class="h-screen bg-purple-900">
-
-</head>
-<body class="h-screen bg-purple-900">
-    <div class="flex flex-col ">
-        <div class="flex">
-            <div class="w-1/2 p-4 text-fuchsia-600" >
-                <h1>UserName</h1>
-                <h3>UserCourse </h3>
-            </div>
-            <div class="w-1/2 p-4 text-fuchsia-600 overflow-auto h-48 " [class.hidden]="isVisible">
-               @for(subject of subjects; track subject.id)
-               {
-                <div>{{subject.point}} <button (click)="viewSubjects()" >{{subject.name}}</button></div>
-                <div>
-                    
-                </div>
-               }
-               <div>
-                <button></button>
-               </div>
-            </div>
-            <div class="w-1/2 p-4 text-fuchsia-600 overflow-auto h-48 " [class.hidden]="isHidden">
-                <div class="sticky top-0 bg-violet-900 "  ><button (click)="viewTests()">Back</button>    subject name</div>
-                @for(test of tests1; track test.id)
-                {
-                    <div>{{test.name}} {{test.score}}</div>
-                }
+<body class="h-screen bg-primary-light dark:bg-primary">
+    <div class="flex flex wrap flex-row h-3/5">
+        <button class="flex flex-wrap content-start justify-center text-white p-2 m-6 bg-secondary-light dark:bg-secondary rounded-xl h-10 w-1/12">
+            Back
+        </button>
+        <div class="flex flex-wrap w-1/3 ml-10 content-center">
+            <div class="flex flex-wrap flex-col p-4 text-white" >
+                <h1 class="text-6xl">
+                    UserName
+                </h1>
+                <h3 class="text-lg">
+                    UserCourse
+                </h3>
             </div>
         </div>
-        <div class="p-6 mt-4 text-fuchsia-600 overflow-auto h-48">
-            @for(group of groups; track group.id)
-            {
-                <div>{{group.subject}} {{group.class}} {{group.studentName}}</div>
+        <div class="flex flex-wrap w-2/3 justify-center content-center self-end overflow-auto flex-row h-2/3 bg-secondary-light" [class.hidden]="isVisible">
+            @for(subject of subjects; track subject.id) {
+                <div class="flex flex-wrap w-1/4 m-2 p-2 justify-center bg-accent-green-light dark:bg-accent-green text-white-light dark:text-primary rounded-xl">
+                    {{subject.point}}
+                </div>
+                <div class="flex flex-wrap w-9/12 m-2 p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                    <button (click)="viewSubjects()" >{{subject.name}}</button>
+                </div>
+            }
+        </div>
+        <div class="flex flex-wrap w-2/3 justify-center content-center self-end overflow-auto flex-row h-2/3 bg-secondary-light" [class.hidden]="isHidden">
+            <div class="flex flex-wrap fixed h-6 w-1/6 justify-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                <button (click)="viewTests()">subject name</button>
+            </div>
+            @for(test of tests1; track test.id) {
+                <div class="flex flex-wrap w-9/12 m-2 p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                    {{test.name}} 
+                </div>
+                <div class="flex flex-wrap w-1/4 m-2 p-2 justify-center bg-accent-green-light dark:bg-accent-green text-white-light dark:text-primary rounded-xl">
+                    {{test.score}}
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="flex flex-wrap">
+        <div class="flex flex-wrap flex-col w-2/3 p-2 mt-8 text-white overflow-auto h-1/12">
+            @for(subject of subjects; track subject.id) {
+                <div class="flex flex-wrap flex-row justify-evenly content-center h-10 m-1 rounded-xl">
+                    <div class="flex flex wrap p-1 w-1/6 justify-center bg-accent-green-light dark:bg-accent-green rounded-xl">{{subject.point}}</div>
+                    <div class="flex flex-wrap p-1 w-1/2 justify-center bg-secondary-light dark:bg-secondary rounded-xl">{{subject.name}}</div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="flex flex-wrap justify-center">
+        <div class="flex flex-wrap flex-col w-9/12 p-2 mt-8 text-white overflow-auto h-1/12 bg-secondary-light dark:bg-secondary rounded-xl">
+            @for(group of groups; track group.id) {
+                <div class="flex flex-wrap flex-row justify-evenly content-center h-10 m-1 bg-tertiary-light dark:bg-tertiary rounded-xl">
+                    <div class="flex flex wrap g-1 w-1/4 justify-start">{{group.subject}}</div>
+                    <div class="flex flex-wrap g-1 w-1/4 justify-center">{{group.class}}</div>
+                    <div class="flex flex-wrap g-1 w-1/4 justify-end">{{group.studentName}}</div>
+                </div>
             }
         </div>
     </div>
