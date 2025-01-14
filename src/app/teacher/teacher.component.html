@@ -1,0 +1,73 @@
+<body class="bg-primary-light dark:bg-primary h-screen">
+    <!--menu button-->
+    <div class="flex flex-wrap justify-start p-3 mb-10">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45" height="45" viewBox="0 0 16 16"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
+    </div>
+
+    <!--class/back button and edit button-->
+    <div class="flex flex-wrap justify-center m-2">
+        <div class="flex flex-wrap justify-between w-9/12">
+            @if (selectedClass != null) {
+            <div class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                <button (click)="viewClasses()" [class.hidden]="isHidden">{{selectedClass.name}}</button>
+            </div>
+            }
+            <div class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl invisible">
+                <button class="invisible">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <!--search student-->
+    <label for="searchStudents">
+        <div class="flex flex-wrap justify-center m-2" [class.hidden]="isHidden">
+            <div class="flex flex-wrap w-9/12">
+                <input class="w-screen p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" 
+                type="text" (input)="onInputChangeStudents()" [(ngModel)]="searchStudents">
+            </div>
+        </div>
+    </label>
+
+    <!--search class-->
+    <label for="searchClasses">
+        <div class="flex flex-wrap justify-center m-2" [class.hidden]="isVisible">
+            <div class="flex flex-wrap w-9/12">
+                <input class="w-screen p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" 
+                type="text" (input)="onInputChangeClasses()" [(ngModel)]="searchClasses">
+            </div>
+        </div>
+    </label>
+
+    <!--students-->
+    <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
+        <div class="flex flex-wrap flex-col w-9/12 overflow-y-auto h-96">
+            @if (filteredStudents.length > 0) {
+                @for (filteredStudent of searchedStudents; track filteredStudent.id) {
+                    <div class="flex flex-wrap justify-evenly flex-row m-2">
+                        <div class="w-1/6 p-2 flex justify-center self-center bg-accent-green-light dark:bg-accent-green text-white dark:text-primary rounded-xl border-white">
+                            81%
+                        </div>
+                        <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                            <button>{{filteredStudent.firstname}} {{filteredStudent.lastname}}</button>
+                        </div>
+                    </div>
+                }
+            } @else {
+                <div class="flex flex-wrap justify-evenly flex-row m-2 text-white">No students found.</div>
+            }
+        </div>
+    </div>
+
+    <!--classes-->
+    <div class="flex flex-wrap justify-center" [class.hidden]="isVisible">
+        <div class="flex flex-wrap flex-col w-9/12 overflow-y-auto h-96">
+            <div class="flex flex-wrap justify-evenly gap-3 flex-row">
+                @for (class of searchedClasses; track class.id) {
+                <div class="w-1/4 p-2 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                    <button (click)="viewStudents()" (click)="displayStudents(class.id)" (click)="selectClass(class)">{{class.name}}</button>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
