@@ -29,7 +29,15 @@ tests = [
   { id: 2, name: 'biologie: hoofdstuk 5', courseName: 'biologie'},
   { id: 3, name: 'natuurkunde: hoofstuk 28', courseName: 'natuurkunde'},
   { id: 4, name: 'chemie: hoofstuk 19', courseName: 'chemie'},
-  { id: 5, name: 'aarderijkskunde: hoodstuk 3', courseName: 'aarderijkskunde'}
+  { id: 5, name: 'aarderijkskunde: hoodstuk 3', courseName: 'aarderijkskunde'},
+  { id: 6, name: 'wiskunde: examen', courseName: 'wiskunde'},
+  { id: 7, name: 'wiskunde: test examen', courseName: 'wiskunde'},
+  { id: 8, name: 'biologie: 21', courseName: 'biologie'},
+  { id: 9, name: 'aarderijkskunde: hfdstk 20', courseName: 'aarderijkskunde'},
+  { id: 10, name: 'chemie: hoofstuk 19', courseName: 'chemie'},
+  { id: 11, name: 'chemie: hoofstuk 13', courseName: 'chemie'},
+  { id: 12, name: 'chemie: hoofstuk 17', courseName: 'chemie'},
+  { id: 13, name: 'chemie: hoofstuk 10', courseName: 'chemie'},
 ];
 
 students = [
@@ -74,16 +82,22 @@ search: string = '';
 searched: Array<{ id: number; name: string; courseName: string}> = [...this.tests]
 
 onInputChange(): void {
-  this.searched = this.tests.filter(test =>
+  this.searched = this.filtered.filter(test =>
     test.name.toLowerCase().includes(this.search.toLowerCase()));
 }
 
 //filter by course
 filter: string = '';
 
+filtered: Array<{ id: number; name: string; courseName: string }> = [...this.tests];
+
+
 filterCourses (filter: string): void {
-    this.searched = this.tests.filter(test => 
-      test.courseName === filter);
+  this.filter = filter;
+  this.filtered = this.tests.filter(test =>
+    test.courseName === filter);
+  this.searched = this.filtered.filter(test =>
+    test.name.toLowerCase().includes(this.search.toLowerCase()));
 }
 
 }

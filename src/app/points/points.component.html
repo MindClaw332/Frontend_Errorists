@@ -1,7 +1,7 @@
-<body class="bg-primary h-screen">
+<body class="bg-primary-light dark:bg-primary h-screen">
     <!--menu button-->
-    <div class="flex flex-wrap justify-start m-3 mb-10" [class.hidden]="isVisible">
-        <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondairy p-1 rounded-xl" width="45" height="45" viewBox="0 0 16 16"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
+    <div class="flex flex-wrap justify-start p-3 mb-10" [class.hidden]="isVisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45" height="45" viewBox="0 0 16 16"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
     </div>
 
     <div class="flex flex-wrap mb-16" [class.hidden]="isHidden"> </div>
@@ -10,13 +10,14 @@
     <div class="flex flex-wrap justify-evenly">
         <label for="search">
             <div class="flex flex-wrap m-2" [class.hidden]="isVisible">
-                <input id="search" class="p-2 bg-secondairy text-white rounded-xl outline-secondairy" 
+                <input id="search" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" 
                 type="text" (input)="onInputChange()" [(ngModel)]="search">
             </div>
         </label>
         <label for="filter">
             <div class="flex flex-wrap m-2" [class.hidden]="isVisible">
-                <select id="filter" class="p-2 bg-secondairy text-white rounded-xl outline-secondairy" (change)="filterCourses(filter)" [(ngModel)]="filter">
+                <select id="filter" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" (change)="filterCourses(filter)" [(ngModel)]="filter">
+                    <option>Alle vakken</option>
                     @for (course of courses; track course.id) {
                         <option id="{{course.id}}">{{course.name}}</option>
                     }
@@ -27,17 +28,15 @@
 
     <!--tests-->
     <div class="flex flex-wrap justify-center" [class.hidden]="isVisible">
-        <div class="flex flex-wrap flex-col w-9/12">
+        <div class="flex flex-wrap flex-rol justify-center w-9/12 overflow-y-auto h-96">
             @if (searched.length > 0) {
                 @for (test of searched; track test.id) {
-                    <div class="flex flex-wrap justify-evenly flex-row m-2">
-                        <div class="w-2/3 p-2 flex self-center bg-secondairy text-white rounded-xl">
-                            <button id="{{test.id}}" (click)="viewPoints()" (click)="displayStudents(test.id)" (click)="selectTest(test)">{{test.name}}</button>
-                        </div>
+                    <div class="w-2/3 m-2 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                        <button id="{{test.id}}" (click)="viewPoints()" (click)="displayStudents(test.id)" (click)="selectTest(test)">{{test.name}}</button>
                     </div>
                 }
             } @else {
-                <div class="flex flex-wrap justify-evenly flex-row m-2">No tests found.</div>
+                <div class="flex flex-wrap justify-center flex-row m-2 text-white">No tests found.</div>
             }
         </div>
     </div>
@@ -46,7 +45,7 @@
     @if (selectedTest != null) {
         <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
             <div class="flex flex-wrap w-9/12">
-                <div class="w-1/6 flex justify-center self-center bg-secondairy text-white rounded-xl">
+                <div class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
                     <button (click)="viewTests()">{{selectedTest.name}}</button>
                 </div>
             </div>
@@ -55,20 +54,20 @@
 
     <!--student and points-->
     <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
-        <div class="flex flex-wrap flex-col w-9/12">
+        <div class="flex flex-wrap flex-col w-9/12 overflow-y-auto h-96">
             @if (filteredStudents.length > 0) {
                 @for (filteredStudent of filteredStudents; track filteredStudent.id) {
                     <div class="flex flex-wrap justify-evenly flex-row m-2">
-                        <div class="w-2/3 p-2 flex self-center bg-secondairy text-white rounded-xl">
+                        <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
                             {{filteredStudent.firstname}} {{filteredStudent.lastname}}
                         </div>
-                        <div class="w-1/6 p-2 flex justify-center self-center bg-emerald-400 text-primary rounded-xl">
+                        <div class="w-1/6 p-2 flex justify-center self-center bg-accent-green-light dark:bg-accent-green text-white dark:text-primary rounded-xl">
                             {{filteredStudent.value}}/{{filteredStudent.maxvalue}}
                         </div>
                     </div>
                 }
             } @else {
-                <div class="flex flex-wrap justify-evenly flex-row m-2">No Students results found.</div>
+                <div class="flex flex-wrap justify-evenly flex-row m-2 text-white">No Students results found.</div>
             }
         </div>
     </div>
