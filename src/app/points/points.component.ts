@@ -25,11 +25,11 @@ viewTests () {
 
 //arrays
 tests = [
-  { id: 1, name: 'wiskunde'},
-  { id: 2, name: 'biologie'},
-  { id: 3, name: 'natuurkunde'},
-  { id: 4, name: 'chemie'},
-  { id: 5, name: 'aarderijkskunde'}
+  { id: 1, name: 'wiskunde: hoodstuk 13', courseName: 'wiskunde'},
+  { id: 2, name: 'biologie: hoofdstuk 5', courseName: 'biologie'},
+  { id: 3, name: 'natuurkunde: hoofstuk 28', courseName: 'natuurkunde'},
+  { id: 4, name: 'chemie: hoofstuk 19', courseName: 'chemie'},
+  { id: 5, name: 'aarderijkskunde: hoodstuk 3', courseName: 'aarderijkskunde'}
 ];
 
 students = [
@@ -45,6 +45,15 @@ students = [
   { id: 10, firstname: 'Noelle', lastname: 'Reaper', test_id: 4, value: 12, maxvalue: 20}
 ];
 
+courses = [
+  { id: 1, name: 'wiskunde'},
+  { id: 2, name: 'biologie'},
+  { id: 3, name: 'natuurkunde'},
+  { id: 4, name: 'chemie'},
+  { id: 5, name: 'aarderijkskunde'},
+  { id: 6, name: 'geschiedenis'}
+];
+
 //filter the student array for needed students
 filteredStudents: Array<{ id: number; firstname: string; lastname: string; test_id: number; value: number; maxvalue: number }> = []
 
@@ -53,20 +62,28 @@ displayStudents(test: number): void {
 }
 
 //filter the test array for needed test
-selectedTest: { id: number; name: string } | null = null;
+selectedTest: { id: number; name: string; courseName: string } | null = null;
 
-selectTest(test: { id: number; name: string }): void {
+selectTest(test: { id: number; name: string; courseName: string }): void {
   this.selectedTest = test;
 }
 
 //filter against content input field
 search: string = '';
 
-searched: Array<{ id: number; name: string}> = [...this.tests]
+searched: Array<{ id: number; name: string; courseName: string}> = [...this.tests]
 
 onInputChange(): void {
   this.searched = this.tests.filter(test =>
-            test.name.toLowerCase().includes(this.search.toLowerCase()));
+    test.name.toLowerCase().includes(this.search.toLowerCase()));
+}
+
+//filter by course
+filter: string = '';
+
+filterCourses (filter: string): void {
+    this.searched = this.tests.filter(test => 
+      test.courseName === filter);
 }
 
 }
