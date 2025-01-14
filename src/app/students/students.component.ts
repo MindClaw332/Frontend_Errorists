@@ -31,7 +31,7 @@ export class StudentsComponent {
     {id: 6, point: '55 %', name: 'Dutch',}
   ];
 
-  tests = [
+  tests1 = [
     {id: 1, name: 'Test chapter 1', score: '20/30',},
     {id: 2, name: 'Test chapter 2', score: '40/80',},
     {id: 3, name: 'Test chapter 3', score: '8/10',},
@@ -44,6 +44,30 @@ export class StudentsComponent {
     {id: 10, name: 'Test chapter 10', score: '5/10',}
   ]
 
+  tests2 = [
+    {id: 1, name: 'Test chapter 1', score: '20/30',},
+    {id: 2, name: 'Test chapter 2', score: '40/80',},
+    {id: 3, name: 'Test chapter 3', score: '8/10',},
+    {id: 4, name: 'Test chapter 4', score: '10/20',},
+    {id: 5, name: 'Test chapter 5', score: '10/10',},
+    {id: 6, name: 'Test chapter 6', score: '10/20',},
+    {id: 7, name: 'Test chapter 7', score: '10/20',},
+    {id: 8, name: 'Test chapter 8', score: '20/30',},
+    {id: 9, name: 'Test chapter 9', score: '70/100',},
+    {id: 10, name: 'Test chapter 10', score: '5/10',}
+  ]
+  tests3 = [
+    {id: 1, name: 'Test chapter 1', score: '20/30',},
+    {id: 2, name: 'Test chapter 2', score: '40/80',},
+    {id: 3, name: 'Test chapter 3', score: '8/10',},
+    {id: 4, name: 'Test chapter 4', score: '10/20',},
+    {id: 5, name: 'Test chapter 5', score: '10/10',},
+    {id: 6, name: 'Test chapter 6', score: '10/20',},
+    {id: 7, name: 'Test chapter 7', score: '10/20',},
+    {id: 8, name: 'Test chapter 8', score: '20/30',},
+    {id: 9, name: 'Test chapter 9', score: '70/100',},
+    {id: 10, name: 'Test chapter 10', score: '5/10',}
+  ]
   groups = [
     {id: 1, subject: 'History' , class:'Office Logistics', studentName:'Jan Janse'},
     {id: 2, subject: 'English' , class:'Office Logistics', studentName:'Emma Janse'},

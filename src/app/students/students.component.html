@@ -22,7 +22,7 @@
             </div>
             <div class="w-1/2 p-4 text-fuchsia-600 overflow-auto h-48 " [class.hidden]="isHidden">
                 <div class="sticky top-0 bg-violet-900 "  ><button (click)="viewTests()">Back</button>    subject name</div>
-                @for(test of tests; track test.id)
+                @for(test of tests1; track test.id)
                 {
                     <div>{{test.name}} {{test.score}}</div>
                 }
