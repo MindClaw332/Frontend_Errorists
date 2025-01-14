@@ -50,4 +50,5 @@ export class StudentsComponent {
     {id: 3, subject: 'Dutch' , class:'Office Logistics', studentName:'Jan Janse'},
     {id: 4, subject: 'Math' , class:'Office Logistics', studentName:'Emma Janse'}
   ]
+
 }
