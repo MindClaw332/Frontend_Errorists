@@ -21,6 +21,9 @@ module.exports = {
         'accent-red-light': '#D43A3A',
         'white-light': '#FFFFFF',
       },
+      scrollbar: {
+        none: 'scrollbar-width: none; -ms-overflow-style: none;',
+      },
     },
   },
   plugins: [],
