@@ -8,21 +8,40 @@
 
 <!--Title-->
 <div class="text-center mb-6">
-    <button class="bg-fuchsia-700 px-4 py-2 rounded-lg text-white shadow-lg">Aanvragen bijles</button>
+    <button (click)="toggleRequestMod()" class="bg-fuchsia-700 px-4 py-2 rounded-lg text-white shadow-lg">Aanvragen bijles</button>
 </div>
 
-<!--Request list-->
-<div class="flex flex-col items-center space-y-4">
-
-<!--Exemple items-->
-@for(group of groups; track group.id)
+<!--Request From-->
+@if(isRequestMod)
 {
-    <div class="flex items-center space-x-4 w-3/4 bg-purple-700 px-4 py-3 rounded-lg shadow-lg">
-        <div class="flex-1 text-center"> {{group.name}}</div>
-        <button class="bg-green-500 px-4 py-2 rounded-lg text-white hover:bg-green-700">Accepteren </button>
-        <button class="bg-red-500 px-4 py-2 rounded-lg text-white hover:bg-red-700">Weiger</button>
+    <div class="flex flex-col items-center space-y-4">
+        <div class="flex items-center space-x-4 w-3/4 bg-purple-700 px-4 py-3 rounded-lg shadow-lg">
+            <select [(ngModel)]="selectedSubject" class="flex-1 bg-purple-700 text-white text-center focus:outline-none">
+                <option value="" disabled selected>Vak</option>
+                @for(subject of subjects; track subject)
+                {
+                    <option [value]="subject">{{subject}}</option>
+                }
+            </select>
+            <button (click)="submitRequest()" class="bg-green-500 px-4 py-2 rounded-lg text-white hover:bg-green-700">Aanvragen</button>
+            <button (click)="canncelRequest()" class="bg-red-500 px-4 py-2 rounded-lg text-white hover:bg-red-700">Annuleren</button>
+        </div>
     </div>
 }
-
+<!--Request list-->
+@if(!isRequestMod)
+{
+    <div class="flex flex-col items-center space-y-4">
+    @for(group of groups; track group.id)
+    {
+        <div class="flex items-center space-x-4 w-3/4 bg-purple-700 px-4 py-3 rounded-lg shadow-lg">
+            <div class="flex-1 text-center"> {{group.name}}</div>
+            <button class="bg-green-500 px-4 py-2 rounded-lg text-white hover:bg-green-700">Accepteren </button>
+            <button class="bg-red-500 px-4 py-2 rounded-lg text-white hover:bg-red-700">Weiger</button>
+        </div>
+    }
 </div>
+
+}
+
 </body>
