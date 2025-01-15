@@ -1,15 +1,28 @@
-<body h-sreecn bg-purple-900>
+<body class="h-screen bg-purple-900 text-white" >
     <!--menu button-->
-<div class="flex flex-wrap justify-start m-3 mb-10">
-    <svg xmlns="http://www.w3.org/2000/svg" class="bg-fuchsia-800 p-1 rounded-xl" width="45" height="45" viewBox="0 0 16 16"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
+<div class="flex flex-wrap justify-start  mb-10">
+    <svg xmlns="http://www.w3.org/2000/svg" class="bg-fuchsia-800 p-1 rounded-xl" width="45" height="45" viewBox="0 0 16 16">
+        <path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/>
+    </svg>
 </div>
 
-<div class="flex flex-wrap justify-self-center"><button>Aanvragen bijles</button></div>
+<!--Title-->
+<div class="text-center mb-6">
+    <button class="bg-fuchsia-700 px-4 py-2 rounded-lg text-white shadow-lg">Aanvragen bijles</button>
+</div>
 
-<div class="flex flex-wrap justify-center" >
-    @for(group of groups; track group.id)
-    {
-        <div>{{group.name}}</div>
-    }
+<!--Request list-->
+<div class="flex flex-col items-center space-y-4">
+
+<!--Exemple items-->
+@for(group of groups; track group.id)
+{
+    <div class="flex items-center space-x-4 w-3/4 bg-purple-700 px-4 py-3 rounded-lg shadow-lg">
+        <div class="flex-1 text-center"> {{group.name}}</div>
+        <button class="bg-green-500 px-4 py-2 rounded-lg text-white hover:bg-green-700">Accepteren </button>
+        <button class="bg-red-500 px-4 py-2 rounded-lg text-white hover:bg-red-700">Weiger</button>
+    </div>
+}
+
 </div>
 </body>
