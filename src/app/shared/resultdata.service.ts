@@ -4,7 +4,7 @@ import {Testresult} from '../interfaces/testresult'
 @Injectable({
   providedIn: 'root'
 })
-export class StudentdataService {
+export class ResultdataService {
 
   private apiurl: string = 'http://127.0.0.1:8000/api/test-user';
   results = signal<Testresult[]>([]);
