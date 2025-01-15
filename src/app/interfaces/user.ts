@@ -6,6 +6,7 @@ export interface User {
     password: string,
     eligible: number,
     role: string,
+    class_id:number,
     class: string,
     schoolyear: number
 }

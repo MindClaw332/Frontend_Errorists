@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import { User } from '../interfaces/user';
+import { Class } from '../interfaces/class';
+import { StudentdataService } from '../shared/studentdata.service';
 
 @Component({
   selector: 'app-teacher',
@@ -20,7 +23,7 @@ viewStudents () {
   
 viewClasses () {
   this.isHidden = !this.isHidden;
-  this.isVisible = ! this.isVisible;
+  this.isVisible = !this.isVisible;
 }
 
 //arrays
