@@ -49,11 +49,11 @@
     <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
         <div class="flex flex-wrap flex-col w-9/12 overflow-x-auto h-96">
             @if (filteredStudents().length !== 0) {
-            @for (student of filteredStudents(); track student.id) {
+            @for (student of searchedStudents(); track student.id) {
             <div class="flex flex-wrap justify-evenly flex-row m-2">
-                <div
-                    class="w-1/6 p-2 flex justify-center self-center bg-accent-green-light dark:bg-accent-green text-white dark:text-primary rounded-xl border-white">
-                    81%
+                <div class="w-1/6 p-2 flex justify-center self-center  text-white dark:text-primary rounded-xl border-white"
+                    [ngClass]="GetClassColor(student.average)">
+                    {{student.average}}%
                 </div>
                 <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
                     <button>{{student.firstname}} {{student.lastname}}</button>
