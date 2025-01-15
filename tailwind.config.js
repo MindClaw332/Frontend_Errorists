@@ -19,6 +19,7 @@ module.exports = {
         'accent-green-light': '#5BA714',
         'accent-orange-light': '#F7A93B',
         'accent-red-light': '#D43A3A',
+        'white-light': '#FFFFFF',
       },
     },
   },
