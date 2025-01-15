@@ -1,91 +1,95 @@
-import { Component } from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { User } from '../interfaces/user';
 import { Class } from '../interfaces/class';
 import { StudentdataService } from '../shared/studentdata.service';
+import { ClassdataService } from '../shared/classdata.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-teacher',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './teacher.component.html',
   styleUrl: './teacher.component.css'
 })
 export class TeacherComponent {
+  private userdata = inject(StudentdataService);
+  private classdata = inject(ClassdataService);
+  studentfilter = signal<number>(1);
 
-//visibility
-isHidden = true;
-isVisible = false;
-  
-viewStudents () {
-  this.isHidden = !this.isHidden;
-  this.isVisible = ! this.isVisible;
-}
-  
-viewClasses () {
-  this.isHidden = !this.isHidden;
-  this.isVisible = !this.isVisible;
-}
+  //signals 
+  classes = this.classdata.classes;
+  students = this.userdata.users;
 
-//arrays
-classes = [
-  { id: 1, name: '3wis'},
-  { id: 2, name: '2wis'},
-  { id: 3, name: '3eco'},
-  { id: 4, name: '2eco'},
-  { id: 5, name: '4eco'},
-  { id: 6, name: '4wis'}
-];
+  // constructor initializes the service so it can read those signals
+  constructor() {
+    this.classdata.loadClasses();
+    this.userdata.loadUsers();
+  }
 
-students = [
-  { id: 1, firstname: 'Jeff', lastname: 'Dunn', class_id: 1},
-  { id: 2, firstname: 'Lisa', lastname: 'Pruet', class_id: 1},
-  { id: 3, firstname: 'Leo', lastname: 'Durett', class_id: 2},
-  { id: 4, firstname: 'Liam', lastname: 'Bay', class_id: 1},
-  { id: 5, firstname: 'Jamie', lastname: 'Baker', class_id: 2},
-  { id: 6, firstname: 'Jeff', lastname: 'Olan', class_id: 3},
-  { id: 7, firstname: 'Brady', lastname: 'Duran', class_id: 3},
-  { id: 8, firstname: 'Remy', lastname: 'Duran', class_id: 4},
-  { id: 9, firstname: 'Liz', lastname: 'Mayfair', class_id: 2},
-  { id: 10, firstname: 'Noelle', lastname: 'Reaper', class_id: 4}
-];
+  //visibility
+  isHidden = true;
+  isVisible = false;
 
+  // toggle classes off and students on
+  viewStudents() {
+    this.isHidden = !this.isHidden;
+    this.isVisible = !this.isVisible;
+  }
 
-//filter student array for needed students
-filteredStudents: Array<{ id: number; firstname: string; lastname: string; class_id: number }> = []
+  // toggle classes on and students off
+  viewClasses() {
+    this.isHidden = !this.isHidden;
+    this.isVisible = !this.isVisible;
+  }
 
-displayStudents(classId: number): void {
-  this.filteredStudents = this.students.filter(student => student.class_id === classId);
-  this.searchedStudents = [...this.filteredStudents]
-}
+  // changes the studentfilter signal 
+  SetStudentFilter(id: number) {
+    this.studentfilter.set(id);
+  }
 
-//filter class array for needed class
-selectedClass: { id: number; name: string } | null = null;
+  //filter student array for needed students
+  filteredStudents = computed(() => {
+    const filterid = this.studentfilter();
+    const filteredstudentsarray = this.students().filter(student => student.class_id == filterid);
+    return filteredstudentsarray;
+  }
+  )
+  //filter class array for needed class
+  selectedClass: { id: number; name: string } | null = null;
 
-selectClass(classItem: { id: number; name: string }): void {
-  this.selectedClass = classItem;
-}
+  selectClass(classItem: { id: number; name: string }): void {
+    this.selectedClass = classItem;
+  }
 
-//filter against content input field classes
-searchClasses: string = '';
+  //signal that reads input of searchbar to search for users
+  searchClasses = signal('');
 
-searchedClasses: Array<{ id: number; name: string}> = [...this.classes]
+  // signal that changes the classes you are actively searching for
+  searchedClasses = computed(() => {
+    const searchquery = this.searchClasses().toLowerCase();
+    let filteredclasses = this.classes().filter(item => item.name.toLowerCase().includes(searchquery));
+    return filteredclasses;
+  });
+  //signal that reads input of searchbar so it ccan search for it
+  searchStudents = signal('');
 
-onInputChangeClasses(): void {
-  this.searchedClasses = this.classes.filter(classInput =>
-            classInput.name.toLowerCase().includes(this.searchClasses.toLowerCase()));
-}
+  // signal that changes the students you are actively searching for
+  searchedStudents = computed(() => {
+    const searchquery = this.searchStudents().toLowerCase();
+    let searchedStudents = this.filteredStudents().filter(student =>
+      student.firstname.toLowerCase().includes(searchquery) ||
+      student.lastname.toLowerCase().includes(searchquery));
+    return searchedStudents;
+  })
 
-//filter against content input field students
-searchStudents: string = '';
-
-searchedStudents: Array<{ id: number; firstname: string; lastname: string; class_id: number}> = []
-
-onInputChangeStudents(): void {
-  const searching = this.searchStudents.toLowerCase();
-  this.searchedStudents = this.filteredStudents.filter(student =>
-      student.firstname.toLowerCase().includes(searching) || 
-      student.lastname.toLowerCase().includes(searching)
-  );
-}
-
+  GetClassColor(percentage: number) {
+    if (percentage >= 66) {
+      return 'bg-accent-green-light dark:bg-accent-green'
+    } else if (percentage > 33 && percentage < 66) {
+      return 'bg-accent-orange-light dark:bg-accent-orange'
+    } else {
+      return 'bg-accent-red-light dark:bg-accent-red'
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { Component, inject, effect, signal } from '@angular/core';
 import {CommonModule} from '@angular/common'
-import {ClassdataService} from '../shared/classdata.service'
+import { StudentdataService } from '../shared/studentdata.service';
 import {User} from '../interfaces/user'
 import{Class} from '../interfaces/class'
 
@@ -11,10 +11,10 @@ import{Class} from '../interfaces/class'
   styleUrl: './mich-test.component.css'
 })
 export class MichTestComponent {
-  private dataservice = inject(ClassdataService);
-  classes = this.dataservice.classes;
+  private dataservice = inject(StudentdataService);
+  students = this.dataservice.users
   constructor(){
-    this.dataservice.loadClasses();
+    this.dataservice.loadUsers();
   }
 
 }
