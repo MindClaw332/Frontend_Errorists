@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { StudentdataService } from '../shared/studentdata.service';
 import { ResultdataService } from '../shared/resultdata.service';
 import { GroupdataService } from '../shared/groupdata.service';
-import { CoursedataService } from '../shared/coursedata.service';
 import { CommonModule } from '@angular/common';
 import { Testresult } from '../interfaces/testresult';
 
@@ -18,22 +17,19 @@ export class StudentsComponent {
 private userdata = inject(StudentdataService);
 private groupdata = inject(GroupdataService);
 private testresultdata = inject(ResultdataService);
-private coursedata = inject(CoursedataService);
 
 students = this.userdata.users
 groups = this.groupdata.groups
 testresults = this.testresultdata.results
-courses = this.coursedata.courses
   
 constructor(){
     this.userdata.loadUsers();
     this.groupdata.loadGroups();
     this.testresultdata.loadResults(this.id);
-    this.coursedata.loadCourses();
 }
 
 // The id of the specific student
-id = 2;
+id = 1;
 
 // Get the specific student for the student profile
 loadStudent = computed(() => {
@@ -64,23 +60,37 @@ filteredGroups = computed(() => {
   });
 });
 
-
 // Groups tests per course
-course = computed (() => {
-type groupedTests = Record<string, Testresult[]>;
+course = computed(() => {
+  type GroupedTestWithId = {
+    id: number;
+    tests: Testresult[];
+  };
 
-const groupedTests = this.testresults().reduce((acc: groupedTests, test: Testresult) => {
-  acc[test.coursename] = acc[test.coursename] || [];  // Default to an empty array if undefined
-  acc[test.coursename].push(test);
-  return acc;
-}, {} as groupedTests);
+  let currentId = 1; // Start-ID
 
-// Convert groupedTests to an iterable
-const iterableGroupedTests = Object.entries(groupedTests);
+  // Group on coursename and add an ID
+  const groupedTests = this.testresults().reduce((acc: Record<string, GroupedTestWithId>, test: Testresult) => {
+    if (!acc[test.coursename]) {
+      acc[test.coursename] = {
+        id: currentId++,
+        tests: [],
+      };
+    }
+    acc[test.coursename].tests.push(test);
+    return acc;
+  }, {} as Record<string, GroupedTestWithId>);
 
-console.log(iterableGroupedTests);
+  // Convert groupedTests to iterabble
+  const iterableGroupedTests = Object.entries(groupedTests).map(([coursename, { id, tests }]) => ({
+    id,
+    coursename,
+    tests,
+  }));
 
-return iterableGroupedTests;
+  console.log(iterableGroupedTests);
+
+  return iterableGroupedTests;
 });
 
 // Get average per course
@@ -102,13 +112,19 @@ GetClassColor(percentage: number) {
   }
 }
 
+// Filters to the selected course
+selectedCourse: {id: number, coursename: string, tests: Testresult[]}[] = [];
+
+selectCourse (id: number) {
+  this.selectedCourse = this.course().filter(test => test.id === id);
+}
 
 // Visibility
 isHidden = true;
 
 isVisible = false;
 
-viewSubjects () {
+viewCourses () {
     this.isHidden = !this.isHidden;
     this.isVisible = !this.isVisible;
 }
@@ -117,30 +133,5 @@ viewTests () {
     this.isHidden = !this.isHidden;
     this.isVisible = !this.isVisible;
 }
-
-  subjects = [
-    {id: 1, point: '80 %', name: 'History'},
-    {id: 2, point: '90 %', name: 'Mytoligy'},
-    {id: 3, point: '60 %', name: 'Lockpicking'},
-    {id: 4, point: '40 %', name: 'Math'},
-    {id: 5, point: '70 %', name: 'English'},
-    {id: 6, point: '55 %', name: 'Dutch'},
-    {id: 7, point: '70 %', name: 'English'},
-    {id: 8, point: '70 %', name: 'English'},
-    {id: 9, point: '70 %', name: 'English'},
-  ];
-
-  tests1 = [
-    {id: 1, name: 'Test chapter 1', score: '20/30'},
-    {id: 2, name: 'Test chapter 2', score: '40/80'},
-    {id: 3, name: 'Test chapter 3', score: '8/10'},
-    {id: 4, name: 'Test chapter 4', score: '10/20'},
-    {id: 5, name: 'Test chapter 5', score: '10/10'},
-    {id: 6, name: 'Test chapter 6', score: '10/20'},
-    {id: 7, name: 'Test chapter 7', score: '10/20'},
-    {id: 8, name: 'Test chapter 8', score: '20/30'},
-    {id: 9, name: 'Test chapter 9', score: '70/100'},
-    {id: 10, name: 'Test chapter 10', score: '5/10'}
-  ]
 
 }

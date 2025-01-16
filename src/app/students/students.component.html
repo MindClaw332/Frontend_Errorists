@@ -9,8 +9,8 @@
             </button>
             </div>
             <div class="flex mt-10"> </div>
-            <div class="flex flex-wrap content-center">
-                <div class="flex flex-wrap flex-col p-4 ml-10 mt-10 text-white" >
+            <div class="flex flex-wrap content-end lg:justify-end bg-secondary">
+                <div class="flex flex-wrap flex-col p-4 ml-16 mt-10 text-white bg-tertiary" >
                     @for (student of loadStudent(); track student.id) {
                     <h1 class="text-7xl">
                         {{student.firstname}} {{student.lastname}}
@@ -23,33 +23,41 @@
             </div>
         </div>
         <!--points-->
-        <div class="flex flex-wrap w-full lg:w-2/3 scrollbar-none overflow-y-auto mt-10 h-2/5 lg:h-4/5">
+        <div class="flex flex-wrap w-full lg:w-3/5 scrollbar-none overflow-y-auto mt-10 h-2/5 lg:h-4/5">
             <!--all courses + average-->
             <div class="flex flex-wrap flex-col flex-grow p-2 text-white" [class.hidden]="isVisible">
                 @for(test of course(); track test) {
                     <div class="flex flex-wrap flex-row content-center h-10 m-1 rounded-xl">
-                            <div class="flex flex wrap w-1/6 p-1 ml-12 lg:ml-36 mr-10 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl"
-                            [ngClass]="GetClassColor(getAverage(test[1]))">
-                                {{getAverage(test[1])}}%
+                            <div class="flex flex wrap w-1/6 p-1 ml-12 lg:ml-20 mr-10 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl"
+                            [ngClass]="GetClassColor(getAverage(test.tests))">
+                                {{getAverage(test.tests)}}%
                             </div>
                         <div class="flex flex-wrap p-1 w-1/2 justify-start bg-secondary-light dark:bg-secondary rounded-xl">
-                            <button (click)="viewSubjects()">{{test[0]}}</button>
+                            <button (click)="viewCourses()" (click)="selectCourse(test.id)">{{test.coursename}}</button>
                         </div>
                     </div>
                 }
             </div>
             <!--all tests from a course + score-->
             <div class="flex flex-wrap flex-col w-2/3 flex-grow p-2 m-2 ml-4 text-white" [class.hidden]="isHidden">
-                <button class="flex flex-wrap fixed top-60 lg:top-32 bg-secondary-light dark:bg-secondary justify-center w-1/4 lg:w-1/6 ml-12 lg:ml-32 rounded-xl" (click)="viewTests()">
-                    subject name
+                <button class="flex flex-wrap fixed top-60 lg:top-32 bg-secondary-light dark:bg-secondary justify-center w-1/4 lg:w-1/6 ml-12 lg:ml-20 rounded-xl" (click)="viewTests()">
+                    @for(test of selectedCourse; track test) {
+                        {{test.coursename}}
+                    }
                 </button>
             </div>
             <div class="flex flex-wrap flex-col w-2/3 flex-grow p-2 m-2 ml-4 text-white" [class.hidden]="isHidden">
-                @for(test of tests1; track test.id) {
-                    <div class="flex flex-wrap flex-row content-center h-10 m-1 rounded-xl">
-                        <div class="flex flex-wrap p-1 w-1/2 justify-start ml-12 lg:ml-32 mr-10 bg-secondary-light dark:bg-secondary rounded-xl">{{test.name}}</div>
-                        <div class="flex flex wrap p-1 w-1/6 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl">{{test.score}}</div>
-                    </div>
+                @for(test of selectedCourse; track test) {
+                    @for (test of test.tests; track test) {
+                        <div class="flex flex-wrap flex-row content-center h-10 m-1 rounded-xl">
+                            <div class="flex flex-wrap p-1 w-1/2 justify-start ml-12 lg:ml-20 mr-10 bg-secondary-light dark:bg-secondary rounded-xl">
+                                {{test.testname}}
+                            </div>
+                            <div class="flex flex wrap p-1 w-1/6 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl">
+                                {{test.value}}/{{test.maxvalue}}
+                            </div>
+                        </div>
+                    }
                 }
             </div>
         </div>
