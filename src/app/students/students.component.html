@@ -4,11 +4,11 @@
         <!--username/class-->
         <div class="flex flex-wrap flex-col flex-grow content-start lg:content-end">
             <div class="flex">
-            <button class="flex flex-wrap justify-center text-white m-5 ml-8 bg-secondary-light dark:bg-secondary rounded-xl w-1/3">
+            <button class="flex flex-wrap justify-center text-white m-5 ml-8 bg-secondary-light dark:bg-secondary rounded-xl w-1/3 hidden">
                 Back
             </button>
             </div>
-            <div class="flex mt-16 hidden"> </div>
+            <div class="flex mt-10"> </div>
             <div class="flex flex-wrap content-center">
                 <div class="flex flex-wrap flex-col p-4 ml-10 mt-10 text-white" >
                     @for (student of loadStudent(); track student.id) {
@@ -26,13 +26,14 @@
         <div class="flex flex-wrap w-full lg:w-2/3 scrollbar-none overflow-y-auto mt-10 h-2/5 lg:h-4/5">
             <!--all courses + average-->
             <div class="flex flex-wrap flex-col flex-grow p-2 text-white" [class.hidden]="isVisible">
-                @for(test of testresults(); track test.id) {
+                @for(test of course(); track test) {
                     <div class="flex flex-wrap flex-row content-center h-10 m-1 rounded-xl">
-                        <div class="flex flex wrap w-1/6 p-1 ml-12 lg:ml-36 mr-10 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl">
-                            81%
-                        </div>
+                            <div class="flex flex wrap w-1/6 p-1 ml-12 lg:ml-36 mr-10 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl"
+                            [ngClass]="GetClassColor(getAverage(test[1]))">
+                                {{getAverage(test[1])}}%
+                            </div>
                         <div class="flex flex-wrap p-1 w-1/2 justify-start bg-secondary-light dark:bg-secondary rounded-xl">
-                            <button (click)="viewSubjects()">{{test.coursename}}</button>
+                            <button (click)="viewSubjects()">{{test[0]}}</button>
                         </div>
                     </div>
                 }

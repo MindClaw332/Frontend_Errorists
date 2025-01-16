@@ -5,10 +5,11 @@ import { ResultdataService } from '../shared/resultdata.service';
 import { GroupdataService } from '../shared/groupdata.service';
 import { CoursedataService } from '../shared/coursedata.service';
 import { CommonModule } from '@angular/common';
+import { Testresult } from '../interfaces/testresult';
 
 @Component({
   selector: 'app-students',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './students.component.html',
   styleUrl: './students.component.css'
 })
@@ -63,6 +64,43 @@ filteredGroups = computed(() => {
   });
 });
 
+
+// Groups tests per course
+course = computed (() => {
+type groupedTests = Record<string, Testresult[]>;
+
+const groupedTests = this.testresults().reduce((acc: groupedTests, test: Testresult) => {
+  acc[test.coursename] = acc[test.coursename] || [];  // Default to an empty array if undefined
+  acc[test.coursename].push(test);
+  return acc;
+}, {} as groupedTests);
+
+// Convert groupedTests to an iterable
+const iterableGroupedTests = Object.entries(groupedTests);
+
+console.log(iterableGroupedTests);
+
+return iterableGroupedTests;
+});
+
+// Get average per course
+getAverage(testResults: Testresult[]): number {
+  let totalValue = testResults.reduce((sum, test) => sum + test.value, 0);
+  let totalMaxvalue = testResults.reduce((sum, test) => sum + test.maxvalue, 0);
+  let average = (totalValue/totalMaxvalue)*100;
+  return Math.round(average);
+}
+
+// Colour depending on score
+GetClassColor(percentage: number) {
+  if (percentage >= 66) {
+    return 'bg-accent-green-light dark:bg-accent-green'
+  } else if (percentage > 50 && percentage < 66) {
+    return 'bg-accent-orange-light dark:bg-accent-orange'
+  } else {
+    return 'bg-accent-red-light dark:bg-accent-red'
+  }
+}
 
 
 // Visibility
