@@ -3,5 +3,6 @@ export interface Group {
     tutoredcourse:string,
     groupname: string,
     firstname: string,
-    lastname:string
+    lastname:string,
+    user_id: number
 }

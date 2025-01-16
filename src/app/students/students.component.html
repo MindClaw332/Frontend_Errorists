@@ -11,12 +11,14 @@
             <div class="flex mt-16 hidden"> </div>
             <div class="flex flex-wrap content-center">
                 <div class="flex flex-wrap flex-col p-4 ml-10 mt-10 text-white" >
+                    @for (student of loadStudent(); track student.id) {
                     <h1 class="text-7xl">
-                        UserName
+                        {{student.firstname}} {{student.lastname}}
                     </h1>
                     <h3 class="text-xl ml-2">
-                        UserCourse
+                        {{student.class}}
                     </h3>
+                    }
                 </div>
             </div>
         </div>
@@ -24,13 +26,13 @@
         <div class="flex flex-wrap w-full lg:w-2/3 scrollbar-none overflow-y-auto mt-10 h-2/5 lg:h-4/5">
             <!--all courses + average-->
             <div class="flex flex-wrap flex-col flex-grow p-2 text-white" [class.hidden]="isVisible">
-                @for(subject of subjects; track subject.id) {
+                @for(test of testresults(); track test.id) {
                     <div class="flex flex-wrap flex-row content-center h-10 m-1 rounded-xl">
-                        <div class="flex flex wrap w-1/6 p-1 ml-12 lg:ml-36 mr-10 justify-center bg-accent-green-light dark:bg-accent-green rounded-xl">
-                            {{subject.point}}
+                        <div class="flex flex wrap w-1/6 p-1 ml-12 lg:ml-36 mr-10 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl">
+                            81%
                         </div>
                         <div class="flex flex-wrap p-1 w-1/2 justify-start bg-secondary-light dark:bg-secondary rounded-xl">
-                            <button (click)="viewSubjects()">{{subject.name}}</button>
+                            <button (click)="viewSubjects()">{{test.coursename}}</button>
                         </div>
                     </div>
                 }
@@ -45,7 +47,7 @@
                 @for(test of tests1; track test.id) {
                     <div class="flex flex-wrap flex-row content-center h-10 m-1 rounded-xl">
                         <div class="flex flex-wrap p-1 w-1/2 justify-start ml-12 lg:ml-32 mr-10 bg-secondary-light dark:bg-secondary rounded-xl">{{test.name}}</div>
-                        <div class="flex flex wrap p-1 w-1/6 justify-center bg-accent-green-light dark:bg-accent-green rounded-xl">{{test.score}}</div>
+                        <div class="flex flex wrap p-1 w-1/6 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl">{{test.score}}</div>
                     </div>
                 }
             </div>
@@ -54,11 +56,11 @@
     <!--tutor overview-->
     <div class="flex flex-wrap scrollbar-none overflow-y-auto h-1/4 p-2 mt-10 content-start justify-self-center bg-secondary-light dark:bg-secondary rounded-xl w-9/12">
         <div class="flex flex-wrap flex-col w-full text-white">
-            @for(group of groups; track group.id) {
+            @for(group of filteredGroups(); track group.id) {
                 <div class="flex flex-wrap flex-row justify-evenly content-center m-1 bg-tertiary-light dark:bg-tertiary rounded-xl">
-                    <div class="flex flex wrap w-1/4 justify-start">{{group.subject}}</div>
-                    <div class="flex flex-wrap w-1/4 justify-center hidden sm:block">{{group.class}}</div>
-                    <div class="flex flex-wrap w-1/4 justify-end">{{group.studentName}}</div>
+                    <div class="flex flex wrap w-1/4 justify-start">{{group.tutoredcourse}}</div>
+                    <div class="flex flex-wrap w-1/4 justify-center hidden sm:block">{{group.userClass}}</div>
+                    <div class="flex flex-wrap w-1/4 justify-end">{{group.firstname}} {{group.lastname}}</div>
                 </div>
             }
         </div>

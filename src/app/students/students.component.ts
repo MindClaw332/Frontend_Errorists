@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { StudentdataService } from '../shared/studentdata.service';
+import { ResultdataService } from '../shared/resultdata.service';
+import { GroupdataService } from '../shared/groupdata.service';
+import { CoursedataService } from '../shared/coursedata.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-students',
@@ -7,20 +13,72 @@ import { Component } from '@angular/core';
   styleUrl: './students.component.css'
 })
 export class StudentsComponent {
-  isHidden = true;
-  isVisible = false;
 
-  viewSubjects() 
-  {
+private userdata = inject(StudentdataService);
+private groupdata = inject(GroupdataService);
+private testresultdata = inject(ResultdataService);
+private coursedata = inject(CoursedataService);
+
+students = this.userdata.users
+groups = this.groupdata.groups
+testresults = this.testresultdata.results
+courses = this.coursedata.courses
+  
+constructor(){
+    this.userdata.loadUsers();
+    this.groupdata.loadGroups();
+    this.testresultdata.loadResults(this.id);
+    this.coursedata.loadCourses();
+}
+
+// The id of the specific student
+id = 2;
+
+// Get the specific student for the student profile
+loadStudent = computed(() => {
+    let chosenStudent = this.students().filter(student => student.id === this.id);
+    return chosenStudent;
+});
+
+// Get the tutors/tuitees linked to the student
+filteredGroups = computed(() => {
+  // Get groups with the matching user_id
+  let filter = this.groups().filter(group => group.user_id === this.id);
+  
+  // Get array of groupnames from those groups
+  let groupNames = filter.map(group => group.groupname);
+  
+  // Get groups that have a groupname that matches and different user_id
+  let inverse = this.groups().filter(group =>
+    groupNames.includes(group.groupname) && group.user_id !== this.id
+  );
+
+  // Add student.class to each group
+  return inverse.map(group => {
+    const userData = this.students().find(user => user.id === group.user_id);
+    return {
+      ...group,
+      userClass: userData?.class
+    };
+  });
+});
+
+
+
+// Visibility
+isHidden = true;
+
+isVisible = false;
+
+viewSubjects () {
     this.isHidden = !this.isHidden;
     this.isVisible = !this.isVisible;
-  }
+}
 
-  viewTests()
-  {
+viewTests () {
     this.isHidden = !this.isHidden;
     this.isVisible = !this.isVisible;
-  }
+}
 
   subjects = [
     {id: 1, point: '80 %', name: 'History'},
@@ -45,17 +103,6 @@ export class StudentsComponent {
     {id: 8, name: 'Test chapter 8', score: '20/30'},
     {id: 9, name: 'Test chapter 9', score: '70/100'},
     {id: 10, name: 'Test chapter 10', score: '5/10'}
-  ]
-
-  groups = [
-    {id: 1, subject: 'History' , class:'Office Logistics', studentName:'Jan Janse'},
-    {id: 2, subject: 'English' , class:'Office Logistics', studentName:'Emma Janse'},
-    {id: 3, subject: 'Dutch' , class:'Office Logistics', studentName:'Jan Janse'},
-    {id: 4, subject: 'Math' , class:'Office Logistics', studentName:'Emma Janse'},
-    {id: 5, subject: 'Dutch' , class:'Office Logistics', studentName:'Jan Janse'},
-    {id: 6, subject: 'Dutch' , class:'Office Logistics', studentName:'Jan Janse'},
-    {id: 7, subject: 'Dutch' , class:'Office Logistics', studentName:'Jan Janse'},
-    {id: 8, subject: 'Dutch' , class:'Office Logistics', studentName:'Jan Janse'},
   ]
 
 }
