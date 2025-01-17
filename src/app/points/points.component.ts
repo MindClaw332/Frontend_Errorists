@@ -44,8 +44,13 @@ filter = signal('');
 
 filterCourses = computed(() => {
   const searchquery = this.filter().toLowerCase();
-  let filteredCourse = this.courses().filter(course => course.name.toLocaleLowerCase().includes(searchquery));
-  return filteredCourse;
+  const filteredCourse = this.courses().find(course => 
+    course.name.toLocaleLowerCase().includes(searchquery)
+  );
+  if (!filteredCourse) return [];
+
+  const filteredTests = this.tests().filter(test => test.course_id === filteredCourse.id);
+  return filteredTests;
 });
 
 // Visibility
