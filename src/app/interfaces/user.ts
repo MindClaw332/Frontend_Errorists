@@ -8,5 +8,6 @@ export interface User {
     role: string,
     class_id:number,
     class: string,
-    schoolyear: number
+    schoolyear: number,
+    average: number
 }
