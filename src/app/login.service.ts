@@ -49,6 +49,5 @@ export class LoginService {
       console.error("Error making login request", error);
       throw error;
     }
-
   }
 }

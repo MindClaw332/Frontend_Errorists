@@ -26,8 +26,9 @@ export class LoginComponent {
   
   //when you press the submit button this will login (still add when login is correct redirect when it isnt show it to user)
   async handleSubmit() {
-    await this.auth.login(this.loginform.value.email!, this.loginform.value.password!);
-    console.log(this.auth.isloggedin())
+   const test = await this.auth.login(this.loginform.value.email!, this.loginform.value.password!);
+   console.log(test, 'test');
+   
   }
 
   //when you click the eye icon it will show the password in plain text
@@ -45,5 +46,4 @@ export class LoginComponent {
         this.inputtype = "password";
     }
   }
-
 }
