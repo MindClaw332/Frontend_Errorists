@@ -6,8 +6,8 @@ import { Logindata } from './interfaces/logindata';
 
 
 export class LoginService {
-  isloggedin: boolean = false;
-  user = signal<any>(null);
+  isloggedin = signal<boolean>(false);
+  currentuser = signal<any>(null);
 
   private apiurl: string = 'http://127.0.0.1:8000/api/login';
   constructor() { }
@@ -27,17 +27,19 @@ export class LoginService {
       });
 
       const result = await response.json();
-      console.log(result);
+      console.log(result, 'result na fetch');
       if (response.ok){
-        this.user.set({
+        console.log('response is ok')
+        this.currentuser.set({
           "user_id": result.user_id,
           "role_id": result.role_id
         })
-        this.isloggedin = true;
+        this.isloggedin.set(true);
       }
-      console.log(this.user())
+      console.log(this.currentuser())
       return result;
     }
+    
     catch (error) {
       console.error("Error making login request", error);
       throw error;
