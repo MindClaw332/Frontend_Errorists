@@ -1,4 +1,5 @@
 
+@if (auth.isloggedin()) {
 <!-- <div class="flex flex-wrap justify-start p-3 mb-10 absolute"> -->
     <!-- <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45"
         height="45" viewBox="0 0 16 16">
@@ -6,6 +7,7 @@
             d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5" />
     </svg> -->
 <!-- </div> -->
+ <!-- navbar still needs styling -->
 <nav>
     <ul>
         <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page" >login</a></li>
@@ -15,5 +17,7 @@
         <li><a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page" >dashboard</a></li>
     </ul>
 </nav>
+}
+
 
 <router-outlet></router-outlet>

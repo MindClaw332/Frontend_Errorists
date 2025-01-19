@@ -10,10 +10,13 @@ import { LoginService } from './login.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  // variables we want to check on for routing purposes
   title = 'frontend_erorrists';
-  private auth = inject(LoginService);
+  auth = inject(LoginService);
   user = this.auth.currentuser();
+  loggedin = this.auth.isloggedin();
   
+  //commented out tests
   constructor(){
     // this.auth.login('lambik@test.com', 'lambikske')
     // this.logintest();
