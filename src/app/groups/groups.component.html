@@ -1,8 +1,10 @@
 <body class="h-screen bg-primary-light dark:bg-primary text-white " >
-    <!--menu button-->
-<div class="flex flex-wrap justify-start  mb-10">
-    <svg xmlns="http://www.w3.org/2000/svg" class="bg-tertiary-light dark:bg-tertiary rounded-xl" width="45" height="45" viewBox="0 0 16 16">
-        <path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/>
+<!--menu button-->
+<div class="flex flex-wrap justify-start p-3 mb-10">
+    <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45"
+        height="45" viewBox="0 0 16 16">
+        <path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5" />
     </svg>
 </div>
 
@@ -12,25 +14,22 @@
 </div>
 
 <!--Request From-->
-@if(isRequestMod)
-{
+@if(isRequestMod) {
     <div class="flex flex-col items-center space-y-4">
         <div class="flex items-center space-x-4 w-3/4 bg-secondary-light dark:bg-secondary px-4 py-3 rounded-lg shadow-lg">
             <select [(ngModel)]="selectedSubject" class="flex-1 bg-secondary-light dark:bg-secondary text-white text-center focus:outline-none">
                 <option value="" disabled selected>Vak</option>
-                @for(subject of subjects; track subject)
-                {
-                    <option [value]="subject">{{subject}}</option>
+                @for(course of courses(); track course) {
+                    <option [value]="course.name">{{course.name}}</option>
                 }
             </select>
             <button (click)="submitRequest()" class="bg-accent-green-light dark:bg-accent-green px-4 py-2 rounded-lg text-white hover:bg-accent-green dark:hover:bg-accent-green-light">Aanvragen</button>
             <button (click)="canncelRequest()" class="bg-accent-red-light dark:bg-accent-red px-4 py-2 rounded-lg text-white hover:bg-accent-red dark:hover:bg-accent-red-light">Annuleren</button>
         </div>
-    </div>µ
+    </div>
 }
 <!--Request list-->
-@if(!isRequestMod)
-{
+@if(!isRequestMod) {
     <div class="flex flex-col items-center space-y-4">
     @for(group of groups; track group.id)
     {
@@ -43,5 +42,18 @@
 </div>
 
 }
+<div class="w-1/2">
+    <button (click)="updateHeader()" id="updateHeader">Update header</button>
+    <button (click)="updateEvents()" id="updateEvents">Update events</button>
+    <full-calendar
+    *ngIf="calendarOptions"
+    #fullcalendar
+    [options]="calendarOptions"
+    >
+    <ng-template #eventContent let-arg>
+        <b>{{ arg.event.title }}</b> - {{ arg.event.start.getDate() }}
+    </ng-template>
+    </full-calendar>
+</div>
 
 </body>
