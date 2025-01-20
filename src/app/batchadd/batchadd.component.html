@@ -5,22 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batchadd</title>
 </head>
-<body class="bg-primary-light dark:bg-primary h-screen ">
-    <div class="flex items-center justify-center">
-        <div class="w-96 p-6 bg-secondary-light dark:bg-secondary rounded-lg shadow-lg">
-            <input type="text" placeholder="Voornaam" class="flex-1 p-2 bg-secondary-light dark:bg-secondary text-white rounded focus:outline-none focus:ring-2 focus:ring-tertiary-light dark:focus:ring-tertiary">
-            <input type="text" placeholder="Achternaam" class="flex-1 p-2 bg-secondary-light dark:bg-secondary text-white rounded focus:outline-none focus:ring-2 focus:ring-tertiary-light dark:focus:ring-tertiary">
+<body>
+    <div class="bg-primary-light dark:bg-primary min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-lg bg-secondary-light dark:bg-secondary rounded-lg shadow-lg p-6">
+            <!--Input veld voornaam en achternaam-->
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="Voornaam" 
+                    class="bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg focus:outline-none focus:ring-2 
+                    focus:ring-primary-light dark:focus:ring-primary">
+                    <input type="text" placeholder="Achternaam"
+                    class="bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg 
+                    focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+                </div>
+                <!--Email en password velden-->
+                <input type="email" placeholder="Email" 
+                class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+            
+                <input type="password" placeholder="Password" 
+                class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg
+                focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+                
+                <!--Class en role-->
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="Klass" 
+                    class="bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg 
+                    focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+            
+                    <select class="bg-tertiary-light dark:bg-tertiary text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary appearance-none">
+                        <option value="" disabled selected>Role</option>
+                        <option value="1">Student</option>
+                        <option value="2">Leerkracht</option>
+                        <option value="3">Admin</option>
+                    </select>
+                </div>
+                <!--Buttons-->
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="bg-accent-green-light dark:bg-accent-green hover:bg-accent-green 
+                    dark:hover:bg-accent-green-light text-white font-semibold p-3 rounded-lg transition-color duration-200">
+                    Toevoegen</button>
+            
+                    <button class="bg-accent-red-light dark:bg-accent-red hover:bg-accent-red 
+                    dark:hover:bg-accent-red-light text-white font-semibold p-3 rounded-lg transition-color duration-200">
+                    Annuleren </button>
+                </div>
+            
+            </div>
         </div>
-        <div class="space-y-4 mb-4">
-            <input type="email" placeholder="email adres" class="w-full p-2 bg-secondary-light dark:bg-secondary text-white rounded focus:outline-none focus:ring-2 focus:ring-tertiary-light dark:focus:ring-tertiary">
-            <input type="text" placeholder="Password" class="w-full p-2 bg-secondary-light dark:bg-secondary text-white rounded focus:outline-none focus:ring-2 focus:ring-tertiary-light dark:focus:ring-tertiary">
-            <input type="text" placeholder="Klas" class="w-full p-2 bg-secondary-light dark:bg-secondary text-white rounded focus:outline-none focus:ring-2 focus:ring-tertiary-light dark:focus:ring-tertiary">
-        </div>
-        <div class="flex space-x-4">
-            <button class="flex-1 p-2 bg-accent-green-light dark:bg-accent-green text-white font-semibold rounded hover:bg-accent-green dark:hover:bg-accent-green-light focus:outline-none focus:ring-2 focus:ring-accent-green-light dark:focus:ring-accent-green">Toevoegen </button>
-            <button class="flex-1 p-2 bg-accent-red-light dark:bg-accent-red text-white font-semibold rounded hover:bg-accent-red dark:hover:bg-accent-red-light focus:outline-none focus:ring-2 focus:ring-accent-red-light dark:focus:ring-accent-red">Annuleren</button>
-        </div>
-
     </div>
 </body>
 </html>
+
