@@ -56,7 +56,7 @@
                     {{student.average}}%
                 </div>
                 <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                    <button>{{student.firstname}} {{student.lastname}}</button>
+                    <button (click)="RedirectToStudent(student.id)">{{student.firstname}} {{student.lastname}}</button>
                 </div>
             </div>
             }

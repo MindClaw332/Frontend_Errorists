@@ -30,10 +30,8 @@ export class LoginService {
       });
 
       const result = await response.json();
-      console.log(result, 'result na fetch');
       // if the response is not an error code set the currentuser signal to the returned user
       if (response.ok){
-        console.log('response is ok')
         this.currentuser.set({
           "user_id": result.user_id,
           "role_id": result.role_id
@@ -41,7 +39,6 @@ export class LoginService {
         // set the loggedin signal to true
         this.isloggedin.set(true);
       }
-      console.log(this.currentuser())
       return result;
     }
     // if something goes wrong thow me an error

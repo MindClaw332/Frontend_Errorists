@@ -16,13 +16,17 @@ export const routes: Routes = [
         component: GroupsComponent,
         canActivate: [AuthGuard, teacherGuard],
     },
-    { path: 'points', component: PointsComponent },
+    {
+        path: 'points',
+        component: PointsComponent,
+        canActivate: [AuthGuard]
+    },
     {
         path: 'unauthorized',
         component: UnauthorizedComponent,
     },
     {
-        path: 'students',
+        path: 'students/:id',
         component: StudentsComponent,
         canActivate: [AuthGuard],
     },
