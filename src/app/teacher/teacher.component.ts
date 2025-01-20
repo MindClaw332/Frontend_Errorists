@@ -5,6 +5,7 @@ import { Class } from '../interfaces/class';
 import { StudentdataService } from '../shared/studentdata.service';
 import { ClassdataService } from '../shared/classdata.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-teacher',
@@ -22,7 +23,7 @@ export class TeacherComponent {
   students = this.userdata.users;
 
   // constructor initializes the service so it can read those signals
-  constructor() {
+  constructor(private router :Router) {
     this.classdata.loadClasses();
     this.userdata.loadUsers();
   }
@@ -91,5 +92,8 @@ export class TeacherComponent {
     } else {
       return 'bg-accent-red-light dark:bg-accent-red'
     }
+  }
+  RedirectToStudent(id:number){
+    this.router.navigate([`/students/${id}`])
   }
 }

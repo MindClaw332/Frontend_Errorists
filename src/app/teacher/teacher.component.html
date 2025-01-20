@@ -1,14 +1,14 @@
 <body class="bg-primary-light dark:bg-primary h-screen">
-    <!--menu button-->
-    <div class="flex flex-wrap justify-start p-3 mb-10">
-        <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45"
+
+    <div class="flex flex-wrap justify-start p-3 mb-16">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45"
             height="45" viewBox="0 0 16 16">
             <path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                 d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5" />
-        </svg>
+        </svg> -->
     </div>
-    <!--class/back button and edit button-->
-    <div class="flex flex-wrap justify-center m-2">
+    <!-- class/back button and edit button -->
+    <div class="flex flex-wrap justify-center mt-16">
         <div class="flex flex-wrap justify-between w-9/12">
             @if (selectedClass != null) {
             <div
@@ -56,7 +56,7 @@
                     {{student.average}}%
                 </div>
                 <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                    <button>{{student.firstname}} {{student.lastname}}</button>
+                    <button (click)="RedirectToStudent(student.id)">{{student.firstname}} {{student.lastname}}</button>
                 </div>
             </div>
             }
