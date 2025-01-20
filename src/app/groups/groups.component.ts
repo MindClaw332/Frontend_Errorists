@@ -1,7 +1,6 @@
 import { Component, inject, signal, ChangeDetectorRef, OnInit, ViewChild, forwardRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CoursedataService } from '../shared/coursedata.service';
-
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
 import { CalendarOptions, Calendar, EventClickArg } from '@fullcalendar/core';
@@ -26,7 +25,6 @@ constructor () {
   
   isRequestMod= false;
   selectedSubject ='';
-  subjects = ['History', 'Math', 'Dutch', 'English'];
 
   groups= [
     {id: 1, name:"History",},
@@ -53,64 +51,121 @@ constructor () {
     this.selectedSubject = '';
   }
 
+
+// On load
+ngOnInit() {
+  // Initialize visibility for all groups
+  this.groups.forEach(group => {
+    this.groupVisibility[group.id] = {
+      isHidden: true,  // Initial state: true
+      isVisible: false // Initial state: false
+    };
+    this.calendar[group.id] = {
+      hidden: true
+    }
+  });
+}
+
+// Removes/returns the request tutoring button
+requestingTutor () {
+  this.requestTutor = !this.requestTutor;
+}
+
+// Calendar logic
+  calendar: { [key: number]: { hidden: boolean} } = {};
+  requestTutor = false;
+
   calendarOptions?: CalendarOptions;
   eventsModel: any;
   @ViewChild('fullcalendar') fullcalendar?: FullCalendarComponent;
 
-  ngOnInit() {
-    // need for load calendar bundle first
+  // Shows the calendar/removes the request tutoring button
+  viewCalendar (groupId: number) {
+    this.calendar[groupId].hidden = !this.calendar[groupId].hidden;
+    this.requestTutor = !this.requestTutor;
+
     forwardRef(() => Calendar);
 
     this.calendarOptions = {
       plugins: [dayGridPlugin, interactionPlugin],
       editable: true,
       customButtons: {
-        myCustomButton: {
-          text: 'custom!',
-          click: function () {
-            alert('clicked the custom button!');
-          }
-        }
       },
       headerToolbar: {
-        left: 'prev,next today myCustomButton',
+        left: 'next',
         center: 'title',
-        right: 'dayGridMonth'
+        right: 'today'
       },
-      dateClick: this.handleDateClick.bind(this),
-      eventClick: this.handleEventClick.bind(this),
-      eventDragStop: this.handleEventDragStop.bind(this)
+      dateClick: this.handleDateClick.bind(this)
     };
   }
+
+  // Needs: Logic for selecting one date for tutoring (color: (de)select, only possible for one date, saves the temporary date)
+  saveDay: Date | null = null;
+  previousDayEl: HTMLElement | null = null;
 
   handleDateClick(arg: DateClickArg) {
-    console.log(arg);
+    const clickedDate = arg.date;
+    const today = new Date();
+  
+    // Prevent selecting dates in the past
+    if (clickedDate < today) {
+      return;
+    }
+  
+    // If a previous date is selected, deselect it
+    if (this.previousDayEl) {
+      this.previousDayEl.style.background = '';
+    }
+  
+    // If the clicked date is the same as the saved date, deselect it and reset saved date
+    if (this.saveDay && this.saveDay.getTime() === clickedDate.getTime()) {
+      this.saveDay = null; 
+      this.previousDayEl = null;
+    } else {
+      // Select and save the date
+      arg.dayEl.style.background = 'green';
+      this.saveDay = clickedDate; 
+      this.previousDayEl = arg.dayEl;
+    }
+    console.log(this.saveDay);
   }
 
-  handleEventClick(arg: EventClickArg) {
-    console.log(arg);
+  // Needs: method for accept button that permenantly saves the date -> database
+  saveTutoringDate (groupId: number) {
+    if (this.saveDay === null){
+      return;
+    }
+    console.log(`gekozen dag: ${this.saveDay}, groep-id: ${groupId}`);
+    this.calendar[groupId].hidden = !this.calendar[groupId].hidden;
+    this.groupVisibility[groupId].isHidden = !this.groupVisibility[groupId].isHidden;
+    this.requestTutor = !this.requestTutor;
   }
 
-  handleEventDragStop(arg: EventDragStopArg) {
-    console.log(arg);
+  // Needs: method for cancel button that closes the calendar + reset calendar
+  cancelDate (groupId: number) {
+    this.calendar[groupId].hidden = !this.calendar[groupId].hidden;
+    this.requestTutor = !this.requestTutor;
+
+    // If a date is still selected, reset it
+    if (this.previousDayEl) {
+      this.previousDayEl.style.background = '';
+      this.saveDay = null; 
+    }
+    console.log(this.saveDay);
   }
 
-  updateHeader() {
-    this.calendarOptions!.headerToolbar = {
-      left: 'prev,next myCustomButton',
-      center: 'title',
-      right: ''
-    };
-  }
 
-  updateEvents() {
-    const nowDate = new Date();
-    const yearMonth = nowDate.getUTCFullYear() + '-' + (nowDate.getUTCMonth() + 1);
+// Needs: Accept the request for a tutor (when group logic in order)
+// Removes the accept/decline buttons and shows the calendar button
+groupVisibility: { [key: number]: { isHidden: boolean; isVisible: boolean } } = {};
 
-    this.calendarOptions!.events = [{
-      title: 'Updated Event',
-      start: yearMonth + '-08',
-      end: yearMonth + '-10'
-    }];
+acceptTutee(groupId: number): void {
+  const visibility = this.groupVisibility[groupId];
+  if (visibility) {
+    visibility.isHidden = !visibility.isHidden;
+    visibility.isVisible = !visibility.isVisible;
   }
+}
+
 }
