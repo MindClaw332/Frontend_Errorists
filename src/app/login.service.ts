@@ -9,10 +9,10 @@ export class LoginService {
   // signals to keep check on state in other components
   isloggedin = signal<boolean>(false);
   currentuser = signal<any>(null);
-// login url
-  private apiurl: string = 'http://127.0.0.1:8000/api/login';
+  // login url
+  private apiurl: string = 'http://127.0.0.1:8000/api/';
   constructor() { }
-// login function which you pass username/email and password parameters
+  // login function which you pass username/email and password parameters
   async login(username: string, password: string) {
     // turn parameters into variable
     const logindata = {
@@ -21,7 +21,7 @@ export class LoginService {
     };
     try {
       // make post request
-      const response = await fetch(this.apiurl, {
+      const response = await fetch(`${this.apiurl}login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +31,7 @@ export class LoginService {
 
       const result = await response.json();
       // if the response is not an error code set the currentuser signal to the returned user
-      if (response.ok){
+      if (response.ok) {
         this.currentuser.set({
           "user_id": result.user_id,
           "role_id": result.role_id
@@ -44,6 +44,32 @@ export class LoginService {
     // if something goes wrong thow me an error
     catch (error) {
       console.error("Error making login request", error);
+      throw error;
+    }
+  }
+
+  async registration(firstname: string, lastname: string, email: string, password: string, role_id: number, class_id: number | null) {
+    const userdata = {
+      "firstname": firstname,
+      "lastname": lastname,
+      "email": email,
+      "password": password,
+      "role_id": role_id,
+      "class_id": class_id
+    }
+    try {
+      const response = await fetch(`${this.apiurl}register`, {
+        method: "POST",
+        headers:{
+          "content-type":"application/json",
+        },
+        body: JSON.stringify(userdata),
+      })
+      const result = await response.json();
+      return result;
+      
+    } catch (error) {
+      console.error('error registering user', error);
       throw error;
     }
   }
