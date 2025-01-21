@@ -1,4 +1,11 @@
 export interface Course {
     id: number,
-    name: string
+    name: string,
+    tests: [
+        {
+            test_name: string,
+            maxvalue: number,
+            course_name: string
+        }
+    ]
 }
