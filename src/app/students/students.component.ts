@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, OnDestroy,  ViewChild, forwardRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StudentdataService } from '../shared/studentdata.service';
 import { ResultdataService } from '../shared/resultdata.service';
@@ -7,10 +7,15 @@ import { CommonModule } from '@angular/common';
 import { Testresult } from '../interfaces/testresult';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarOptions, Calendar, EventClickArg } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin, { DateClickArg, EventDragStopArg } from '@fullcalendar/interaction';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'app-students',
-  imports: [CommonModule],
+  imports: [CommonModule,FullCalendarModule],
   templateUrl: './students.component.html',
   styleUrl: './students.component.css'
 })
@@ -40,6 +45,8 @@ export class StudentsComponent implements OnInit, OnDestroy {
     console.log(this.students, 'groups na load')
     this.testresultdata.loadResults(this.id);
     console.log(this.id);
+
+    //checks groups for acceptdate and nowdate, all +7 accepted groups -> show pop up
   }
 
   ngOnDestroy(): void {
@@ -149,6 +156,64 @@ export class StudentsComponent implements OnInit, OnDestroy {
   viewTests() {
     this.isHidden = !this.isHidden;
     this.isVisible = !this.isVisible;
+  }
+
+  calendarHidden = true;
+  calendarVisible = false;
+
+  calendarOptions?: CalendarOptions;
+  eventsModel: any;
+  @ViewChild('fullcalendar') fullcalendar?: FullCalendarComponent;
+
+  selectDate () {
+    this.calendarHidden = !this.calendarHidden;
+    this.calendarVisible = !this.calendarVisible;
+
+    // calendar needs to be group specific, a week since acceptdate, so a specific group is like huh needs a date
+    forwardRef(() => Calendar);
+
+    this.calendarOptions = {
+      plugins: [dayGridPlugin, interactionPlugin],
+      editable: true,
+      customButtons: {
+      },
+      headerToolbar: {
+        left: 'next',
+        center: 'title',
+        right: 'today'
+      },
+      dateClick: this.handleDateClick.bind(this)
+    };
+  }
+
+  saveDay: Date | null = null;
+  previousDayEl: HTMLElement | null = null;
+
+  handleDateClick(arg: DateClickArg) {
+    const clickedDate = arg.date;
+    const today = new Date();
+  
+    // Prevent selecting dates in the past
+    if (clickedDate < today) {
+      return;
+    }   
+
+    // If a previous date is selected, deselect it
+    if (this.previousDayEl) {
+      this.previousDayEl.classList.remove('bg-accent-green');
+    }
+  
+    // If the clicked date is the same as the saved date, deselect it and reset saved date
+    if (this.saveDay && this.saveDay.getTime() === clickedDate.getTime()) {
+      this.saveDay = null; 
+      this.previousDayEl = null;
+    } else {
+      // Select and save the date
+      arg.dayEl.classList.add('bg-accent-green');
+      this.saveDay = clickedDate; 
+      this.previousDayEl = arg.dayEl;
+    }
+    console.log(this.saveDay);
   }
 
 }
