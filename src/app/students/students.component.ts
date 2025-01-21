@@ -1,78 +1,154 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { StudentdataService } from '../shared/studentdata.service';
+import { ResultdataService } from '../shared/resultdata.service';
+import { GroupdataService } from '../shared/groupdata.service';
+import { CommonModule } from '@angular/common';
+import { Testresult } from '../interfaces/testresult';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-students',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './students.component.html',
   styleUrl: './students.component.css'
 })
-export class StudentsComponent {
+export class StudentsComponent implements OnInit, OnDestroy {
+
+  userdata = inject(StudentdataService);
+  private groupdata = inject(GroupdataService);
+  private testresultdata = inject(ResultdataService);
+  private routeSub!: Subscription;
+  id: number = 1;
+  students = this.userdata.users
+  groups = this.groupdata.groups
+  testresults = this.testresultdata.results;
+
+  constructor(private route: ActivatedRoute) {
+  }
+
+  ngOnInit(): void {
+    console.log(this.id, 'begin init')
+    this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      console.log(this.id, 'na sub');
+    })
+    this.userdata.loadStudent(this.id);
+    console.log(this.students, 'students na load')
+    this.groupdata.loadGroups();
+    console.log(this.students, 'groups na load')
+    this.testresultdata.loadResults(this.id);
+    console.log(this.id);
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeSub) {
+      this.routeSub.unsubscribe();
+    }
+  }
+  
+  test(){
+    console.log(this.students, 'wanneer alles gecalled word');
+    console.log(this.testresults, 'wanneer alles gecalled word');
+  }
+
+
+  // Get the tutors/tuitees linked to the student
+  filteredGroups = computed(() => {
+    // Get groups with the matching user_id
+    let filter = this.groups().filter(group => group.user_id === this.id);
+
+    // Get array of groupnames from those groups
+    let groupNames = filter.map(group => group.groupname);
+
+    // Get groups that have a groupname that matches and different user_id
+    let inverse = this.groups().filter(group =>
+      groupNames.includes(group.groupname) && group.user_id !== this.id
+    );
+
+    // Add student.class to each group
+    return inverse.map(group => {
+      const userData = this.students().find(user => user.id === group.user_id);
+      return {
+        ...group,
+        userClass: userData?.class
+      };
+    });
+  });
+
+  // Groups tests per course
+  course = computed(() => {
+    type GroupedTestWithId = {
+      id: number;
+      tests: Testresult[];
+    };
+
+    let currentId = 1; // Start-ID
+
+    // Group on coursename and add an ID
+    const groupedTests = this.testresults().reduce((acc: Record<string, GroupedTestWithId>, test: Testresult) => {
+      if (!acc[test.coursename]) {
+        acc[test.coursename] = {
+          id: currentId++,
+          tests: [],
+        };
+      }
+      acc[test.coursename].tests.push(test);
+      return acc;
+    }, {} as Record<string, GroupedTestWithId>);
+
+    // Convert groupedTests to iterabble
+    const iterableGroupedTests = Object.entries(groupedTests).map(([coursename, { id, tests }]) => ({
+      id,
+      coursename,
+      tests,
+    }));
+
+    console.log(iterableGroupedTests);
+
+    return iterableGroupedTests;
+  });
+
+  // Get average per course
+  getAverage(testResults: Testresult[]): number {
+    let totalValue = testResults.reduce((sum, test) => sum + test.value, 0);
+    let totalMaxvalue = testResults.reduce((sum, test) => sum + test.maxvalue, 0);
+    let average = (totalValue / totalMaxvalue) * 100;
+    return Math.round(average);
+  }
+
+  // Colour depending on score
+  GetClassColor(percentage: number) {
+    if (percentage >= 66) {
+      return 'bg-accent-green-light dark:bg-accent-green'
+    } else if (percentage > 50 && percentage < 66) {
+      return 'bg-accent-orange-light dark:bg-accent-orange'
+    } else {
+      return 'bg-accent-red-light dark:bg-accent-red'
+    }
+  }
+
+  // Filters to the selected course
+  selectedCourse: { id: number, coursename: string, tests: Testresult[] }[] = [];
+
+  selectCourse(id: number) {
+    this.selectedCourse = this.course().filter(test => test.id === id);
+  }
+
+  // Visibility
   isHidden = true;
+
   isVisible = false;
 
-  viewSubjects() 
-  {
+  viewCourses() {
     this.isHidden = !this.isHidden;
     this.isVisible = !this.isVisible;
   }
 
-  viewTests()
-  {
+  viewTests() {
     this.isHidden = !this.isHidden;
     this.isVisible = !this.isVisible;
   }
-
-  subjects = [
-    {id: 1, point: '80 %', name: 'History',},
-    {id: 2, point: '90 %', name: 'Mytoligy',},
-    {id: 3, point: '60 %', name: 'Lockpicking',},
-    {id: 4, point: '40 %', name: 'Math',},
-    {id: 5, point: '70 %', name: 'English',},
-    {id: 6, point: '55 %', name: 'Dutch',}
-  ];
-
-  tests1 = [
-    {id: 1, name: 'Test chapter 1', score: '20/30',},
-    {id: 2, name: 'Test chapter 2', score: '40/80',},
-    {id: 3, name: 'Test chapter 3', score: '8/10',},
-    {id: 4, name: 'Test chapter 4', score: '10/20',},
-    {id: 5, name: 'Test chapter 5', score: '10/10',},
-    {id: 6, name: 'Test chapter 6', score: '10/20',},
-    {id: 7, name: 'Test chapter 7', score: '10/20',},
-    {id: 8, name: 'Test chapter 8', score: '20/30',},
-    {id: 9, name: 'Test chapter 9', score: '70/100',},
-    {id: 10, name: 'Test chapter 10', score: '5/10',}
-  ]
-
-  tests2 = [
-    {id: 1, name: 'Test chapter 1', score: '20/30',},
-    {id: 2, name: 'Test chapter 2', score: '40/80',},
-    {id: 3, name: 'Test chapter 3', score: '8/10',},
-    {id: 4, name: 'Test chapter 4', score: '10/20',},
-    {id: 5, name: 'Test chapter 5', score: '10/10',},
-    {id: 6, name: 'Test chapter 6', score: '10/20',},
-    {id: 7, name: 'Test chapter 7', score: '10/20',},
-    {id: 8, name: 'Test chapter 8', score: '20/30',},
-    {id: 9, name: 'Test chapter 9', score: '70/100',},
-    {id: 10, name: 'Test chapter 10', score: '5/10',}
-  ]
-  tests3 = [
-    {id: 1, name: 'Test chapter 1', score: '20/30',},
-    {id: 2, name: 'Test chapter 2', score: '40/80',},
-    {id: 3, name: 'Test chapter 3', score: '8/10',},
-    {id: 4, name: 'Test chapter 4', score: '10/20',},
-    {id: 5, name: 'Test chapter 5', score: '10/10',},
-    {id: 6, name: 'Test chapter 6', score: '10/20',},
-    {id: 7, name: 'Test chapter 7', score: '10/20',},
-    {id: 8, name: 'Test chapter 8', score: '20/30',},
-    {id: 9, name: 'Test chapter 9', score: '70/100',},
-    {id: 10, name: 'Test chapter 10', score: '5/10',}
-  ]
-  groups = [
-    {id: 1, subject: 'History' , class:'Office Logistics', studentName:'Jan Janse'},
-    {id: 2, subject: 'English' , class:'Office Logistics', studentName:'Emma Janse'},
-    {id: 3, subject: 'Dutch' , class:'Office Logistics', studentName:'Jan Janse'},
-    {id: 4, subject: 'Math' , class:'Office Logistics', studentName:'Emma Janse'}
-  ]
 
 }
