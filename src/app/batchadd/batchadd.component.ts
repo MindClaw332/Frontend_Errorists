@@ -4,10 +4,11 @@ import { LoginService } from '../login.service';
 import { ClassdataService } from '../shared/classdata.service';
 import { first } from 'rxjs';
 import { Route, Router } from '@angular/router';
+import { Class } from '../interfaces/class';
 
 @Component({
   selector: 'app-batchadd',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './batchadd.component.html',
   styleUrl: './batchadd.component.css'
 })
@@ -26,7 +27,13 @@ constructor(private router :Router)
   this.classdata.loadClasses();
   
 }
+async initializeClasses() {
+  await this.classdata.loadClasses();
+}
 
+getClasses(): Class[]{
+  return this.classes() || [];
+}
 //visibility
 isHidden = true;
 isVisible = false;
@@ -46,16 +53,22 @@ selectClass(classItem:{id:number; name:string}): void{
 }
 
 //function to add users to the data base 
-addUser(firstName: string,lastName: string,password: string, klas:number, email: string,role: number)
+async addUser(firstName: string,lastName: string,password: string, klas:number|null, email: string,role: number)
 {
-  const user = {
-    firstName,
-    lastName,
-    email, 
-    password,
-    klas,
-    role,
-  };
-  
+  try{
+    const result = await this.registrationdata.registration(
+      firstName,
+      lastName, 
+      email,
+      password,
+      role,
+      klas
+    );
+    console.log('Gebruiker aangemaakt', result);
+  }
+  catch (error)
+  {
+    console.error('Er is een probleem met het aanmaken van gebruikers', error);
+  }
 }
 }
