@@ -1,43 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Batchadd</title>
-</head>
-<body>
-    <div class="bg-primary-light dark:bg-primary min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-lg bg-secondary-light dark:bg-secondary rounded-lg shadow-lg p-6">
-            <!--Input veld voornaam en achternaam-->
-            <div class="space-y-4">
+<div class="bg-primary-light dark:bg-primary min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-lg">
+        <!--View switcher-->
+        <div class="flex gap-4 mb-4">
+            <button (click)="setView('user')"
+                [class]="currentview === 'user' ? 'w-32 bg-secondary-light dark:bg-secondary text-white p-3 rounded-lg transition-colors duration-200' :
+                    'w-32 bg-tertiary-light dark:bg-tertiary text-white/70 p-3 rounded-lg transition-colors duration-200'">
+                Gebruiker </button>
+            <button (click)="setView('test')" [class]="currentview === 'test' ? 
+                'w-32 bg-secondary-light dark:bg-secondary text-white p-3 rounded-lg transition-colors duration-200' :
+                'w-32 bg-tertiary-light dark:bg-tertiary text-white/70 p-3 rounded-lg transition-colors duration-200'">
+                Test</button>
+        </div>
+        <!--Containers voor de user en test forms-->
+        <div class="bg-secondary-light dark:bg-secondary rounded-lg shadow-lg p-6">
+            <!--User form-->
+            <div *ngIf="currentview === 'user'" class="space-y-4">
+                <!--Input veld voornaam en achternaam-->
                 <div class="grid grid-cols-2 gap-4">
-                    <input #firstName type="text" placeholder="Voornaam" 
-                    class="bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg focus:outline-none focus:ring-2 
-                    focus:ring-primary-light dark:focus:ring-primary">
-                    <input #lastName type="text" placeholder="Achternaam"
-                    class="bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg 
-                    focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+                    <input #firstName type="text" placeholder="Voornaam" class="bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg focus:outline-none focus:ring-2 
+                        focus:ring-primary-light dark:focus:ring-primary">
+                    <input #lastName type="text" placeholder="Achternaam" class="bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg 
+                        focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
                 </div>
+
                 <!--Email en password velden-->
-                <input #email type="email" placeholder="Email" 
-                class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg
-                focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
-            
-                <input #password type="password" placeholder="Password" 
-                class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg
-                focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
-                
+                <input #email type="email" placeholder="Email" class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg
+                    focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+
+                <input #password type="password" placeholder="Password" class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg
+                    focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+
                 <!--Class en role-->
                 <div class="grid grid-cols-2 gap-4">
-                    <select #klas class="bg-tertiary-light dark:bg-tertiary text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary appearance-none">
+                    <select #klas
+                        class="w-full bg-tertiary-light dark:bg-tertiary text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary appearance-none">
                         <option value="null">Geen klas</option>
-                       
-                            @for (classItem of classes(); track classItem.id) {
-                                <option value="{{classItem.id}}">{{classItem.name}}</option>
-                            }
-                        
+                        @for (classItem of classes(); track classItem.id) {
+                        <option value="{{classItem.id}}">{{classItem.name}}</option>
+                        }
+
                     </select>
-                    <select #role class="bg-tertiary-light dark:bg-tertiary text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary appearance-none">
+                    <select #role
+                        class="w-full bg-tertiary-light dark:bg-tertiary text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary appearance-none">
                         <option value="" disabled selected>Role</option>
                         <option value="1">Student</option>
                         <option value="2">Leerkracht</option>
@@ -46,18 +50,62 @@
                 </div>
                 <!--Buttons-->
                 <div class="grid grid-cols-2 gap-4">
-                    <button (click)="addUser(firstName.value, lastName.value,password.value, +klas.value, email.value, +role.value)" class="bg-accent-green-light dark:bg-accent-green hover:bg-accent-green 
-                    dark:hover:bg-accent-green-light text-white font-semibold p-3 rounded-lg transition-color duration-200">
-                    Toevoegen</button>
-            
-                    <button class="bg-accent-red-light dark:bg-accent-red hover:bg-accent-red 
-                    dark:hover:bg-accent-red-light text-white font-semibold p-3 rounded-lg transition-color duration-200">
-                    Annuleren </button>
+                    <button
+                        (click)="addUser(firstName.value, lastName.value,password.value, +klas.value, email.value, +role.value)"
+                        class="w-full bg-accent-green-light dark:bg-accent-green hover:bg-accent-green 
+                        dark:hover:bg-accent-green-light text-white font-semibold p-3 rounded-lg transition-color duration-200">
+                        Toevoegen</button>
+
+                    <button
+                        class="w-full bg-accent-red-light dark:bg-accent-red hover:bg-accent-red 
+                        dark:hover:bg-accent-red-light text-white font-semibold p-3 rounded-lg transition-color duration-200">
+                        Annuleren </button>
                 </div>
-            
+            </div>
+
+            <!--Test form-->
+            <div *ngIf="currentview === 'test'" class="space-y-4">
+                <select #vak class="w-full bg-tertiary-light dark:bg-tertiary text-white p-3 rounded-lg 
+                    focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary appearance-none">
+                    <option value="" disabled selected>Vakken</option>
+                    @for (couseItem of courses(); track courseItem.id)
+                    {
+                        <option value="{{courseItem.id}}">{{courseItem.name}}</option>
+                        <option>We are in here </option>
+                    }
+                </select>
+
+                <!-- Fixed Klassen and Naam test layout -->
+                <div class="flex gap-4">
+                    <select #klastest
+                        class="w-1/4 bg-tertiary-light dark:bg-tertiary text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary appearance-none">
+                        <option value="" disabled selected>Klassen</option>
+                        @for (classItem of classes(); track classItem.id) {
+                            <option value="{{classItem.id}}">{{classItem.name}}</option>
+                            }
+    
+                    </select>   
+                    <input #testName type="text" placeholder="Naam test"
+                        class="w-3/4 bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <input #score type="text" placeholder="Score of "
+                        class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+                    <input #hours type="text" placeholder="Uren"
+                        class="w-full bg-tertiary-light dark:bg-tertiary text-white placeholder-white/70 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <button (click)="addTest(+klastest.value, testName.value, +score.value, +hours.value)"
+                        class="w-full bg-accent-green-light dark:bg-accent-green hover:bg-accent-green dark:hover:bg-accent-green-light text-white font-semibold p-3 rounded-lg transition-colors duration-200">
+                        Toevoegen
+                    </button>
+                    <button
+                        class="w-full bg-accent-red-light dark:bg-accent-red hover:bg-accent-red dark:hover:bg-accent-red-light text-white font-semibold p-3 rounded-lg transition-colors duration-200">
+                        Annuleren
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</body>
-</html>
-
