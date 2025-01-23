@@ -9,28 +9,44 @@
 </div>
 
 <!--Title-->
-<div class="text-center mb-6" [class.hidden]="requestTutor">
-    <button (click)="requestingTutor()" (click)="toggleRequestMod()" class="bg-secondary-light dark:bg-secondary px-4 py-2 rounded-lg text-white shadow-lg hover:bg-tertiary dark:hover:bg-tertiary-light">
+<div class="flex flex-wrap w-2/3 justify-self-center" [class.hidden]="requestTutor">
+    <button (click)="requestingTutor()" (click)="toggleRequestMod()" class="bg-secondary-light dark:bg-secondary w-full p-2 rounded-xl text-white shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
         Aanvragen bijles
     </button>
 </div>
 
+<div class="flex mt-10"> </div>
+
 <!--Request From-->
 @if(isRequestMod) {
-    <div class="flex flex-col items-center space-y-4">
-        <div class="flex items-center space-x-4 w-3/4 bg-secondary-light dark:bg-secondary px-4 py-3 rounded-lg shadow-lg">
-            <select [(ngModel)]="selectedSubject" class="flex-1 bg-secondary-light dark:bg-secondary text-white text-center focus:outline-none">
-                <option value="" disabled selected>Vak</option>
-                @for(course of courses(); track course) {
-                    <option [value]="course.name">{{course.name}}</option>
-                }
-            </select>
-            <button (click)="requestingTutor()"  (click)="submitRequest()" class="bg-accent-green-light dark:bg-accent-green px-4 py-2 rounded-lg text-white hover:bg-accent-green dark:hover:bg-accent-green-light">
-                Aanvragen
-            </button>
-            <button (click)="requestingTutor()" (click)="canncelRequest()" class="bg-accent-red-light dark:bg-accent-red px-4 py-2 rounded-lg text-white hover:bg-accent-red dark:hover:bg-accent-red-light">
-                Annuleren
-            </button>
+    <div class="flex flex-wrap justify-center">
+        <div class="flex flex-wrap flex-col justify-center lg:flex-row w-3/4">
+            <div class="flex flex-wrap w-full lg:w-2/5 m-1 p-2 focus:outline-none">
+                <div class="p-2">Ik heb bijles nodig voor:</div>
+                <select [(ngModel)]="selectedSubject" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
+                    <option value="" disabled selected>Vak</option>
+                    @for(course of courses(); track course) {
+                        <option [value]="course.name">{{course.name}}</option>
+                    }
+                </select>
+            </div>
+            <div class="flex flex-wrap w-full lg:w-2/5 m-1 p-2 focus:outline-none">
+                <div class="p-2">Ik kan bijles geven in:</div>
+                <select [(ngModel)]="selectedSubject" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
+                    <option value="" disabled selected>Vak</option>
+                    @for(course of courses(); track course) {
+                        <option [value]="course.name">{{course.name}}</option>
+                    }
+                </select>
+            </div>
+            <div class="flex flex-wrap flex-row w-full lg:w-2/6 justify-center">
+                <button (click)="requestingTutor()"  (click)="submitRequest()" class="flex flex-grow justify-center bg-accent-green-light dark:bg-accent-green w-1/6 m-1 p-2 rounded-xl text-white hover:bg-accent-green dark:hover:bg-accent-green-light">
+                    Aanvragen
+                </button>
+                <button (click)="requestingTutor()" (click)="canncelRequest()" class="flex flex-grow justify-center bg-accent-red-light dark:bg-accent-red w-1/6 m-1 p-2 rounded-xl text-white hover:bg-accent-red dark:hover:bg-accent-red-light">
+                    Annuleren
+                </button>
+            </div>
         </div>
     </div>
 }
@@ -39,23 +55,31 @@
 @if(!isRequestMod) {
     <div class="flex flex-col items-center space-y-4">
         @for(group of groups; track group.id) {
-            <div class="flex items-center space-x-4 w-3/4 px-4 py-3">
-                <div class="flex-1 p-2 text-center bg-secondary-light dark:bg-secondary shadow-lg rounded-xl"> {{group.name}}</div>
-                <button (click)="viewCalendar(group.id)" [class.hidden]="groupVisibility[group.id].isHidden">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"/>
-                </svg>
-                </button>
-                <button (click)="acceptTutee(group.id)" class="bg-accent-green-light dark:bg-accent-green px-4 py-2 rounded-lg text-white hover:bg-accent-green dark:hover:bg-accent-green-light" [class.hidden]="groupVisibility[group.id].isVisible">
-                    Accepteren
-                </button>
-                <button class="bg-accent-red-light dark:bg-accent-red px-4 py-2 rounded-lg text-white hover:bg-accent-red dark:hover:bg-accent-red-light" [class.hidden]="groupVisibility[group.id].isVisible">
-                    Weiger
-                </button>
+            <div class="flex flex-wrap w-3/4 justify-center">
+                <div class="flex justify-between w-full lg:w-3/5 m-1 p-2 text-center bg-secondary-light dark:bg-secondary shadow-lg rounded-xl">
+                    <div class="flex">
+                        {{group.name}}
+                    </div>
+                    <div class="flex">
+                        <button (click)="viewCalendar(group.id)" [class.hidden]="groupVisibility[group.id].isHidden">
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-row w-2/6">
+                    <button (click)="acceptTutee(group.id)" class="bg-accent-green-light dark:bg-accent-green w-full m-1 p-2 rounded-xl text-white hover:bg-accent-green dark:hover:bg-accent-green-light" [class.hidden]="groupVisibility[group.id].isVisible">
+                        Accepteren
+                    </button>
+                    <button class="bg-accent-red-light dark:bg-accent-red w-full m-1 p-2 rounded-xl text-white hover:bg-accent-red dark:hover:bg-accent-red-light" [class.hidden]="groupVisibility[group.id].isVisible">
+                        Weiger
+                    </button>
+                </div>
             </div>
-            <div class="w-1/3" [class.hidden]="calendar[group.id].hidden">
+            <div class="w-3/4 lg:w-1/3" [class.hidden]="calendar[group.id].hidden">
                 <div>
-                    <full-calendar
+                    <full-calendar class="w-full"
                     *ngIf="calendarOptions"
                     #fullcalendar
                     [options]="calendarOptions">

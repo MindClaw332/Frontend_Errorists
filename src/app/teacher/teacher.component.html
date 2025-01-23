@@ -11,13 +11,11 @@
     <div class="flex flex-wrap justify-center mt-16">
         <div class="flex flex-wrap justify-between w-9/12">
             @if (selectedClass != null) {
-            <div
-                class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+            <div class="w-1/4 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
                 <button (click)="viewClasses()" [class.hidden]="isHidden">{{selectedClass.name}}</button>
             </div>
             }
-            <div
-                class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl invisible">
+            <div class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl invisible">
                 <button class="invisible">Edit</button>
             </div>
         </div>
@@ -71,13 +69,12 @@
         <div class="flex flex-wrap flex-col w-9/12 overflow-y-auto h-96">
             <div class="flex flex-wrap justify-evenly gap-3 flex-row">
                 @for (class of searchedClasses(); track class.id) {
-                <div
-                    class="w-1/4 p-2 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                    <button (click)="viewStudents()" (click)="SetStudentFilter(class.id)"
-                        (click)="selectClass(class)">{{class.name}}</button>
+                <div class="w-2/5 p-2 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                    <button (click)="viewStudents()" (click)="SetStudentFilter(class.id)" (click)="selectClass(class)">
+                        {{class.name}}
+                    </button>
                 </div>
                 }
-
             </div>
         </div>
     </div>

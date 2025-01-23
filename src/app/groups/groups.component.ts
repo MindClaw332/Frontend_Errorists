@@ -115,7 +115,7 @@ requestingTutor () {
   
     // If a previous date is selected, deselect it
     if (this.previousDayEl) {
-      this.previousDayEl.style.background = '';
+      this.previousDayEl.classList.remove('bg-accent-green');
     }
   
     // If the clicked date is the same as the saved date, deselect it and reset saved date
@@ -124,7 +124,7 @@ requestingTutor () {
       this.previousDayEl = null;
     } else {
       // Select and save the date
-      arg.dayEl.style.background = 'green';
+      arg.dayEl.classList.add('bg-accent-green');
       this.saveDay = clickedDate; 
       this.previousDayEl = arg.dayEl;
     }
