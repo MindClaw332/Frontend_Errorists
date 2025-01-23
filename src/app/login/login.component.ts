@@ -31,11 +31,14 @@ export class LoginComponent {
   //when you press the submit button this will login (still add when login is correct redirect when it isnt show it to user)
   async handleSubmit() {
     const result = await this.auth.login(this.loginform.value.email!, this.loginform.value.password!);
+    console.log(this.auth.currentuser())
     if (result.message === 'valid credentials' && this.auth.currentuser().role_id === 2) {
       this.pairing.test();
       this.router.navigate(['/dashboard'])
     } else if (result.message === 'valid credentials' && this.auth.currentuser().role_id === 1) {
       console.log('student login');
+      this.pairing.test();
+
     }
   }
 

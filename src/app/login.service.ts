@@ -17,7 +17,7 @@ export class LoginService {
     // turn parameters into variable
     const logindata = {
       "email": username,
-      "password": password
+      "password": password,
     };
     try {
       // make post request
@@ -34,7 +34,7 @@ export class LoginService {
       if (response.ok) {
         this.currentuser.set({
           "user_id": result.user_id,
-          "role_id": result.role_id
+          "role_id": result.role_id,
         })
         // set the loggedin signal to true
         this.isloggedin.set(true);
