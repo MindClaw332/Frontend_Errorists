@@ -8,6 +8,7 @@ import { ClassdataService } from '../shared/classdata.service';
 import { Class } from '../interfaces/class';
 import { CoursedataService } from '../shared/coursedata.service';
 import { Course } from '../interfaces/course';
+import { TestdataService } from '../shared/testdata.service';
 
 @Component({
   selector: 'app-batchadd',
@@ -20,11 +21,13 @@ export class BatchaddComponent {
   private registrationdata = inject(LoginService);
   private classdata = inject(ClassdataService);
   private coursedata = inject(CoursedataService)
+  private testdata = inject(TestdataService)
 
   //signals
   registration = this.registrationdata.registration;
   classes = this.classdata.classes;
   courses = this.coursedata.courses;
+  tests = this.testdata.addTest;
 
   //curent view stat
   currentview: 'user' | 'test' = 'user';
@@ -67,9 +70,21 @@ export class BatchaddComponent {
   }
   
   //function to add test to the data base 
-  addTest(klastest:number, testName:string, score:number, hours:number)
+  async addTest(vak: number, testName: string, score: number, hours: number)
   {
-    console.log(klastest, testName,score, hours )
+   try {
+    const result = await this.testdata.addTest(
+      vak,
+      testName,
+      score,
+      hours,
+    )
+    console.log('Test aangemaakt', result);
+   }
+   catch(error)
+   {
+    console.error('ER is iets mis gegaan in het aanmaken van de test', error);
+   }
   }
   //for stiching views 
   setView(view: 'user' | 'test') {

@@ -17,4 +17,31 @@ export class TestdataService {
       this.tests.set(tests);
     }
   }
-}
+
+  async addTest(vak: number,testName: string, maxScore: number, hours: number, )
+  {
+    const testdata = {
+      "course_id": vak,
+      "name": testName,
+      "maxvalue": maxScore,
+      "hours": hours,
+    }
+    console.log(testdata);
+    try {
+      const response = await fetch(`${this.apiurl}`, {
+        method: "POST",
+        headers:{
+          "content-type":"application/json",
+        },
+        body: JSON.stringify(testdata),
+      })
+      const result = await response.json();
+      return result;
+      
+    } catch (error) {
+      console.error('error registering test', error);
+      throw error;
+    }
+  }
+  }
+
