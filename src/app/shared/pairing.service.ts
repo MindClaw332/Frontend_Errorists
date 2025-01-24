@@ -24,7 +24,7 @@ export class PairingService {
       console.log(this.averagePerUserArray(), "set new array");
     }
   }
-
+//#region pairing
   async pairUser(requestedCourse_id: number, proposedCourse_id: number) {
     // this has to be finished before accessing the signal
     await this.loadAverages(requestedCourse_id);
@@ -92,8 +92,8 @@ export class PairingService {
     await this.loadAverages(proposedCourse_id);
     await this.chooseTutor(potentialTutors, proposedCourse_id);
     const groupId = await this.postGroup(requestedCourse_id, user.firstname);
-    console.log(groupId,"groupid id");
-    await this.PostTutee(parseInt(groupId),parseInt(user.id));
+    console.log(groupId, "groupid id");
+    await this.PostTutee(parseInt(groupId), parseInt(user.id));
     await this.PostTutor(parseInt(groupId), parseInt(this.chosentutor().id));
 
 
@@ -126,12 +126,12 @@ export class PairingService {
     console.log(sortedusers, "sortedusers")
     this.chosentutor.set(sortedusers[0])
   }
-
+//#endregion
   //test function you can call to test the service
   async test() {
     this.pairUser(1, 2);
   }
-
+//#region DateFunctions
   // gets the currentdate and converts it to a datestring
   getDate() {
     // get date
@@ -166,7 +166,8 @@ export class PairingService {
     console.log(date, "date string to date")
     return date;
   }
-
+  //#endregion
+//#region posts
   async postGroup(course_id: number, user_name: string) {
     const groupdata = {
       "name": `${user_name}-${this.chosentutor().firstname}`,
@@ -188,7 +189,7 @@ export class PairingService {
       console.log(result)
       return result.id;
     } catch (error) {
-      console.error('error registering user', error);
+      console.error('error posting group', error);
       throw error;
     }
   }
@@ -211,7 +212,7 @@ export class PairingService {
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error('error registering user', error);
+      console.error('error posting group', error);
       throw error;
     }
   }
@@ -234,9 +235,115 @@ export class PairingService {
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error('error registering user', error);
+      console.error('error posting group', error);
       throw error;
     }
   }
+
+  async accept(username: string, tutorName: string, course_id: number) {
+    const groupdata = {
+      "name": `${username}-${tutorName}`,
+      "course_id": course_id,
+      "status": "ACCEPTED",
+      "date": null,
+      "accepted_at": this.getDate(),
+      "declined_at": null
+    }
+    try {
+      const response = await fetch(`${this.apiurl}/groups`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(groupdata),
+      })
+      const result = await response.json();
+      console.log(result)
+      return result.id;
+    } catch (error) {
+      console.error('error posting group', error);
+      throw error;
+    }
+  }
+
+  async decline(username: string, tutorName: string, course_id: number) {
+    const groupdata = {
+      "name": `${username}-${tutorName}`,
+      "course_id": course_id,
+      "status": "DECLINED",
+      "date": null,
+      "accepted_at": null,
+      "declined_at": this.getDate()
+    }
+    try {
+      const response = await fetch(`${this.apiurl}/groups`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(groupdata),
+      })
+      const result = await response.json();
+      console.log(result)
+      return result.id;
+    } catch (error) {
+      console.error('error posting group', error);
+      throw error;
+    }
+  }
+
+  async acceptDate(username: string, tutorName: string, course_id: number, date: string) {
+    const groupdata = {
+      "name": `${username}-${tutorName}`,
+      "course_id": course_id,
+      "status": "ACCEPTED",
+      "date": date,
+      "accepted_at": null,
+      "declined_at": null
+    }
+    try {
+      const response = await fetch(`${this.apiurl}/groups`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(groupdata),
+      })
+      const result = await response.json();
+      console.log(result)
+      return result.id;
+    } catch (error) {
+      console.error('error posting group', error);
+      throw error;
+    }
+  }
+
+  async finish(username: string, tutorName: string, course_id: number, date: string) {
+    const groupdata = {
+      "name": `${username}-${tutorName}`,
+      "course_id": course_id,
+      "status": "FINISHED",
+      "date": date,
+      "accepted_at": null,
+      "declined_at": null
+    }
+    try {
+      const response = await fetch(`${this.apiurl}/groups`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(groupdata),
+      })
+      const result = await response.json();
+      console.log(result)
+      return result.id;
+    } catch (error) {
+      console.error('error posting group', error);
+      throw error;
+    }
+  }
+//#endregion
 }
+
 
