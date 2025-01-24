@@ -26,7 +26,6 @@ export class TestdataService {
       "maxvalue": maxScore,
       "hours": hours,
     }
-    console.log(testdata);
     try {
       const response = await fetch(`${this.apiurl}`, {
         method: "POST",
