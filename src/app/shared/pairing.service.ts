@@ -11,8 +11,7 @@ import { formatDate } from '@angular/common';
 export class PairingService {
   averagePerUserArray = signal<any[]>([]);
   chosentutor = signal<any>(null);
-  private auth = inject(LoginService)
-  user = this.auth.currentuser();
+  loggedUser = JSON.parse(sessionStorage.getItem("user")!)
   private apiurl: string = "http://127.0.0.1:8000/api"
   constructor() { }
 
@@ -31,10 +30,10 @@ export class PairingService {
     await this.loadAverages(requestedCourse_id);
     console.log(this.averagePerUserArray(), 'vergelijk users');
     // get the current_user data without extra api call
-    const user = this.averagePerUserArray().find(element => element.id === this.auth.currentuser().user_id);
+    const user = this.averagePerUserArray().find(element => element.id === this.loggedUser.user_id);
     console.log(user)
     // immediately filter out people who are not weighted enough or below in years
-    const filteredUsersPerWeight = this.averagePerUserArray().filter(element => element.weight >= user.weight); //add year filter back
+    const filteredUsersPerWeight = this.averagePerUserArray().filter(element => element.weight >= user.weight && element.year >= user.year); //add year filter back
 
     // const filteredUsersPerYear= filteredUsersPerWeight.filter(element => element.year >= user[0].year)// group averages in a bracket we can search through
     const groupedAverages = filteredUsersPerWeight.reduce((groupedPerPercent, averageForUser) => {
@@ -92,7 +91,12 @@ export class PairingService {
     }
     await this.loadAverages(proposedCourse_id);
     await this.chooseTutor(potentialTutors, proposedCourse_id);
-    console.log(this.chosentutor(), "potential tutor");
+    const groupId = await this.postGroup(requestedCourse_id, user.firstname);
+    console.log(groupId,"groupid id");
+    await this.PostTutee(parseInt(groupId),parseInt(user.id));
+    await this.PostTutor(parseInt(groupId), parseInt(this.chosentutor().id));
+
+
   }
 
   // check in what bracket the result falls
@@ -163,9 +167,9 @@ export class PairingService {
     return date;
   }
 
-  async postGroup(course_id: number) {
+  async postGroup(course_id: number, user_name: string) {
     const groupdata = {
-      "name": `${this.user().firstname}-${this.chosentutor().firstname}`,
+      "name": `${user_name}-${this.chosentutor().firstname}`,
       "course_id": course_id,
       "status": "PENDING",
       "date": null,
@@ -181,6 +185,7 @@ export class PairingService {
         body: JSON.stringify(groupdata),
       })
       const result = await response.json();
+      console.log(result)
       return result.id;
     } catch (error) {
       console.error('error registering user', error);
