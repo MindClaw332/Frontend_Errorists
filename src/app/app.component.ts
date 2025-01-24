@@ -1,3 +1,4 @@
+
 import { Component, inject } from '@angular/core'
 import { LoginComponent } from './login/login.component';
 import { RouterOutlet, RouterLink,RouterLinkActive } from '@angular/router';
@@ -7,7 +8,6 @@ import { LoginService } from './login.service';
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
 
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
 })
 export class AppComponent {
   // variables we want to check on for routing purposes
