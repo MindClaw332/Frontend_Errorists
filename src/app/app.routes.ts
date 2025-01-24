@@ -45,5 +45,9 @@ export const routes: Routes = [
         redirectTo: '/login',
         pathMatch: 'full'
     },
+    {
+        path: '**',
+        component: UnauthorizedComponent
+    }
 
 ];

@@ -13,11 +13,11 @@ export class PairingService {
   chosentutor = signal<any>(null);
   private auth = inject(LoginService)
   user = this.auth.currentuser();
-  private apiurl: string = "http://127.0.0.1:8000/api/pairingusers/"
+  private apiurl: string = "http://127.0.0.1:8000/api"
   constructor() { }
 
   async loadAverages(course_id: number) {
-    const response = await fetch(`${this.apiurl}${course_id}`);
+    const response = await fetch(`${this.apiurl}/pairingusers/${course_id}`);
     const averages = await response.json();
     console.log(averages, 'array we set')
     if (averages) {
@@ -70,7 +70,7 @@ export class PairingService {
               for (let k = 0; k < myDeclinedGroups.length; k++) {
                 if (this.calculateCurrentDateDiff(myDeclinedGroups[k].declined_at!) > 15) {
                   potentialTutors.push(groupedAverages[currentkey][j]);
-                } else{
+                } else {
                   return;
                 }
               }
@@ -162,8 +162,76 @@ export class PairingService {
     console.log(date, "date string to date")
     return date;
   }
+
+  async postGroup(course_id: number) {
+    const groupdata = {
+      "name": `${this.user().firstname}-${this.chosentutor().firstname}`,
+      "course_id": course_id,
+      "status": "PENDING",
+      "date": null,
+      "accepted_at": null,
+      "declined_at": null
+    }
+    try {
+      const response = await fetch(`${this.apiurl}/groups`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(groupdata),
+      })
+      const result = await response.json();
+      return result.id;
+    } catch (error) {
+      console.error('error registering user', error);
+      throw error;
+    }
+  }
+
+  async PostTutee(group_id: number, user_id: number) {
+    const groupTutee = {
+      "group_id": group_id,
+      "user_id": user_id,
+      "tutor": 0
+    }
+
+    try {
+      const response = await fetch(`${this.apiurl}/group-user`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(groupTutee),
+      })
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('error registering user', error);
+      throw error;
+    }
+  }
+
+  async PostTutor(group_id: number, user_id: number) {
+    const groupTutor = {
+      "group_id": group_id,
+      "user_id": user_id,
+      "tutor": 1
+    }
+
+    try {
+      const response = await fetch(`${this.apiurl}/group-user`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(groupTutor),
+      })
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('error registering user', error);
+      throw error;
+    }
+  }
 }
-
-
-
 
