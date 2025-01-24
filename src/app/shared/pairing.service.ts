@@ -1,8 +1,9 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { LoginService } from '../login.service';
-import { elementAt } from 'rxjs';
+import { elementAt, retry } from 'rxjs';
 import { Pairinggroup } from '../interfaces/pairinggroup';
 import { Pairinguser } from '../interfaces/pairinguser';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ export class PairingService {
     const brackets = Object.keys(groupedAverages).sort().reverse();
     console.log(groupedAverages[brackets[0]], 'should show 90 bracket')
     const potentialTutors: Pairinguser[] = [];
-    const backupTutors: Pairinguser[] = []
+    const backupTutors: Pairinguser[] = [];
     outerloop: for (let i = 0; i < brackets.length; i++) {
       let currentkey: number = parseInt(brackets[i]);
       console.log(brackets[i], 'de key waar we door loopen')
@@ -62,6 +63,19 @@ export class PairingService {
           if (groupsArray.some(group => group?.status === 'PENDING' || group.status === 'ACCEPTED')) {
             console.log('has an open group')
             backupTutors.push(groupedAverages[currentkey][j]);
+          } else if (groupsArray.some(group => group?.status === 'DECLINED')) {
+            const declinedGroups = groupsArray.filter(group => group.status === 'DECLINED');
+            const myDeclinedGroups = declinedGroups.filter(group => group.user1_id === user.id || group.user2_id === user.id);
+            if (myDeclinedGroups.length > 0) {
+              for (let k = 0; k < myDeclinedGroups.length; k++) {
+                if (this.calculateCurrentDateDiff(myDeclinedGroups[k].declined_at!) > 15) {
+                  potentialTutors.push(groupedAverages[currentkey][j]);
+                } else{
+                  return;
+                }
+              }
+            }
+
           }
         } else if (potentialTutors.length < 5) {
           potentialTutors.push(groupedAverages[currentkey][j]);
@@ -97,7 +111,6 @@ export class PairingService {
   }
 
   chooseTutor(tutors: Array<Pairinguser>, proposedCourse_id: number) {
-
     const users: Pairinguser[] = this.averagePerUserArray();
     console.log(users, ' choosetutor users')
     const filteredtutors: Pairinguser[] = [];
@@ -109,10 +122,48 @@ export class PairingService {
     console.log(sortedusers, "sortedusers")
     this.chosentutor.set(sortedusers[0])
   }
+
   //test function you can call to test the service
   async test() {
     this.pairUser(1, 2);
   }
+
+  // gets the currentdate and converts it to a datestring
+  getDate() {
+    // get date
+    const date = new Date(Date.now());
+    const year = date.getFullYear();
+    // get month and day and add a leading 0
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    // return the actual date
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  }
+
+  // gives the difference between now and a yyyy-mm-dd datestring
+  calculateCurrentDateDiff(datePast: string) {
+    //calculate a day in ms becouse gettime give milliseconds
+    // 1000ms in a second/ 60 seconds in a minuit/ 60 minutes in an hour/ 24hours in a day
+    let dayInMs = 1000 * 60 * 60 * 24;
+    let currentDate = this.stringToDate(this.getDate());
+    let pastDate = this.stringToDate(datePast);
+    // devide time diff by these days to get the amount of days
+    let result: number = Math.round((currentDate.getTime() - pastDate.getTime()) / dayInMs)
+    let finalResult: number = parseInt(result.toFixed(0));
+
+    return finalResult;
+  }
+
+  // gives database datestring back as a utc 0000 date
+  stringToDate(dateString: string) {
+    const timeString: string = 'T00:00:00'
+    const date = new Date(dateString + timeString);
+    console.log(date, "date string to date")
+    return date;
+  }
 }
+
+
 
 

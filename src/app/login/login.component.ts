@@ -33,7 +33,9 @@ export class LoginComponent {
     const result = await this.auth.login(this.loginform.value.email!, this.loginform.value.password!);
     console.log(this.auth.currentuser())
     if (result.message === 'valid credentials' && this.auth.currentuser().role_id === 2) {
-      this.pairing.test();
+      const diff = this.pairing.calculateCurrentDateDiff("2025-01-22")
+      console.log(diff, 'current diff should be 2 or 3')
+      // this.pairing.test();
       this.router.navigate(['/dashboard'])
     } else if (result.message === 'valid credentials' && this.auth.currentuser().role_id === 1) {
       console.log('student login');
