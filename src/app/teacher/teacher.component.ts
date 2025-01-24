@@ -94,6 +94,6 @@ export class TeacherComponent {
     }
   }
   RedirectToStudent(id:number){
-    this.router.navigate([`/students/${id}`])
+    this.router.navigate([`/students/${id}`]);
   }
 }

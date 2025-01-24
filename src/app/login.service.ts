@@ -17,7 +17,7 @@ export class LoginService {
     // turn parameters into variable
     const logindata = {
       "email": username,
-      "password": password
+      "password": password,
     };
     try {
       // make post request
@@ -32,10 +32,17 @@ export class LoginService {
       const result = await response.json();
       // if the response is not an error code set the currentuser signal to the returned user
       if (response.ok) {
+        const userdata = {
+          "user_id": result.user_id,
+          "role_id": result.role_id,
+        }
         this.currentuser.set({
           "user_id": result.user_id,
-          "role_id": result.role_id
+          "role_id": result.role_id,
         })
+
+        sessionStorage.setItem("user", JSON.stringify(userdata));
+        sessionStorage.setItem("isLoggedIn", "true");
         // set the loggedin signal to true
         this.isloggedin.set(true);
       }
