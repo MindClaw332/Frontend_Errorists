@@ -10,8 +10,8 @@ export class AuthGuard implements CanActivate {
 // just check if we have a user and they are logged in otherwise redirect to login page
   canActivate(): boolean {
     const loggedIn = sessionStorage.getItem("isLoggedIn");
-
-    if (!this.auth.currentuser() || !loggedIn) {
+    const user = JSON.parse(sessionStorage.getItem('user')!)
+    if (!user || !loggedIn) {
       this.router.navigate(['/login']);
       return false;
     }

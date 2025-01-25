@@ -13,7 +13,6 @@ export class AppComponent {
   // variables we want to check on for routing purposes
   title = 'frontend_erorrists';
   auth = inject(LoginService);
-  user = this.auth.currentuser();
   loggedin = this.auth.isloggedin();
   manualLogIn = signal(false);
   isMenuOpen = signal(false);
