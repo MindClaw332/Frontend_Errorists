@@ -81,4 +81,11 @@ export class LoginService {
       throw error;
     }
   }
+
+  logout(){
+    sessionStorage.clear();
+    this.currentuser.set(null);
+    this.isloggedin.set(false);
+    console.log(this.isloggedin())
+  }
 }

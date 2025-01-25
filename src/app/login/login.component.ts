@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from '../login.service';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { PairingService } from '../shared/pairing.service';
   styleUrl: './login.component.css'
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
  // testing
   pairing = inject(PairingService);
   //variables
@@ -28,6 +28,10 @@ export class LoginComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl(''),
   });
+
+  ngOnInit(): void {
+    console.log('initialized');
+  }
   //when you press the submit button this will login (still add when login is correct redirect when it isnt show it to user)
   async handleSubmit() {
     const result = await this.auth.login(this.loginform.value.email!, this.loginform.value.password!);
