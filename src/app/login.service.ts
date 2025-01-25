@@ -45,6 +45,7 @@ export class LoginService {
         sessionStorage.setItem("isLoggedIn", "true");
         // set the loggedin signal to true
         this.isloggedin.set(true);
+        this.isloggedin.set(true);
       }
       return result;
     }

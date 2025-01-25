@@ -1,7 +1,7 @@
 
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { LoginComponent } from './login/login.component';
-import { RouterOutlet, RouterLink,RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { LoginService } from './login.service';
 @Component({
   selector: 'app-root',
@@ -15,12 +15,18 @@ export class AppComponent {
   auth = inject(LoginService);
   user = this.auth.currentuser();
   loggedin = this.auth.isloggedin();
-  
+  isMenuOpen = signal(false);
+
+  toggleMenu() {
+    this.isMenuOpen.set(!this.isMenuOpen());
+    console.log(this.isMenuOpen())
+  }
+
   //commented out tests
-  constructor(){
+  constructor() {
     // this.auth.login('lambik@test.com', 'lambikske')
     // this.logintest();
-   }
+  }
 
   //  async logintest(){
   //   await this.auth.login('lambik@tes.com', 'lambikske');
