@@ -11,6 +11,7 @@ import { StudentdataService } from '../shared/studentdata.service';
 import { PairingService } from '../shared/pairing.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { GroupdataService } from '../shared/groupdata.service';
 
 @Component({
   selector: 'app-groups',
@@ -22,16 +23,19 @@ export class GroupsComponent {
 private coursedata = inject(CoursedataService);
 private studentdata = inject(StudentdataService);
 private pairingdata = inject(PairingService);
+private groupdata = inject(GroupdataService);
 private routeSub!: Subscription;
 
 courses = this.coursedata.courses;
 student = this.studentdata.specificstudent();
-pairing = this.pairingdata;
+groups = this.groupdata.groups;
+
 
 id: number = 1;
 
 constructor (private route: ActivatedRoute) {
   this.coursedata.loadCourses();
+  this.groupdata.loadGroups();
 }
   
   isRequestMod= false;
@@ -53,8 +57,10 @@ constructor (private route: ActivatedRoute) {
     }
     // Sends the request to pairing
     this.pairingdata.pairUser(this.selectedSubject1, this.selectedSubject2);
+
     // Check for selectedSubject 1 and 2
     console.log('Request tutoring for:', this.selectedSubject1, 'Offer for giving tutoring', this.selectedSubject2);
+
     // Makes the form return to the original state
     this.isRequestMod = false;
     this.requestTutor = !this.requestTutor;
@@ -71,6 +77,8 @@ constructor (private route: ActivatedRoute) {
   }
 
 // On load
+filteredGroups: any[] = [];
+
 async ngOnInit() {
   // Load the student info
   console.log(this.id, 'begin init');
@@ -82,6 +90,9 @@ async ngOnInit() {
   console.log(this.student, 'students na load');
   this.student = this.studentdata.specificstudent();
   console.log(this.student, 'test');
+
+  // Filter on status pending and tutor
+  this.filteredGroups = this.student?.groups.filter(group => group.status === 'PENDING' && group.tutor === 1) || [];
 
   //Initialize visibility for all groups
   this.student?.groups.forEach(group => {
@@ -158,7 +169,7 @@ async ngOnInit() {
   // Needs: method for accept button that permenantly saves the date -> database
   formattedDate: string = '';
 
-  async saveTutoringDate (groupId: number, groupName: string, courseName: string) {
+  async saveTutoringDate (groupId: number, courseName: string) {
     // Can only save when a day is selected
     if (this.saveDay === null){
       return;
@@ -167,12 +178,16 @@ async ngOnInit() {
     let course = this.courses().find(course => courseName === course.name);
     let courseId = course?.id;
 
+    // GroupId get the complementary name
+    let group = this.groups().find(group => groupId === group.id);
+    let groupName = group?.groupname
+
     // The selected date gets transformed into the correct format
     this.formattedDate = this.pairingdata.dateToString(this.saveDay);
     console.log(`gekozen dag: ${this.formattedDate}, groep-id: ${groupId}`);
 
     // Send PUT request
-    if (courseId !== undefined) {
+    if (courseId !== undefined && groupName !== undefined) {
       await this.pairingdata.acceptDate(groupId, groupName, courseId, this.formattedDate);
     }
 
@@ -200,7 +215,7 @@ async ngOnInit() {
 // Removes the accept/decline buttons and shows the calendar button
 groupVisibility: { [key: number]: { isHidden: boolean; isVisible: boolean } } = {};
 
-async acceptTutee(groupId: number, groupName: string, courseName: string) {
+async acceptTutee(groupId: number, courseName: string) {
   const visibility = this.groupVisibility[groupId];
   if (visibility) {
     visibility.isHidden = !visibility.isHidden;
@@ -210,13 +225,17 @@ async acceptTutee(groupId: number, groupName: string, courseName: string) {
   let course = this.courses().find(course => courseName === course.name);
   let courseId = course?.id;
 
+  // GroupId get the complementary name
+  let group = this.groups().find(group => groupId === group.id);
+  let groupName = group?.groupname
+
   // Send PUT request
-  if (courseId !== undefined) {
+  if (courseId !== undefined && groupName !== undefined) {
     await this.pairingdata.accept(groupId, groupName, courseId);
   }
 }
 
-async declineTutee(groupId: number, groupName: string, courseName: string) {
+async declineTutee(groupId: number, courseName: string) {
   const visibility = this.groupVisibility[groupId];
   if (visibility) {
     visibility.isVisible = !visibility.isVisible;
@@ -225,8 +244,12 @@ async declineTutee(groupId: number, groupName: string, courseName: string) {
   let course = this.courses().find(course => courseName === course.name);
   let courseId = course?.id;
 
+  // GroupId get the complementary name
+  let group = this.groups().find(group => groupId === group.id);
+  let groupName = group?.groupname
+
   // Send PUT request
-  if (courseId !== undefined) {
+  if (courseId !== undefined && groupName !== undefined) {
     await this.pairingdata.decline(groupId, groupName, courseId);
   }
 }
