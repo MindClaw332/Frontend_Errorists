@@ -24,27 +24,15 @@ private studentdata = inject(StudentdataService);
 private pairingdata = inject(PairingService);
 private routeSub!: Subscription;
 
-
-courses = this.coursedata.courses
-student = this.studentdata.users
-pairing = this.pairingdata
+courses = this.coursedata.courses;
+student = this.studentdata.specificstudent();
+pairing = this.pairingdata;
 
 id: number = 1;
 
 constructor (private route: ActivatedRoute) {
   this.coursedata.loadCourses();
-  this.studentdata.loadStudent(this.id);
-  this.routeSub = this.route.params.subscribe(params => {
-    this.id = params['id'];
-    console.log(this.id, 'na sub');
-  })
 }
-
-groups= [
-  {id: 1, name:"History",},
-  {id:2, name:"Math"},
-  {id:3, name:"Dutch"}
-]
   
   isRequestMod= false;
   selectedSubject1: number | undefined;
@@ -57,7 +45,7 @@ groups= [
   }
 
   // Handles the request for tutoring
-  submitRequest() {
+  async submitRequest() {
     // Returns if one or more course(s) is not chosen
     if (this.selectedSubject1 === undefined || this.selectedSubject2 === undefined) {
       alert('Please choose courses');
@@ -83,25 +71,27 @@ groups= [
   }
 
 // On load
-ngOnInit() {
-  // Initialize visibility for all groups
-  this.groups.forEach(group => {
-    this.groupVisibility[group.id] = {
+async ngOnInit() {
+  console.log(this.id, 'begin init');
+  this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      console.log(this.id, 'na sub');
+  })
+  await this.studentdata.loadStudent(this.id);
+  console.log(this.student, 'students na load');
+  this.student = this.studentdata.specificstudent();
+  console.log(this.student, 'test');
+
+  //Initialize visibility for all groups
+  this.student?.groups.forEach(group => {
+    this.groupVisibility[group.group_id] = {
       isHidden: true,  // Initial state: true
       isVisible: false // Initial state: false
     };
-    this.calendar[group.id] = {
+    this.calendar[group.group_id] = {
       hidden: true
     }
   });
-
-  console.log(this.id, 'begin init')
-    this.routeSub = this.route.params.subscribe(params => {
-      this.id = params['id'];
-      console.log(this.id, 'na sub');
-    })
-    this.studentdata.loadStudent(this.id);
-    console.log(this.student, 'students na load')
 }
 
 // Calendar logic

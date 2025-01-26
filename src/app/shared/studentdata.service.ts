@@ -29,6 +29,6 @@ export class StudentdataService{
     // user.data = user
     this.specificstudent.set(user);
     console.log(this.specificstudent(), 'dit hoort een user te zijn')
-    return user;
+    return this.specificstudent;
   }
 }
