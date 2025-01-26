@@ -72,6 +72,7 @@ constructor (private route: ActivatedRoute) {
 
 // On load
 async ngOnInit() {
+  // Load the student info
   console.log(this.id, 'begin init');
   this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
@@ -155,17 +156,33 @@ async ngOnInit() {
   }
 
   // Needs: method for accept button that permenantly saves the date -> database
-  saveTutoringDate (groupId: number) {
+  formattedDate: string = '';
+
+  async saveTutoringDate (groupId: number, groupName: string, courseName: string) {
+    // Can only save when a day is selected
     if (this.saveDay === null){
       return;
     }
-    console.log(`gekozen dag: ${this.saveDay}, groep-id: ${groupId}`);
+    // CourseName get the complementary ID
+    let course = this.courses().find(course => courseName === course.name);
+    let courseId = course?.id;
+
+    // The selected date gets transformed into the correct format
+    this.formattedDate = this.pairingdata.dateToString(this.saveDay);
+    console.log(`gekozen dag: ${this.formattedDate}, groep-id: ${groupId}`);
+
+    // Send PUT request
+    if (courseId !== undefined) {
+      await this.pairingdata.acceptDate(groupId, groupName, courseId, this.formattedDate);
+    }
+
+    // Sets the correct visbility
     this.calendar[groupId].hidden = !this.calendar[groupId].hidden;
     this.groupVisibility[groupId].isHidden = !this.groupVisibility[groupId].isHidden;
     this.requestTutor = !this.requestTutor;
   }
 
-  // Needs: method for cancel button that closes the calendar + reset calendar
+  // Closes the calendar + reset calendar
   cancelDate (groupId: number) {
     this.calendar[groupId].hidden = !this.calendar[groupId].hidden;
     this.requestTutor = !this.requestTutor;
@@ -179,15 +196,38 @@ async ngOnInit() {
   }
 
 
-// Needs: Accept the request for a tutor (when group logic in order)
+// Accepts the request for a tutor
 // Removes the accept/decline buttons and shows the calendar button
 groupVisibility: { [key: number]: { isHidden: boolean; isVisible: boolean } } = {};
 
-acceptTutee(groupId: number): void {
+async acceptTutee(groupId: number, groupName: string, courseName: string) {
   const visibility = this.groupVisibility[groupId];
   if (visibility) {
     visibility.isHidden = !visibility.isHidden;
     visibility.isVisible = !visibility.isVisible;
+  }
+  // CourseName get the complementary ID
+  let course = this.courses().find(course => courseName === course.name);
+  let courseId = course?.id;
+
+  // Send PUT request
+  if (courseId !== undefined) {
+    await this.pairingdata.accept(groupId, groupName, courseId);
+  }
+}
+
+async declineTutee(groupId: number, groupName: string, courseName: string) {
+  const visibility = this.groupVisibility[groupId];
+  if (visibility) {
+    visibility.isVisible = !visibility.isVisible;
+  }
+  // CourseName get the complementary ID
+  let course = this.courses().find(course => courseName === course.name);
+  let courseId = course?.id;
+
+  // Send PUT request
+  if (courseId !== undefined) {
+    await this.pairingdata.decline(groupId, groupName, courseId);
   }
 }
 

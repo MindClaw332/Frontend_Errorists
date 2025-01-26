@@ -61,7 +61,7 @@
                 <div class="flex flex-wrap w-3/4 justify-center">
                     <div class="flex justify-between w-full lg:w-3/5 m-1 p-2 text-center bg-secondary-light dark:bg-secondary shadow-lg rounded-xl">
                         <div class="flex">
-                            {{group.user2_id}} {{group.course_name}}
+                            {{group.group_name}} {{group.user2_id}} {{group.course_name}}
                         </div>
                         <div class="flex">
                             <button (click)="viewCalendar(group.group_id)" [class.hidden]="groupVisibility[group.group_id].isHidden">
@@ -72,10 +72,10 @@
                         </div>
                     </div>
                     <div class="flex flex-row w-2/6">
-                        <button (click)="acceptTutee(group.group_id)" class="bg-accent-green-light dark:bg-accent-green w-full m-1 p-2 rounded-xl text-white hover:bg-accent-green dark:hover:bg-accent-green-light" [class.hidden]="groupVisibility[group.group_id].isVisible">
+                        <button (click)="acceptTutee(group.group_id, group.group_name, group.course_name)" class="bg-accent-green-light dark:bg-accent-green w-full m-1 p-2 rounded-xl text-white hover:bg-accent-green dark:hover:bg-accent-green-light" [class.hidden]="groupVisibility[group.group_id].isVisible">
                             Accepteren
                         </button>
-                        <button class="bg-accent-red-light dark:bg-accent-red w-full m-1 p-2 rounded-xl text-white hover:bg-accent-red dark:hover:bg-accent-red-light" [class.hidden]="groupVisibility[group.group_id].isVisible">
+                        <button (click)="declineTutee(group.group_id, group.group_name, group.course_name)" class="bg-accent-red-light dark:bg-accent-red w-full m-1 p-2 rounded-xl text-white hover:bg-accent-red dark:hover:bg-accent-red-light" [class.hidden]="groupVisibility[group.group_id].isVisible">
                             Weiger
                         </button>
                     </div>
@@ -92,7 +92,7 @@
                         </full-calendar>
                     </div>
                     <div class="flex flex-wrap justify-center">
-                        <button (click)="saveTutoringDate(group.group_id)" class="m-1 p-1 w-1/3 bg-accent-green-light dark:bg-accent-green rounded-xl shadow-lg hover:bg-accent-green dark:hover:bg-accent-green-light">
+                        <button (click)="saveTutoringDate(group.group_id, group.group_name, group.course_name)" class="m-1 p-1 w-1/3 bg-accent-green-light dark:bg-accent-green rounded-xl shadow-lg hover:bg-accent-green dark:hover:bg-accent-green-light">
                             Opslaan
                         </button>
                         <button (click)="cancelDate(group.group_id)" class="m-1 p-1 w-1/3 bg-accent-red-light dark:bg-accent-red rounded-xl shadow-lg hover:bg-accent-red dark:hover:bg-accent-red-light">
