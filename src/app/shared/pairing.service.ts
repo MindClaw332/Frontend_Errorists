@@ -145,6 +145,17 @@ export class PairingService {
     return formattedDate;
   }
 
+   // gets a date and converts it to a datestring
+   dateToString(chosenDate: Date) {
+    const year = chosenDate.getFullYear();
+    // get month and day and add a leading 0
+    const month = String(chosenDate.getMonth() + 1).padStart(2, '0');
+    const day = String(chosenDate.getDate()).padStart(2, '0');
+    // return the actual date
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  }
+
   // gives the difference between now and a yyyy-mm-dd datestring
   calculateCurrentDateDiff(datePast: string) {
     //calculate a day in ms becouse gettime give milliseconds
@@ -240,9 +251,9 @@ export class PairingService {
     }
   }
 
-  async accept(group_id: number, username: string, tutorName: string, course_id: number) {
+  async accept(group_id: number, group_name: string, course_id: number) {
     const groupdata = {
-      "name": `${username}-${tutorName}`,
+      "name": group_name,
       "course_id": course_id,
       "status": "ACCEPTED",
       "date": null,
@@ -266,9 +277,9 @@ export class PairingService {
     }
   }
 
-  async decline(group_id: number, username: string, tutorName: string, course_id: number) {
+  async decline(group_id: number, group_name: string, course_id: number) {
     const groupdata = {
-      "name": `${username}-${tutorName}`,
+      "name": group_name,
       "course_id": course_id,
       "status": "DECLINED",
       "date": null,
@@ -292,9 +303,9 @@ export class PairingService {
     }
   }
 
-  async acceptDate(group_id: number, username: string, tutorName: string, course_id: number, date: string) {
+  async acceptDate(group_id: number, group_name: string, course_id: number, date: string) {
     const groupdata = {
-      "name": `${username}-${tutorName}`,
+      "name": group_name,
       "course_id": course_id,
       "status": "ACCEPTED",
       "date": date,
