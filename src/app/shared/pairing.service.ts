@@ -240,7 +240,7 @@ export class PairingService {
     }
   }
 
-  async accept(username: string, tutorName: string, course_id: number) {
+  async accept(group_id: number, username: string, tutorName: string, course_id: number) {
     const groupdata = {
       "name": `${username}-${tutorName}`,
       "course_id": course_id,
@@ -250,8 +250,8 @@ export class PairingService {
       "declined_at": null
     }
     try {
-      const response = await fetch(`${this.apiurl}/groups`, {
-        method: "POST",
+      const response = await fetch(`${this.apiurl}/groups/${group_id}`, {
+        method: "PUT",
         headers: {
           "content-type": "application/json",
         },
@@ -266,7 +266,7 @@ export class PairingService {
     }
   }
 
-  async decline(username: string, tutorName: string, course_id: number) {
+  async decline(group_id: number, username: string, tutorName: string, course_id: number) {
     const groupdata = {
       "name": `${username}-${tutorName}`,
       "course_id": course_id,
@@ -276,8 +276,8 @@ export class PairingService {
       "declined_at": this.getDate()
     }
     try {
-      const response = await fetch(`${this.apiurl}/groups`, {
-        method: "POST",
+      const response = await fetch(`${this.apiurl}/groups/${group_id}`, {
+        method: "PUT",
         headers: {
           "content-type": "application/json",
         },
@@ -292,7 +292,7 @@ export class PairingService {
     }
   }
 
-  async acceptDate(username: string, tutorName: string, course_id: number, date: string) {
+  async acceptDate(group_id: number, username: string, tutorName: string, course_id: number, date: string) {
     const groupdata = {
       "name": `${username}-${tutorName}`,
       "course_id": course_id,
@@ -302,8 +302,8 @@ export class PairingService {
       "declined_at": null
     }
     try {
-      const response = await fetch(`${this.apiurl}/groups`, {
-        method: "POST",
+      const response = await fetch(`${this.apiurl}/groups/${group_id}`, {
+        method: "PUT",
         headers: {
           "content-type": "application/json",
         },
@@ -318,7 +318,7 @@ export class PairingService {
     }
   }
 
-  async finish(username: string, tutorName: string, course_id: number, date: string) {
+  async finish(group_id: number, username: string, tutorName: string, course_id: number, date: string) {
     const groupdata = {
       "name": `${username}-${tutorName}`,
       "course_id": course_id,
@@ -328,8 +328,8 @@ export class PairingService {
       "declined_at": null
     }
     try {
-      const response = await fetch(`${this.apiurl}/groups`, {
-        method: "POST",
+      const response = await fetch(`${this.apiurl}/groups/${group_id}`, {
+        method: "PUT",
         headers: {
           "content-type": "application/json",
         },

@@ -7,6 +7,10 @@ import { CalendarOptions, Calendar, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg, EventDragStopArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { StudentdataService } from '../shared/studentdata.service';
+import { PairingService } from '../shared/pairing.service';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-groups',
@@ -16,41 +20,62 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 })
 export class GroupsComponent {
 private coursedata = inject(CoursedataService);
+private studentdata = inject(StudentdataService);
+private pairingdata = inject(PairingService);
+private routeSub!: Subscription;
 
 courses = this.coursedata.courses
+student = this.studentdata.users
+pairing = this.pairingdata
 
-constructor () {
+id: number = 1;
+
+constructor (private route: ActivatedRoute) {
   this.coursedata.loadCourses();
+  this.studentdata.loadStudent(this.id);
 }
+
+groups= [
+  {id: 1, name:"History",},
+  {id:2, name:"Math"},
+  {id:3, name:"Dutch"}
+]
   
   isRequestMod= false;
-  selectedSubject ='';
+  selectedSubject1: number | undefined;
+  selectedSubject2: number | undefined;
 
-  groups= [
-    {id: 1, name:"History",},
-    {id:2, name:"Math"},
-    {id:3, name:"Dutch"}
-  ]
-
-  toggleRequestMod()
-  {
+  // Toggles the visibility
+  toggleRequestMod() {
     this.isRequestMod = !this.isRequestMod;
+    this.requestTutor = !this.requestTutor;
   }
 
-  submitRequest()
-  {
-    //dit is voor het acepteren van bijles
-    console.log('Request tutoring for:', this.selectedSubject);
+  // Handles the request for tutoring
+  submitRequest() {
+    // Returns if one or more course(s) is not chosen
+    if (this.selectedSubject1 === undefined || this.selectedSubject2 === undefined) {
+      alert('Please choose courses');
+      return
+    }
+    // Sends the request to pairing
+    this.pairingdata.pairUser(this.selectedSubject1, this.selectedSubject2);
+    // Check for selectedSubject 1 and 2
+    console.log('Request tutoring for:', this.selectedSubject1, 'Offer for giving tutoring', this.selectedSubject2);
+    // Makes the form return to the original state
     this.isRequestMod = false;
-    this.selectedSubject = '';
+    this.requestTutor = !this.requestTutor;
+    this.selectedSubject1 = undefined;
+    this.selectedSubject2 = undefined;
   }
 
-  canncelRequest()
-  {
+  // Makes the form return to the original state 
+  canncelRequest() {
     this.isRequestMod = false;
-    this.selectedSubject = '';
+    this.requestTutor = !this.requestTutor;
+    this.selectedSubject1 = undefined;
+    this.selectedSubject2 = undefined;
   }
-
 
 // On load
 ngOnInit() {
@@ -64,11 +89,14 @@ ngOnInit() {
       hidden: true
     }
   });
-}
 
-// Removes/returns the request tutoring button
-requestingTutor () {
-  this.requestTutor = !this.requestTutor;
+  console.log(this.id, 'begin init')
+    this.routeSub = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      console.log(this.id, 'na sub');
+    })
+    this.studentdata.loadStudent(this.id);
+    console.log(this.student, 'students na load')
 }
 
 // Calendar logic
