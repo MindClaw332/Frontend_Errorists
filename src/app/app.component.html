@@ -35,7 +35,7 @@
         <nav class="fixed top-0  bg-secondary text-white transform transition-transform duration-300 ease-in-out w-screen"
                 [class.translate-x-0]="isMenuOpen()" [class.-translate-x-full]="!isMenuOpen()">
                 <ul class="flex justify-evenly m-8 text-xl">
-                        <li><a [routerLink]="['/groups/', manualUser().role_id]" routerLinkActive="active" ariaCurrentWhenActive="page"
+                        <li><a [routerLink]="['/groups/', manualUser().user_id]" routerLinkActive="active" ariaCurrentWhenActive="page"
                                         class="hover:underline" >groups</a></li>
                         <li><a [routerLink]="['/students/', manualUser().user_id]" routerLinkActive="active" ariaCurrentWhenActive="page"
                                         class="hover:underline">dashboard</a></li>
