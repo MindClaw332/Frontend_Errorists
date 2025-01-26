@@ -12,11 +12,6 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 export const routes: Routes = [
 
     {
-        path: 'groups',
-        component: GroupsComponent,
-        canActivate: [AuthGuard, teacherGuard],
-    },
-    {
         path: 'points',
         component: PointsComponent,
         canActivate: [AuthGuard]
@@ -29,6 +24,11 @@ export const routes: Routes = [
         path: 'students/:id',
         component: StudentsComponent,
         canActivate: [AuthGuard],
+    },
+    {
+        path: 'groups/:id',
+        component: GroupsComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'dashboard',

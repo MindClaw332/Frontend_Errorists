@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Logindata } from './interfaces/logindata';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,9 +9,16 @@ import { Logindata } from './interfaces/logindata';
 export class LoginService {
   // signals to keep check on state in other components
   isloggedin = signal<boolean>(false);
+  currentUser = signal<any>(null);
+  private eventSource = new BehaviorSubject<boolean>(false);
+  signal$ = this.eventSource.asObservable();
   // login url
   private apiurl: string = 'http://127.0.0.1:8000/api/';
   constructor() { }
+
+  sendSignal(status:boolean){
+    this.eventSource.next(status)
+  }
   // login function which you pass username/email and password parameters
   async login(username: string, password: string) {
     // turn parameters into variable
@@ -35,11 +43,9 @@ export class LoginService {
           "user_id": result.user_id,
           "role_id": result.role_id,
         }
-
         sessionStorage.setItem("user", JSON.stringify(userdata));
         sessionStorage.setItem("isLoggedIn", "true");
-        // set the loggedin signal to true
-        this.isloggedin.set(true);
+        this.sendSignal(true);
       }
       return result;
     }
