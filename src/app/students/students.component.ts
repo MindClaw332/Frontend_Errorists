@@ -12,6 +12,7 @@ import { CalendarOptions, Calendar, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg, EventDragStopArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { PairingService } from '../shared/pairing.service';
 
 @Component({
   selector: 'app-students',
@@ -24,29 +25,67 @@ export class StudentsComponent implements OnInit, OnDestroy {
   userdata = inject(StudentdataService);
   private groupdata = inject(GroupdataService);
   private testresultdata = inject(ResultdataService);
+  private pairingdata = inject(PairingService);
   private routeSub!: Subscription;
+
   id: number = 1;
-  students = this.userdata.users
+  student = this.userdata.specificstudent();
   groups = this.groupdata.groups
   testresults = this.testresultdata.results;
 
   constructor(private route: ActivatedRoute) {
   }
 
-  ngOnInit(): void {
+  checkedDate: [{ 
+    group_id: number;
+    group_name: string;
+    user1_id: number;
+    user2_id: number;
+    tutor: number;
+    course_name: string;
+    status: string;
+    date: string;
+    accepted_at: string;
+    declined_at: string;
+  }] | undefined ;
+  
+  groupVisibility: { [key: number]: { isHidden: boolean; isVisible: boolean } } = {};
+  filteredGroups: any[] = [];
+
+  async ngOnInit() {
     console.log(this.id, 'begin init')
     this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
       console.log(this.id, 'na sub');
     })
-    this.userdata.loadStudent(this.id);
-    console.log(this.students, 'students na load')
-    this.groupdata.loadGroups();
-    console.log(this.students, 'groups na load')
+    await this.userdata.loadStudent(this.id);
+    this.student = this.userdata.specificstudent();
+    console.log(this.student, 'students na load')
+    await this.groupdata.loadGroups();
+    this.groups.set(this.groupdata.groups());
+    console.log(this.groups(), 'groups na load')
     this.testresultdata.loadResults(this.id);
     console.log(this.id);
 
+    // Filter on ACCEPTED groups from student
+    this.filteredGroups = this.student?.groups.filter(group => group.status === 'ACCEPTED') || [];
+
     //checks groups for acceptdate and nowdate, all +7 accepted groups -> show pop up
+    this.student?.groups.filter(groups => groups.tutor === 1 && groups.accepted_at !== null)
+    .forEach(group => {
+      if (this.pairingdata.calculateCurrentDateDiff(group.accepted_at) >= 7) {
+        this.checkedDate?.push(group);
+      }
+    });
+
+    this.checkedDate?.forEach(group => {
+      this.groupVisibility[group.group_id] = {
+        isHidden: true,  // Initial state: true
+        isVisible: false // Initial state: false
+      };
+    });
+
+    this.checkedDate?.forEach(group => this.selectDate(group.group_id));
   }
 
   ngOnDestroy(): void {
@@ -56,33 +95,9 @@ export class StudentsComponent implements OnInit, OnDestroy {
   }
   
   test(){
-    console.log(this.students, 'wanneer alles gecalled word');
+    console.log(this.student, 'wanneer alles gecalled word');
     console.log(this.testresults, 'wanneer alles gecalled word');
   }
-
-
-  // Get the tutors/tuitees linked to the student
-  filteredGroups = computed(() => {
-    // Get groups with the matching user_id
-    let filter = this.groups().filter(group => group.user_id === this.id);
-
-    // Get array of groupnames from those groups
-    let groupNames = filter.map(group => group.groupname);
-
-    // Get groups that have a groupname that matches and different user_id
-    let inverse = this.groups().filter(group =>
-      groupNames.includes(group.groupname) && group.user_id !== this.id
-    );
-
-    // Add student.class to each group
-    return inverse.map(group => {
-      const userData = this.students().find(user => user.id === group.user_id);
-      return {
-        ...group,
-        userClass: userData?.class
-      };
-    });
-  });
 
   // Groups tests per course
   course = computed(() => {
@@ -165,25 +180,29 @@ export class StudentsComponent implements OnInit, OnDestroy {
   eventsModel: any;
   @ViewChild('fullcalendar') fullcalendar?: FullCalendarComponent;
 
-  selectDate () {
-    this.calendarHidden = !this.calendarHidden;
-    this.calendarVisible = !this.calendarVisible;
+  selectDate (groupId: number) {
+    if (this.checkedDate !== undefined) {
+      this.groupVisibility[groupId].isHidden = !this.groupVisibility[groupId].isHidden;
+      this.calendarVisible = true;
 
-    // calendar needs to be group specific, a week since acceptdate, so a specific group is like huh needs a date
-    forwardRef(() => Calendar);
+      // calendar needs to be group specific, a week since acceptdate, so a specific group is like huh needs a date
+      forwardRef(() => Calendar);
 
-    this.calendarOptions = {
-      plugins: [dayGridPlugin, interactionPlugin],
-      editable: true,
-      customButtons: {
-      },
-      headerToolbar: {
-        left: 'next',
-        center: 'title',
-        right: 'today'
-      },
-      dateClick: this.handleDateClick.bind(this)
-    };
+      this.calendarOptions = {
+        plugins: [dayGridPlugin, interactionPlugin],
+        editable: true,
+        customButtons: {
+        },
+        headerToolbar: {
+          left: 'next',
+          center: 'title',
+          right: 'today'
+        },
+        dateClick: this.handleDateClick.bind(this)
+      };
+    } else {
+      return
+    }
   }
 
   saveDay: Date | null = null;
@@ -216,4 +235,64 @@ export class StudentsComponent implements OnInit, OnDestroy {
     console.log(this.saveDay);
   }
 
+  formattedDate: string = '';
+
+  async saveTutoringDate (groupId: number, courseName: string) {
+    // Can only save when a day is selected
+    if (this.saveDay === null){
+      return;
+    }
+    // CourseName get the complementary ID
+    let course = this.course().find(course => courseName === course.coursename);
+    let courseId = course?.id;
+
+    // GroupId get the complementary name
+    let group = this.groups().find(group => groupId === group.id);
+    let groupName = group?.groupname
+
+    // The selected date gets transformed into the correct format
+    this.formattedDate = this.pairingdata.dateToString(this.saveDay);
+    console.log(`gekozen dag: ${this.formattedDate}, groep-id: ${groupId}`);
+
+    // Send PUT request
+    if (courseId !== undefined && groupName !== undefined) {
+      await this.pairingdata.acceptDate(groupId, groupName, courseId, this.formattedDate);
+    }
+
+    this.calendarVisible = false;
+  }
+
+  async setLater (groupId: number, courseName: string) {
+    // CourseName get the complementary ID
+    let course = this.course().find(course => courseName === course.coursename);
+    let courseId = course?.id;
+
+    // GroupId get the complementary name
+    let group = this.groups().find(group => groupId === group.id);
+    let groupName = group?.groupname
+
+    // Send PUT request
+    if (courseId !== undefined && groupName !== undefined) {
+      await this.pairingdata.accept(groupId, groupName, courseId);
+    }
+
+    this.calendarVisible = false;
+  }
+
+  async declineTutee(groupId: number, courseName: string) {
+    // CourseName get the complementary ID
+    let course = this.course().find(course => courseName === course.coursename);
+    let courseId = course?.id;
+  
+    // GroupId get the complementary name
+    let group = this.groups().find(group => groupId === group.id);
+    let groupName = group?.groupname
+  
+    // Send PUT request
+    if (courseId !== undefined && groupName !== undefined) {
+      await this.pairingdata.decline(groupId, groupName, courseId);
+    }
+
+    this.calendarVisible = false;
+  }
 }

@@ -24,9 +24,9 @@ export interface User {
             tutor: number,
             course_name: string,
             status: string,
-            date: Date,
-            accepted_at: Date,
-            declined_at: Date
+            date: string,
+            accepted_at: string,
+            declined_at: string
         }
     ]
 }

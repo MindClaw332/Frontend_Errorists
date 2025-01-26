@@ -76,9 +76,9 @@ constructor (private route: ActivatedRoute) {
     this.selectedSubject2 = undefined;
   }
 
-// On load
 filteredGroups: any[] = [];
 
+// On load
 async ngOnInit() {
   // Load the student info
   console.log(this.id, 'begin init');

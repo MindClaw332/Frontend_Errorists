@@ -1,36 +1,38 @@
 <body class="h-screen bg-primary-light dark:bg-primary">
     <!--calendar pop up-->
-    <div class="flex pt-8" [class.hidden]="calendarHidden"> </div>
-    <div class="flex flex-wrap justify-self-center self-center flex-col z-10 w-4/5 text-white bg-tertiary-light dark:bg-tertiary rounded-xl shadow-lg" [class.hidden]="calendarHidden">
-        <div class="flex flex-wrap w-full justify-center m-2 text-4xl">(group) heeft nog steeds een datum nodig</div>
-        <div class="flex flex-wrap w-full justify-center m-2">
-            <full-calendar class="w-4/5 md:w-1/2"
-                *ngIf="calendarOptions"
-                #fullcalendar
-                [options]="calendarOptions">
-                    <ng-template #eventContent let-arg>
-                        <b>{{ arg.event.title }}</b> - {{ arg.event.start.getDate() }}
-                    </ng-template>
-            </full-calendar>
+    @for (date of checkedDate; track date) {
+        <div class="flex pt-8" [class.hidden]="groupVisibility[date.group_id].isHidden"> </div>
+        <div class="flex flex-wrap justify-self-center self-center flex-col z-10 w-4/5 text-white bg-tertiary-light dark:bg-tertiary rounded-xl shadow-lg" [class.hidden]="groupVisibility[date.group_id].isHidden">
+            <div class="flex flex-wrap w-full justify-center m-2 text-4xl">{{date.group_name}} heeft nog steeds een datum nodig</div>
+            <div class="flex flex-wrap w-full justify-center m-2">
+                <full-calendar class="w-4/5 md:w-1/2"
+                    *ngIf="calendarOptions"
+                    #fullcalendar
+                    [options]="calendarOptions">
+                        <ng-template #eventContent let-arg>
+                            <b>{{ arg.event.title }}</b> - {{ arg.event.start.getDate()}}
+                        </ng-template>
+                </full-calendar>
+            </div>
+            <div class="flex flex-wrap w-full justify-center m-2">
+                <button (click)="saveTutoringDate(date.group_id, date.course_name)" class="w-1/4 m-1 p-1 rounded-xl bg-accent-green-light dark:bg-accent-green hover:bg-accent-green dark:hover:bg-accent-green-light">
+                    Datum opslaan
+                </button>
+                <button (click)="setLater(date.group_id, date.course_name)" class="w-1/4 m-1 p-1 rounded-xl bg-accent-orange-light dark:bg-accent-orange hover:bg-accent-orange dark:hover:bg-accent-orange-light">
+                    Later invullen
+                </button>
+                <button (click)="declineTutee(date.group_id, date.course_name)" class="w-1/4 m-1 p-1 rounded-xl bg-accent-red-light dark:bg-accent-red hover:bg-accent-red dark:hover:bg-accent-red-light">
+                    Groep verwijderen
+                </button>
+            </div>
         </div>
-        <div class="flex flex-wrap w-full justify-center m-2">
-            <button class="w-1/4 m-1 p-1 rounded-xl bg-accent-green-light dark:bg-accent-green hover:bg-accent-green dark:hover:bg-accent-green-light">
-                Datum opslaan
-            </button>
-            <button class="w-1/4 m-1 p-1 rounded-xl bg-accent-orange-light dark:bg-accent-orange hover:bg-accent-orange dark:hover:bg-accent-orange-light">
-                Later invullen
-            </button>
-            <button class="w-1/4 m-1 p-1 rounded-xl bg-accent-red-light dark:bg-accent-red hover:bg-accent-red dark:hover:bg-accent-red-light">
-                Groep verwijderen
-            </button>
-        </div>
-    </div>
+    }
     <!--username/class + points-->
     <div class="flex flex-wrap flex-row justify-evenly w-screen z-0 h-3/5 pt-12 lg:pt-32 lg:flex-col" [class.hidden]="calendarVisible">
         <!--username/class-->
         <div class="flex flex-wrap flex-col w-1/2 flex-grow content-start lg:content-center">
             <div class="flex">
-            <button class="flex flex-wrap justify-center text-white ml-8 bg-secondary-light dark:bg-secondary rounded-xl w-1/3 shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary hidden" (click)="selectDate()">
+            <button class="flex flex-wrap justify-center text-white ml-8 bg-secondary-light dark:bg-secondary rounded-xl w-1/3 shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary hidden">
                 Back
             </button>
             </div>
@@ -91,12 +93,16 @@
     <!--tutor overview-->
     <div class="flex flex-wrap scrollbar-none overflow-y-auto z-0 h-1/4 p-2 mt-10 content-start ml-10 lg:ml-0 justify-self-start lg:justify-self-center bg-secondary-light dark:bg-secondary rounded-xl w-4/5 shadow-lg" [class.hidden]="calendarVisible">
         <div class="flex flex-wrap flex-col w-full text-white">
-            @for(group of filteredGroups(); track group.id) {
-                <div class="flex flex-wrap flex-row justify-evenly content-center m-1 bg-tertiary-light dark:bg-tertiary rounded-xl">
-                    <div class="flex flex wrap w-1/4 justify-start">{{group.tutoredcourse}}</div>
-                    <div class="flex flex-wrap w-1/4 justify-center hidden sm:block">{{group.userClass}}</div>
-                    <div class="flex flex-wrap w-1/4 justify-end">{{group.firstname}} {{group.lastname}}</div>
-                </div>
+            @if(filteredGroups.length === 0) {
+                <div class="text-white">No groups yet</div>
+            } @else {
+                @for(groups of filteredGroups; track groups) {
+                    <div class="flex flex-wrap flex-row justify-evenly content-center m-1 bg-tertiary-light dark:bg-tertiary rounded-xl">
+                        <div class="flex flex wrap w-1/4 justify-start">{{groups.course_name}}</div>
+                        <div class="flex flex-wrap w-1/4 justify-center hidden sm:block"></div>
+                        <div class="flex flex-wrap w-1/4 justify-end">{{groups.user2_id}}</div>
+                    </div>
+                }
             }
         </div>
     </div>
