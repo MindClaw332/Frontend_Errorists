@@ -24,6 +24,7 @@ private studentdata = inject(StudentdataService);
 private pairingdata = inject(PairingService);
 private routeSub!: Subscription;
 
+
 courses = this.coursedata.courses
 student = this.studentdata.users
 pairing = this.pairingdata
@@ -33,6 +34,10 @@ id: number = 1;
 constructor (private route: ActivatedRoute) {
   this.coursedata.loadCourses();
   this.studentdata.loadStudent(this.id);
+  this.routeSub = this.route.params.subscribe(params => {
+    this.id = params['id'];
+    console.log(this.id, 'na sub');
+  })
 }
 
 groups= [
