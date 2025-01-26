@@ -10,7 +10,7 @@
 
 <!--Title-->
 <div class="flex flex-wrap w-2/3 justify-self-center" [class.hidden]="requestTutor">
-    <button (click)="requestingTutor()" (click)="toggleRequestMod()" class="bg-secondary-light dark:bg-secondary w-full p-2 rounded-xl text-white shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
+    <button (click)="toggleRequestMod()" class="bg-secondary-light dark:bg-secondary w-full p-2 rounded-xl text-white shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
         Aanvragen bijles
     </button>
 </div>
@@ -23,27 +23,27 @@
         <div class="flex flex-wrap flex-col justify-center lg:flex-row w-3/4">
             <div class="flex flex-wrap w-full lg:w-2/5 m-1 p-2 focus:outline-none">
                 <div class="p-2">Ik heb bijles nodig voor:</div>
-                <select [(ngModel)]="selectedSubject" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
+                <select [(ngModel)]="selectedSubject1" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
                     <option value="" disabled selected>Vak</option>
                     @for(course of courses(); track course) {
-                        <option [value]="course.name">{{course.name}}</option>
+                        <option [value]="course.id">{{course.name}}</option>
                     }
                 </select>
             </div>
             <div class="flex flex-wrap w-full lg:w-2/5 m-1 p-2 focus:outline-none">
                 <div class="p-2">Ik kan bijles geven in:</div>
-                <select [(ngModel)]="selectedSubject" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
+                <select [(ngModel)]="selectedSubject2" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
                     <option value="" disabled selected>Vak</option>
                     @for(course of courses(); track course) {
-                        <option [value]="course.name">{{course.name}}</option>
+                        <option [value]="course.id">{{course.name}}</option>
                     }
                 </select>
             </div>
             <div class="flex flex-wrap flex-row w-full lg:w-2/6 justify-center">
-                <button (click)="requestingTutor()"  (click)="submitRequest()" class="flex flex-grow justify-center bg-accent-green-light dark:bg-accent-green w-1/6 m-1 p-2 rounded-xl text-white hover:bg-accent-green dark:hover:bg-accent-green-light">
+                <button  (click)="submitRequest()" class="flex flex-grow justify-center bg-accent-green-light dark:bg-accent-green w-1/6 m-1 p-2 rounded-xl text-white hover:bg-accent-green dark:hover:bg-accent-green-light">
                     Aanvragen
                 </button>
-                <button (click)="requestingTutor()" (click)="canncelRequest()" class="flex flex-grow justify-center bg-accent-red-light dark:bg-accent-red w-1/6 m-1 p-2 rounded-xl text-white hover:bg-accent-red dark:hover:bg-accent-red-light">
+                <button (click)="canncelRequest()" class="flex flex-grow justify-center bg-accent-red-light dark:bg-accent-red w-1/6 m-1 p-2 rounded-xl text-white hover:bg-accent-red dark:hover:bg-accent-red-light">
                     Annuleren
                 </button>
             </div>

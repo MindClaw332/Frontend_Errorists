@@ -17,9 +17,16 @@ export interface User {
     ],
     groups: [
         {
-            id: number,
+            group_id: number,
             group_name: string,
-            course_name: string
+            user1_id: number,
+            user2_id: number,
+            tutor: number,
+            course_name: string,
+            status: string,
+            date: Date,
+            accepted_at: Date,
+            declined_at: Date
         }
     ]
 }
