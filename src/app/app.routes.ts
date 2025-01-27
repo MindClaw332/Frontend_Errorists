@@ -8,6 +8,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { teacherGuard } from './guards/teacher.guard';
 import { adminGuard } from './guards/admin.guard';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { BatchaddComponent} from './batchadd/batchadd.component'
 
 export const routes: Routes = [
 
@@ -38,6 +39,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'register',
+        component: BatchaddComponent,
     },
 
     {
