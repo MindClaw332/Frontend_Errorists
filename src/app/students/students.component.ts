@@ -30,7 +30,8 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   id: number = 1;
   student = this.userdata.specificstudent();
-  groups = this.groupdata.groups
+  students = this.userdata.users;
+  groups = this.groupdata.groups;
   testresults = this.testresultdata.results;
 
   constructor(private route: ActivatedRoute) {
@@ -63,9 +64,12 @@ export class StudentsComponent implements OnInit, OnDestroy {
     console.log(this.student, 'students na load')
     await this.groupdata.loadGroups();
     this.groups.set(this.groupdata.groups());
-    console.log(this.groups(), 'groups na load')
+    console.log(this.groups(), 'groups na load');
     this.testresultdata.loadResults(this.id);
     console.log(this.id);
+    await this.userdata.loadUsers();
+    this.students.set(this.userdata.users());
+    console.log(this.students(), 'students');
 
     // Filter on ACCEPTED groups from student
     this.filteredGroups = this.student?.groups.filter(group => group.status === 'ACCEPTED') || [];
@@ -97,6 +101,11 @@ export class StudentsComponent implements OnInit, OnDestroy {
   test(){
     console.log(this.student, 'wanneer alles gecalled word');
     console.log(this.testresults, 'wanneer alles gecalled word');
+  }
+
+  findUser(id: number) {
+    let user = this.students().filter(student => student.id === id);
+    return user;
   }
 
   // Groups tests per course
@@ -138,6 +147,12 @@ export class StudentsComponent implements OnInit, OnDestroy {
     let totalMaxvalue = testResults.reduce((sum, test) => sum + test.maxvalue, 0);
     let average = (totalValue / totalMaxvalue) * 100;
     return Math.round(average);
+  }
+
+  // Get percentage for a test
+  getTestScore(value: number, maxvalue: number) {
+    let testScore = (value/maxvalue)*100
+    return testScore;
   }
 
   // Colour depending on score

@@ -58,15 +58,15 @@
                             [ngClass]="GetClassColor(getAverage(test.tests))">
                                 {{getAverage(test.tests)}}%
                             </div>
-                        <div class="flex flex-wrap p-1 w-3/5 justify-start bg-secondary-light dark:bg-secondary hover:bg-tertiary-light dark:hover:bg-tertiary rounded-xl shadow-lg">
-                            <button (click)="viewCourses()" (click)="selectCourse(test.id)">{{test.coursename}}</button>
-                        </div>
+                        <button (click)="viewCourses()" (click)="selectCourse(test.id)" class="flex flex-wrap p-1 w-3/5 justify-start bg-secondary-light dark:bg-secondary hover:bg-tertiary-light dark:hover:bg-tertiary rounded-xl shadow-lg">
+                            <div>{{test.coursename}}</div>
+                        </button>
                     </div>
                 }
             </div>
             <!--all tests from a course + score-->
             <div class="flex flex-col flex-grow">
-                <div class="flex flex-wrap flex-col w-2/3 flex-grow p-2 m-2 ml-1 lg:ml-5 text-white" [class.hidden]="isHidden">
+                <div class="flex flex-wrap flex-col w-2/3 flex-grow p-2 m-2 ml-1 lg:ml-5 text-white" [class.hidden]="isHidden">        
                     <button class="flex flex-wrap fixed bg-secondary-light dark:bg-secondary justify-center w-1/4 lg:w-1/6 ml-12 lg:ml-0 rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary" (click)="viewTests()">
                         @for(test of selectedCourse; track test) {
                             {{test.coursename}}
@@ -80,7 +80,8 @@
                                 <div class="flex flex-wrap p-1 w-3/5 justify-start mr-10 ml-8 lg:ml-0 bg-secondary-light dark:bg-secondary rounded-xl shadow-lg">
                                     {{test.testname}}
                                 </div>
-                                <div class="flex flex wrap p-1 w-1/6 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl shadow-lg">
+                                <div class="flex flex wrap p-1 w-1/6 justify-center dark:text-primary bg-accent-green-light dark:bg-accent-green rounded-xl shadow-lg"
+                                [ngClass]="GetClassColor(getTestScore(test.value, test.maxvalue))">
                                     {{test.value}}/{{test.maxvalue}}
                                 </div>
                             </div>
@@ -94,13 +95,15 @@
     <div class="flex flex-wrap scrollbar-none overflow-y-auto z-0 h-1/4 p-2 mt-10 content-start ml-10 lg:ml-0 justify-self-start lg:justify-self-center bg-secondary-light dark:bg-secondary rounded-xl w-4/5 shadow-lg" [class.hidden]="calendarVisible">
         <div class="flex flex-wrap flex-col w-full text-white">
             @if(filteredGroups.length === 0) {
-                <div class="text-white">No groups yet</div>
+                <div class="flex text-white p-2 justify-center">No groups yet.</div>
             } @else {
                 @for(groups of filteredGroups; track groups) {
-                    <div class="flex flex-wrap flex-row justify-evenly content-center m-1 bg-tertiary-light dark:bg-tertiary rounded-xl">
+                    <div class="flex flex-wrap flex-row justify-evenly content-center m-1 p-2 bg-tertiary-light dark:bg-tertiary rounded-xl">
                         <div class="flex flex wrap w-1/4 justify-start">{{groups.course_name}}</div>
-                        <div class="flex flex-wrap w-1/4 justify-center hidden sm:block"></div>
-                        <div class="flex flex-wrap w-1/4 justify-end">{{groups.user2_id}}</div>
+                        @for (student of findUser(groups.user2_id); track student) {
+                            <div class="flex flex-wrap w-1/4 justify-center hidden sm:block">{{student.class}}</div>
+                            <div class="flex flex-wrap w-1/4 justify-end">{{student.firstname}} {{student.lastname}}</div>
+                        }
                     </div>
                 }
             }
