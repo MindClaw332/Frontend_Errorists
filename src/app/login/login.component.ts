@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from '../shared/login.service';
 import { Router } from '@angular/router';
@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   showpassword: boolean = true;
   inputtype: string = 'password'
   loggedin = this.auth.isloggedin();
+  wrongAttempt = signal(false);
 
   //reactiveform declaration
   loginform = new FormGroup({
@@ -40,6 +41,9 @@ export class LoginComponent implements OnInit {
     if (result.message === 'valid credentials') {
       this.redirect(user.role_id, user.user_id);
 
+    } else {
+      this.wrongAttempt.set(true);
+      this.loginform.get('password')?.reset();
     }
   }
 
