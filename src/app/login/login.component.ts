@@ -1,6 +1,6 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
-import { LoginService } from '../login.service';
+import { LoginService } from '../shared/login.service';
 import { Router } from '@angular/router';
 import { PairingService } from '../shared/pairing.service';
 

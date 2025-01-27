@@ -1,7 +1,7 @@
 import { Component, inject, numberAttribute, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { LoginService } from '../login.service';
+import { LoginService } from '../shared/login.service';
 import { first } from 'rxjs';
 import { Route, Router } from '@angular/router';
 import { ClassdataService } from '../shared/classdata.service';

@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { LoginService } from '../login.service';
+import { LoginService } from './login.service';
 import { elementAt, retry } from 'rxjs';
 import { Pairinggroup } from '../interfaces/pairinggroup';
 import { Pairinguser } from '../interfaces/pairinguser';

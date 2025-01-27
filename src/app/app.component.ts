@@ -2,7 +2,7 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core'
 import { LoginComponent } from './login/login.component';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { LoginService } from './login.service';
+import { LoginService } from './shared/login.service';
 import { JsonPipe } from '@angular/common';
 @Component({
   selector: 'app-root',

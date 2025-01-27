@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Logindata } from './interfaces/logindata';
+import { Logindata } from '../interfaces/logindata';
 import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
