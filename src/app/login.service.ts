@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Logindata } from './interfaces/logindata';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,16 +9,22 @@ import { Logindata } from './interfaces/logindata';
 export class LoginService {
   // signals to keep check on state in other components
   isloggedin = signal<boolean>(false);
-  currentuser = signal<any>(null);
+  currentUser = signal<any>(null);
+  private eventSource = new BehaviorSubject<boolean>(false);
+  signal$ = this.eventSource.asObservable();
   // login url
   private apiurl: string = 'http://127.0.0.1:8000/api/';
   constructor() { }
+
+  sendSignal(status:boolean){
+    this.eventSource.next(status)
+  }
   // login function which you pass username/email and password parameters
   async login(username: string, password: string) {
     // turn parameters into variable
     const logindata = {
       "email": username,
-      "password": password
+      "password": password,
     };
     try {
       // make post request
@@ -32,12 +39,13 @@ export class LoginService {
       const result = await response.json();
       // if the response is not an error code set the currentuser signal to the returned user
       if (response.ok) {
-        this.currentuser.set({
+        const userdata = {
           "user_id": result.user_id,
-          "role_id": result.role_id
-        })
-        // set the loggedin signal to true
-        this.isloggedin.set(true);
+          "role_id": result.role_id,
+        }
+        sessionStorage.setItem("user", JSON.stringify(userdata));
+        sessionStorage.setItem("isLoggedIn", "true");
+        this.sendSignal(true);
       }
       return result;
     }
@@ -72,5 +80,11 @@ export class LoginService {
       console.error('error registering user', error);
       throw error;
     }
+  }
+
+  logout(){
+    sessionStorage.clear();
+    this.isloggedin.set(false);
+    console.log(this.isloggedin())
   }
 }

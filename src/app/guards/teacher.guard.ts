@@ -7,9 +7,11 @@ import { LoginService } from '../login.service';
 })
 export class teacherGuard implements CanActivate {
   constructor(private auth: LoginService, private router: Router) { }
+  
   // just check if we have a user and they are logged in otherwise redirect to login page
   canActivate(): boolean {
-    if(this.auth.currentuser().role_id === 2){
+    const user = JSON.parse(sessionStorage.getItem('user')!)
+    if(user.role_id === 2){
       return true;
     }
     return false;

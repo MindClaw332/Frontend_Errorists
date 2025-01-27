@@ -13,11 +13,6 @@ import { BatchaddComponent} from './batchadd/batchadd.component'
 export const routes: Routes = [
 
     {
-        path: 'groups',
-        component: GroupsComponent,
-        canActivate: [AuthGuard, teacherGuard],
-    },
-    {
         path: 'points',
         component: PointsComponent,
         canActivate: [AuthGuard]
@@ -30,6 +25,11 @@ export const routes: Routes = [
         path: 'students/:id',
         component: StudentsComponent,
         canActivate: [AuthGuard],
+    },
+    {
+        path: 'groups/:id',
+        component: GroupsComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'dashboard',
@@ -50,5 +50,9 @@ export const routes: Routes = [
         redirectTo: '/login',
         pathMatch: 'full'
     },
+    {
+        path: '**',
+        component: UnauthorizedComponent
+    }
 
 ];

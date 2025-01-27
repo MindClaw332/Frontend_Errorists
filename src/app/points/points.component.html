@@ -7,19 +7,19 @@
     <div class="flex flex-wrap mb-16" [class.hidden]="isHidden"> </div>
 
     <!--search tests-->
-    <div class="flex flex-wrap justify-evenly">
+    <div class="flex flex-wrap justify-evenly mt-16">
         <label for="search">
             <div class="flex flex-wrap m-2" [class.hidden]="isVisible">
                 <input id="search" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" 
-                type="text" (input)="onInputChange()" [(ngModel)]="search">
+                type="text" [(ngModel)]="searchTests">
             </div>
         </label>
         <label for="filter">
             <div class="flex flex-wrap m-2" [class.hidden]="isVisible">
-                <select id="filter" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" (change)="filterCourses(filter)" [(ngModel)]="filter">
+                <select id="filter" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" [(ngModel)]="filterCourses">
                     <option>Alle vakken</option>
-                    @for (course of courses; track course.id) {
-                        <option id="{{course.id}}">{{course.name}}</option>
+                    @for (course of courses(); track course.id) {
+                        <option id="{{course.name}}">{{course.name}}</option>
                     }
                 </select>
             </div>
@@ -28,46 +28,42 @@
 
     <!--tests-->
     <div class="flex flex-wrap justify-center" [class.hidden]="isVisible">
-        <div class="flex flex-wrap flex-rol justify-center w-9/12 overflow-y-auto h-96">
-            @if (searched.length > 0) {
-                @for (test of searched; track test.id) {
+        <div class="flex flex-wrap flex-rol justify-center w-9/12 h-96 overflow-y-auto scrollbar-none">
+                @for (test of searchedTests(); track test) {
                     <div class="w-2/3 m-2 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                        <button id="{{test.id}}" (click)="viewPoints()" (click)="displayStudents(test.id)" (click)="selectTest(test)">{{test.name}}</button>
+                        <button id="{{test.id}}" (click)="viewPoints()" (click)="selectTest(test.id)">{{test.name}}</button>
                     </div>
                 }
-            } @else {
-                <div class="flex flex-wrap justify-center flex-row m-2 text-white">No tests found.</div>
-            }
         </div>
     </div>
 
     <!--test/back button-->
     @if (selectedTest != null) {
         <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
-            <div class="flex flex-wrap w-9/12">
+            <div class="flex flex-wrap w-9/12 mt-20">
+                @for (test of selectedTest; track test) {
                 <div class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                    <button (click)="viewTests()">{{selectedTest.name}}</button>
+                    <button (click)="viewTests()">{{test.name}}</button>
                 </div>
+                }
             </div>
         </div>
     }
 
     <!--student and points-->
     <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
-        <div class="flex flex-wrap flex-col w-9/12 overflow-y-auto h-96">
-            @if (filteredStudents.length > 0) {
-                @for (filteredStudent of filteredStudents; track filteredStudent.id) {
-                    <div class="flex flex-wrap justify-evenly flex-row m-2">
+        <div class="flex flex-wrap w-9/12 mt-2 scrollbar-none overflow-y-auto h-96">
+            @for (selected of selectedTest; track selected) {
+                @for (test of selected.users; track test) {
+                    <div class="flex flex-wrap justify-evenly flex-row w-full m-2">
                         <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                            {{filteredStudent.firstname}} {{filteredStudent.lastname}}
+                            {{test.firstname}} {{test.lastname}}
                         </div>
                         <div class="w-1/6 p-2 flex justify-center self-center bg-accent-green-light dark:bg-accent-green text-white dark:text-primary rounded-xl">
-                            {{filteredStudent.value}}/{{filteredStudent.maxvalue}}
+                            {{test.value}}/{{selected.maxvalue}}
                         </div>
                     </div>
                 }
-            } @else {
-                <div class="flex flex-wrap justify-evenly flex-row m-2 text-white">No Students results found.</div>
             }
         </div>
     </div>
