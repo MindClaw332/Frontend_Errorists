@@ -1,5 +1,5 @@
-import { Component, inject, numberAttribute } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, numberAttribute, viewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../login.service';
 import { first } from 'rxjs';
@@ -9,14 +9,17 @@ import { Class } from '../interfaces/class';
 import { CoursedataService } from '../shared/coursedata.service';
 import { Course } from '../interfaces/course';
 import { TestdataService } from '../shared/testdata.service';
+import { ViewChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-batchadd',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ],
   templateUrl: './batchadd.component.html',
   styleUrl: './batchadd.component.css'
 })
-export class BatchaddComponent {
+export class BatchaddComponent{
 
   private registrationdata = inject(LoginService);
   private classdata = inject(ClassdataService);
@@ -35,13 +38,23 @@ export class BatchaddComponent {
 
   //constructor
   constructor(private router: Router) {
-    this.classdata.loadClasses();
-    this.coursedata.loadCourses();
+    this.initializeData();
   }
-  async initializeClasses() {
-    await this.classdata.loadClasses();
-    await this.coursedata.loadCourses();
+
+  private async initializeData()
+  {
+    try{
+      await Promise.all([
+        this.classdata.loadClasses(),
+        this.coursedata.loadCourses()
+      ]);
+    }
+    catch(error)
+    {
+      console.error('Error loading initial data:', error);
+    }
   }
+ 
 
   getClasses(): Class[] {
     return this.classes() || [];
@@ -51,6 +64,45 @@ export class BatchaddComponent {
   {
     return this.courses() || [];
   }
+
+  //Form resets 
+  //Users
+  @ViewChild('firstName') firstName?: ElementRef;
+  @ViewChild('lastName') lastName?: ElementRef;
+  @ViewChild('email') email?: ElementRef;
+  @ViewChild('password') password?: ElementRef;
+  @ViewChild('klas') klas?: ElementRef;
+  @ViewChild('role') role?: ElementRef;
+
+  //Tests
+  @ViewChild('vak') vak?: ElementRef;
+  @ViewChild('klastest') klastest?: ElementRef;
+  @ViewChild('testName') testName?: ElementRef;
+  @ViewChild('score') score?: ElementRef;
+  @ViewChild('hours') hours?: ElementRef;
+
+  //Reset User Function
+  resetUserForm(): void
+  {
+    if (this.firstName) this.firstName.nativeElement.value = '';
+    if (this.lastName) this.lastName.nativeElement.value = '';
+    if (this.email) this.email.nativeElement.value = '';
+    if (this.password) this.password.nativeElement.value = '';
+    if (this.klas) this.klas.nativeElement.value = 'null';
+    if (this.role) this.role.nativeElement.value = '';
+  }
+
+  //Reset Test Function
+  resetTestFrom(): void
+  {
+    if (this.vak) this.vak.nativeElement.value = '';
+    if (this.klastest) this.klastest.nativeElement.value = '';
+    if (this.testName) this.testName.nativeElement.value = '';
+    if (this.score) this.score.nativeElement.value = '';
+    if (this.hours) this.hours.nativeElement.value = '';
+  }
+
+
   //function to add users to the data base 
   async addUser(firstName: string, lastName: string, password: string, klas: number | null, email: string, role: number) {
     try {
@@ -63,6 +115,7 @@ export class BatchaddComponent {
         klas
       );
       console.log('Gebruiker aangemaakt', result);
+      this.resetUserForm();
     }
     catch (error) {
       console.error('Er is een probleem met het aanmaken van gebruikers', error);
@@ -80,6 +133,7 @@ export class BatchaddComponent {
       hours,
     )
     console.log('Test aangemaakt', result);
+    this.resetTestFrom();
    }
    catch(error)
    {
