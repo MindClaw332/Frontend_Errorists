@@ -43,7 +43,7 @@
     <!--Request list-->
     @if(!isRequestMod) {
         <div class="flex flex-col items-center space-y-4 pt-4">
-                @if(filteredGroups?.length === 0) { 
+                @if(filteredGroups.length === 0) { 
                     <div>No groups found.</div>
                 } @else {
                     @for (group of filteredGroups; track group) {

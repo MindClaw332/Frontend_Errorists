@@ -16,8 +16,10 @@ private coursedata = inject(CoursedataService);
 
 tests = this.testdata.tests;
 courses = this.coursedata.courses;
+chosenId = signal("0");
 
 isHovered = false;
+
 
 constructor () {
   this.testdata.loadTests();
@@ -38,22 +40,28 @@ searchTests = signal('');
 
 searchedTests = computed(() => {
   const searchquery = this.searchTests().toLowerCase();
+  const chosenId = parseInt(this.chosenId())
+  if(chosenId !== 0){
+    let filteredTests =  this.tests().filter(test => test.name.toLowerCase().includes(searchquery) && test.course_id === chosenId);
+    return filteredTests;
+  }
   let filteredTests = this.tests().filter(test => test.name.toLowerCase().includes(searchquery));
+
   return filteredTests;
 });
 
 //filter by course
 filter = signal('');
 
-filterCourses = computed(() => {
-  const searchquery = this.filter().toLowerCase();
-  let filteredCourse = this.courses().find(course => 
-    course.name.toLocaleLowerCase().includes(searchquery));
-  console.log(filteredCourse);
+// filterCourses = computed(() => {
+//   const searchquery = this.filter().toLowerCase();
+//   let filteredCourse = this.courses().find(course => 
+//     course.name.toLocaleLowerCase().includes(searchquery));
+//   console.log(filteredCourse);
 
-  let filteredByCourse = this.tests().filter(test => test.course_id === filteredCourse?.id);
-  console.log(filteredByCourse);
-});
+//   let filteredByCourse = this.tests().filter(test => test.course_id === filteredCourse?.id);
+//   console.log(filteredByCourse);
+// });
 
 // Visibility
 isHidden = true;

@@ -17,10 +17,10 @@
         <label for="filter">
             <div class="flex flex-wrap m-2" [class.hidden]="isVisible">
                 <select id="filter" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary shadow-lg" 
-                [(ngModel)]="filterCourses">
-                    <option>Alle vakken</option>
+                [(ngModel)]="chosenId">
+                    <option ngValue = 0>Alle vakken</option>
                     @for (course of courses(); track course.id) {
-                        <option id="{{course.name}}">{{course.name}}</option>
+                        <option ngValue={{course.id}} id="{{course.name}}">{{course.name}}</option>
                     }
                 </select>
             </div>
