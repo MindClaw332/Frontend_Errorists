@@ -28,6 +28,7 @@ private routeSub!: Subscription;
 
 courses = this.coursedata.courses;
 student = this.studentdata.specificstudent();
+students = this.studentdata.users;
 groups = this.groupdata.groups;
 
 
@@ -77,7 +78,7 @@ constructor (private route: ActivatedRoute) {
   }
 
 // On load
-filteredGroups: any[] = [];
+filteredGroups: {group_id: number; group_name: string; user1_id: number; user2_id: number; tutor: number; course_name: string; status: string; date: string; accepted_at: string; declined_at: string;}[] | undefined;
 
 async ngOnInit() {
   // Load the student info
@@ -90,9 +91,13 @@ async ngOnInit() {
   console.log(this.student, 'students na load');
   this.student = this.studentdata.specificstudent();
   console.log(this.student, 'test');
+  await this.studentdata.loadUsers();
+  this.students.set(this.studentdata.users());
+  console.log(this.students(), 'students');
 
   // Filter on status pending and tutor
-  this.filteredGroups = this.student?.groups.filter(group => group.status === 'PENDING' && group.tutor === 1) || [];
+  this.filteredGroups = this.student?.groups.filter(group => group.status === 'PENDING' || group.status === 'ACCEPTED')
+  .filter(group => group.tutor === 1 && group.date === null) || [];
 
   //Initialize visibility for all groups
   this.student?.groups.forEach(group => {
@@ -104,6 +109,22 @@ async ngOnInit() {
       hidden: true
     }
   });
+
+  this.filteredGroups.forEach(group => this.acceptedGroups(group.group_id, group.status));
+}
+
+findUser(id: number) {
+  let user = this.students().filter(student => student.id === id);
+  return user;
+}
+
+acceptedGroups(id: number, status: string) {
+  if (status === 'ACCEPTED') {
+    this.groupVisibility[id].isVisible = !this.groupVisibility[id].isVisible;
+    this.groupVisibility[id].isHidden = !this.groupVisibility[id].isHidden;
+  } else {
+    return
+  }
 }
 
 // Calendar logic
