@@ -1,6 +1,6 @@
 <body class="bg-primary-light dark:bg-primary h-screen">
 
-    <div class="flex flex-wrap justify-start p-3 mb-16">
+    <div class="flex flex-wrap justify-start p-3 mb-24">
         <!-- <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45"
             height="45" viewBox="0 0 16 16">
             <path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -34,7 +34,7 @@
 
     <!--search class-->
     <label for="searchClasses">
-        <div class="flex flex-wrap justify-center m-2" [class.hidden]="isVisible">
+        <div class="flex flex-wrap justify-center m-2 mb-3" [class.hidden]="isVisible">
             <div class="flex flex-wrap w-9/12">
                 <input
                     class="w-screen p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg outline-secondary-light dark:outline-secondary"
@@ -53,9 +53,9 @@
                     [ngClass]="GetClassColor(student.average)">
                     {{student.average}}%
                 </div>
-                <div class="w-2/3 h-10 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
-                    <button (click)="RedirectToStudent(student.id)">{{student.firstname}} {{student.lastname}}</button>
-                </div>
+                <button (click)="RedirectToStudent(student.id)" class="w-2/3 h-10 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
+                    <div>{{student.firstname}} {{student.lastname}}</div>
+                </button>
             </div>
             }
             } @else {
@@ -69,11 +69,11 @@
         <div class="flex flex-wrap flex-col w-9/12 overflow-y-auto h-96">
             <div class="flex flex-wrap justify-evenly gap-3 flex-row">
                 @for (class of searchedClasses(); track class.id) {
-                <div class="w-2/5 p-2 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
-                    <button (click)="viewStudents()" (click)="SetStudentFilter(class.id)" (click)="selectClass(class)">
+                <button (click)="viewStudents()" (click)="SetStudentFilter(class.id)" (click)="selectClass(class)" class="w-2/5 p-2 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
+                    <div>
                         {{class.name}}
-                    </button>
-                </div>
+                    </div>
+                </button>
                 }
             </div>
         </div>
