@@ -28,6 +28,7 @@ private routeSub!: Subscription;
 
 courses = this.coursedata.courses;
 student = this.studentdata.specificstudent();
+students = this.studentdata.users;
 groups = this.groupdata.groups;
 
 
@@ -90,6 +91,9 @@ async ngOnInit() {
   console.log(this.student, 'students na load');
   this.student = this.studentdata.specificstudent();
   console.log(this.student, 'test');
+  await this.studentdata.loadUsers();
+  this.students.set(this.studentdata.users());
+  console.log(this.students(), 'students');
 
   // Filter on status pending and tutor
   this.filteredGroups = this.student?.groups.filter(group => group.status === 'PENDING' || group.status === 'ACCEPTED')
@@ -107,6 +111,11 @@ async ngOnInit() {
   });
 
   this.filteredGroups.forEach(group => this.acceptedGroups(group.group_id, group.status));
+}
+
+findUser(id: number) {
+  let user = this.students().filter(student => student.id === id);
+  return user;
 }
 
 acceptedGroups(id: number, status: string) {

@@ -15,7 +15,9 @@ private testdata = inject(TestdataService);
 private coursedata = inject(CoursedataService);
 
 tests = this.testdata.tests;
-courses = this.coursedata.courses
+courses = this.coursedata.courses;
+
+isHovered = false;
 
 constructor () {
   this.testdata.loadTests();
@@ -45,13 +47,12 @@ filter = signal('');
 
 filterCourses = computed(() => {
   const searchquery = this.filter().toLowerCase();
-  const filteredCourse = this.courses().find(course => 
-    course.name.toLocaleLowerCase().includes(searchquery)
-  );
-  if (!filteredCourse) return [];
+  let filteredCourse = this.courses().find(course => 
+    course.name.toLocaleLowerCase().includes(searchquery));
+  console.log(filteredCourse);
 
-  const filteredTests = this.tests().filter(test => test.course_id === filteredCourse.id);
-  return filteredTests;
+  let filteredByCourse = this.tests().filter(test => test.course_id === filteredCourse?.id);
+  console.log(filteredByCourse);
 });
 
 // Visibility
