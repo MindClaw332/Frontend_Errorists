@@ -26,7 +26,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
   private groupdata = inject(GroupdataService);
   private testresultdata = inject(ResultdataService);
   private pairingdata = inject(PairingService);
-  private routeSub!: Subscription;
+  private routeSub!: Subscription; 
 
   id: number = 1;
   student = this.userdata.specificstudent();
@@ -36,19 +36,9 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute) {
   }
+  
 
-  checkedDate: [{ 
-    group_id: number;
-    group_name: string;
-    user1_id: number;
-    user2_id: number;
-    tutor: number;
-    course_name: string;
-    status: string;
-    date: string;
-    accepted_at: string;
-    declined_at: string;
-  }] | undefined ;
+  checkedDate: Array<any>= [];
   
   groupVisibility: { [key: number]: { isHidden: boolean; isVisible: boolean } } = {};
   filteredGroups: any[] = [];
@@ -59,6 +49,8 @@ export class StudentsComponent implements OnInit, OnDestroy {
       this.id = params['id'];
       console.log(this.id, 'na sub');
     })
+    // refactor to one api call
+
     await this.userdata.loadStudent(this.id);
     this.student = this.userdata.specificstudent();
     console.log(this.student, 'students na load')
@@ -78,11 +70,14 @@ export class StudentsComponent implements OnInit, OnDestroy {
     this.student?.groups.filter(groups => groups.tutor === 1 && groups.accepted_at !== null)
     .forEach(group => {
       if (this.pairingdata.calculateCurrentDateDiff(group.accepted_at) >= 7) {
+        console.log('HEYY LANGE GROEP')
         this.checkedDate?.push(group);
+        console.log(this.checkedDate,'checked date')
       }
     });
 
     this.checkedDate?.forEach(group => {
+      console.log('groupje', group)
       this.groupVisibility[group.group_id] = {
         isHidden: true,  // Initial state: true
         isVisible: false // Initial state: false
@@ -136,7 +131,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
       tests,
     }));
 
-    console.log(iterableGroupedTests);
+    console.log(iterableGroupedTests,"hoe groeped tests eruit moet zien");
 
     return iterableGroupedTests;
   });
@@ -274,7 +269,8 @@ export class StudentsComponent implements OnInit, OnDestroy {
       await this.pairingdata.acceptDate(groupId, groupName, courseId, this.formattedDate);
     }
 
-    this.calendarVisible = false;
+     this. groupVisibility[groupId].isHidden = !this. groupVisibility[groupId].isHidden;
+     this.calendarVisible = false;
   }
 
   async setLater (groupId: number, courseName: string) {
@@ -291,7 +287,8 @@ export class StudentsComponent implements OnInit, OnDestroy {
       await this.pairingdata.accept(groupId, groupName, courseId);
     }
 
-    this.calendarVisible = false;
+    this. groupVisibility[groupId].isHidden = !this. groupVisibility[groupId].isHidden;
+     this.calendarVisible = false;
   }
 
   async declineTutee(groupId: number, courseName: string) {
@@ -308,6 +305,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
       await this.pairingdata.decline(groupId, groupName, courseId);
     }
 
-    this.calendarVisible = false;
+    this. groupVisibility[groupId].isHidden = !this. groupVisibility[groupId].isHidden;
+     this.calendarVisible = false;
   }
 }
