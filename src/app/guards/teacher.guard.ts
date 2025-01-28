@@ -6,7 +6,7 @@ import { LoginService } from '../shared/login.service';
   providedIn: 'root'
 })
 export class teacherGuard implements CanActivate {
-  constructor(private auth: LoginService, private router: Router) { }
+  constructor() { }
   
   // just check if we have a user and they are logged in otherwise redirect to login page
   canActivate(): boolean {

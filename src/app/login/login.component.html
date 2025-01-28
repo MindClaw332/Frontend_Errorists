@@ -24,10 +24,12 @@
                     </svg></button>
             </div>
             <!-- checkbox will probably be removed -->
-            <div class="flex items-center">
-                <input type="checkbox" id="leerkracht" class="w-4 h-4 rounded border-gray-300">
-                <label for="leerkracht" class="ml-2 text-black dark:text-gray-300 font-mono">Leerkracht</label>
-            </div>
+             @if (wrongAttempt()) {
+                <div class="flex items-center text-red-700">
+                    <p>incorrect email or password, try again</p>
+                </div>
+             }
+
             <!-- submit button which is disabled when the reactiveform is not validated -->
             <button [disabled]="!loginform.valid" type="submit"
                 class="disabled:opacity-50 disabled:cursor-not-allowed  bg-secondary-light dark:bg-secondary text-gray-300 py-2 px-4 rounded-md   hover:bg-tertiary dark:hover:bg-tertiary-light transition-color font-mono">Login</button>
