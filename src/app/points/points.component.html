@@ -1,7 +1,7 @@
 <body class="bg-primary-light dark:bg-primary h-screen">
     <!--menu button-->
-    <div class="flex flex-wrap justify-start p-3 mb-10" [class.hidden]="isVisible">
-        <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45" height="45" viewBox="0 0 16 16"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg>
+    <div class="flex flex-wrap justify-start p-3 mb-24" [class.hidden]="isVisible">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45" height="45" viewBox="0 0 16 16"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5"/></svg> -->
     </div>
 
     <div class="flex flex-wrap mb-16" [class.hidden]="isHidden"> </div>
@@ -10,13 +10,14 @@
     <div class="flex flex-wrap justify-evenly mt-16">
         <label for="search">
             <div class="flex flex-wrap m-2" [class.hidden]="isVisible">
-                <input id="search" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" 
+                <input id="search" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary shadow-lg" 
                 type="text" [(ngModel)]="searchTests">
             </div>
         </label>
         <label for="filter">
             <div class="flex flex-wrap m-2" [class.hidden]="isVisible">
-                <select id="filter" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary" [(ngModel)]="filterCourses">
+                <select id="filter" class="p-2 bg-secondary-light dark:bg-secondary text-white rounded-xl outline-secondary-light dark:outline-secondary shadow-lg" 
+                [(ngModel)]="filterCourses">
                     <option>Alle vakken</option>
                     @for (course of courses(); track course.id) {
                         <option id="{{course.name}}">{{course.name}}</option>
@@ -28,11 +29,11 @@
 
     <!--tests-->
     <div class="flex flex-wrap justify-center" [class.hidden]="isVisible">
-        <div class="flex flex-wrap flex-rol justify-center w-9/12 h-96 overflow-y-auto scrollbar-none">
+        <div class="flex flex-wrap flex-rol justify-center w-full h-96 overflow-y-auto scrollbar-none">
                 @for (test of searchedTests(); track test) {
-                    <div class="w-2/3 m-2 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                        <button id="{{test.id}}" (click)="viewPoints()" (click)="selectTest(test.id)">{{test.name}}</button>
-                    </div>
+                    <button id="{{test.id}}" (click)="viewPoints()" (click)="selectTest(test.id)" class="w-2/3 m-2 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
+                        <div>{{test.name}}</div>
+                    </button>
                 }
         </div>
     </div>
@@ -42,9 +43,10 @@
         <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
             <div class="flex flex-wrap w-9/12 mt-20">
                 @for (test of selectedTest; track test) {
-                <div class="w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
-                    <button (click)="viewTests()">{{test.name}}</button>
-                </div>
+                <button (click)="viewTests()" class="w-1/3 lg:w-1/6 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary" 
+                (mouseover)="isHovered = true" (mouseleave)="isHovered = false">
+                    {{ isHovered ? 'Terug' : test.name }}
+                </button>
                 }
             </div>
         </div>
@@ -52,14 +54,15 @@
 
     <!--student and points-->
     <div class="flex flex-wrap justify-center" [class.hidden]="isHidden">
-        <div class="flex flex-wrap w-9/12 mt-2 scrollbar-none overflow-y-auto h-96">
+        <div class="flex flex-wrap w-4/5 mt-2 scrollbar-none overflow-y-auto h-96">
             @for (selected of selectedTest; track selected) {
                 @for (test of selected.users; track test) {
                     <div class="flex flex-wrap justify-evenly flex-row w-full m-2">
-                        <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl">
+                        <div class="w-2/3 p-2 flex self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg">
                             {{test.firstname}} {{test.lastname}}
                         </div>
-                        <div class="w-1/6 p-2 flex justify-center self-center bg-accent-green-light dark:bg-accent-green text-white dark:text-primary rounded-xl">
+                        <div class="w-1/6 p-2 flex justify-center self-center bg-accent-green-light dark:bg-accent-green text-white dark:text-primary rounded-xl shadow-lg"
+                        [ngClass]="GetClassColor(getTestScore(test.value, selected.maxvalue))">
                             {{test.value}}/{{selected.maxvalue}}
                         </div>
                     </div>

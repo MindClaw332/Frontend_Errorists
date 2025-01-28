@@ -1,12 +1,5 @@
 @if (manualLogIn()) {
 <div class=" fixed text-white">
-        <!-- <div class="flex flex-wrap justify-start p-3 mb-10 absolute"> -->
-        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="bg-secondary-light dark:bg-secondary p-1 rounded-xl" width="45"
-        height="45" viewBox="0 0 16 16">
-        <path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M2.75 12.25h10.5m-10.5-4h10.5m-10.5-4h10.5" />
-    </svg> -->
-        <!-- </div> -->
         <!-- navbar still needs styling -->
         @if (isMenuOpen()) {
         <button class="text-3xl mt-7 ml-3 z-50 relative" (click)="toggleMenu()">✕</button>
@@ -14,35 +7,72 @@
         <button class="text-3xl mt-7 ml-3 z-40 relative" (click)="toggleMenu()">☰</button>
         }
         @if (manualUser().role_id === 2) {
+        <nav class="fixed top-0 bg-secondary text-white transform transition-transform duration-300 ease-in-out w-screen"
+                [class.translate-x-0]="isMenuOpen()" [class.-translate-x-full]="!isMenuOpen()">
+                <ul class="flex flex-wrap justify-evenly m-8 text-xl md:flex-nowrap md:justify-between pr-5 pl-5">
+
+                        <li>
+                                <a routerLink="/groups" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline">groups</a>
+                        </li>
+                        <li>
+                                <a routerLink="/points" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline">points</a>
+                        </li>
+                        <li>
+                                <a routerLink="/students" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline">students</a>
+                        </li>
+                        <li>
+                                <a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline">dashboard</a>
+                        </li>
+                        <li>
+                                <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline" (click)="logout()">log out</a>
+                        </li>
+                </ul>
+        </nav>
+
+        } @else if (manualUser().role_id === 1) {
         <nav class="fixed top-0  bg-secondary text-white transform transition-transform duration-300 ease-in-out w-screen"
                 [class.translate-x-0]="isMenuOpen()" [class.-translate-x-full]="!isMenuOpen()">
-                <ul class="flex justify-evenly m-8 text-xl">
-                        <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">login</a></li>
-                        <li><a routerLink="/groups" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">groups</a></li>
-                        <li><a routerLink="/points" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">points</a></li>
-                        <li><a routerLink="/students" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">students</a></li>
-                        <li><a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">dashboard</a></li>
+                <ul class="flex flex-wrap justify-evenly m-8 text-xl md:flex-nowrap md:justify-between pr-5 pl-5">
+                        <li><a [routerLink]="['/groups/', manualUser().user_id]" routerLinkActive="active"
+                                        ariaCurrentWhenActive="page" class="hover:underline">groups</a></li>
+                        <li><a [routerLink]="['/students/', manualUser().user_id]" routerLinkActive="active"
+                                        ariaCurrentWhenActive="page" class="hover:underline">dashboard</a></li>
                         <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page"
                                         class="hover:underline" (click)="logout()">log out</a></li>
                 </ul>
         </nav>
         } @else if (manualUser().role_id === 1) {
-        <nav class="fixed top-0  bg-secondary text-white transform transition-transform duration-300 ease-in-out w-screen"
-                [class.translate-x-0]="isMenuOpen()" [class.-translate-x-full]="!isMenuOpen()">
-                <ul class="flex justify-evenly m-8 text-xl">
-                        <li><a [routerLink]="['/groups/', manualUser().user_id]" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline" >groups</a></li>
-                        <li><a [routerLink]="['/students/', manualUser().user_id]" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">dashboard</a></li>
-                        <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline" (click)="logout()">log out</a></li>
-                </ul>
-        </nav>
+        <ul>
+                <li>
+                        <a routerLink="/admin" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                class="hover:underline">groups</a>
+                </li>
+                <li>
+                        <a routerLink="/groups" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                class="hover:underline">groups</a>
+                </li>
+                <li>
+                        <a routerLink="/points" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                class="hover:underline">points</a>
+                </li>
+                <li>
+                        <a routerLink="/students" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                class="hover:underline">students</a>
+                </li>
+                <li>
+                        <a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                class="hover:underline">dashboard</a>
+                </li>
+                <li>
+                        <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                class="hover:underline" (click)="logout()">log out</a>
+                </li>
+        </ul>
         }
 
 </div>

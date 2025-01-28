@@ -6,12 +6,10 @@
         </button>
     </div>
 
-    <div class="flex mt-10"> </div>
-
     <!--Request From-->
     @if(isRequestMod) {
         <div class="flex flex-wrap justify-center">
-            <div class="flex flex-wrap flex-col justify-center lg:flex-row w-3/4">
+            <div class="flex flex-wrap flex-col pt-24 justify-center lg:flex-row w-3/4">
                 <div class="flex flex-wrap w-full lg:w-2/5 m-1 p-2 focus:outline-none">
                     <div class="p-2">Ik heb bijles nodig voor:</div>
                     <select [(ngModel)]="selectedSubject1" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
@@ -44,16 +42,22 @@
 
     <!--Request list-->
     @if(!isRequestMod) {
-        <div class="flex flex-col items-center space-y-4">
-                @if(filteredGroups.length === 0) { 
+        <div class="flex flex-col items-center space-y-4 pt-4">
+                @if(filteredGroups?.length === 0) { 
                     <div>No groups found.</div>
                 } @else {
                     @for (group of filteredGroups; track group) {
+                        <div class="pt-20"  [class.hidden]="calendar[group.group_id].hidden"> </div>
                         <div class="flex flex-wrap w-3/4 justify-center">
                             <div class="flex justify-between w-full lg:w-3/5 m-1 p-2 text-center bg-secondary-light dark:bg-secondary shadow-lg rounded-xl">
-                                <div class="flex">
-                                    {{group.group_name}} {{group.user2_id}} {{group.course_name}}
-                                </div>
+                                @for (student of findUser(group.user2_id); track student) {
+                                    <div class="flex justify-start">
+                                        {{group.course_name}}
+                                    </div>
+                                    <div class="flex justify-end">
+                                        {{student.firstname}} {{student.lastname}} ({{student.class}})
+                                    </div>
+                                }
                                 <div class="flex">
                                     <button (click)="viewCalendar(group.group_id)" [class.hidden]="groupVisibility[group.group_id].isHidden">
                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

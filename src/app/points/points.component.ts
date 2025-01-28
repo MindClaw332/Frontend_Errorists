@@ -2,10 +2,11 @@ import { Component, computed, inject, signal } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import { TestdataService } from '../shared/testdata.service';
 import { CoursedataService } from '../shared/coursedata.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-points',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './points.component.html',
   styleUrl: './points.component.css'
 })
@@ -14,7 +15,9 @@ private testdata = inject(TestdataService);
 private coursedata = inject(CoursedataService);
 
 tests = this.testdata.tests;
-courses = this.coursedata.courses
+courses = this.coursedata.courses;
+
+isHovered = false;
 
 constructor () {
   this.testdata.loadTests();
@@ -44,13 +47,12 @@ filter = signal('');
 
 filterCourses = computed(() => {
   const searchquery = this.filter().toLowerCase();
-  const filteredCourse = this.courses().find(course => 
-    course.name.toLocaleLowerCase().includes(searchquery)
-  );
-  if (!filteredCourse) return [];
+  let filteredCourse = this.courses().find(course => 
+    course.name.toLocaleLowerCase().includes(searchquery));
+  console.log(filteredCourse);
 
-  const filteredTests = this.tests().filter(test => test.course_id === filteredCourse.id);
-  return filteredTests;
+  let filteredByCourse = this.tests().filter(test => test.course_id === filteredCourse?.id);
+  console.log(filteredByCourse);
 });
 
 // Visibility
@@ -65,6 +67,23 @@ viewPoints () {
 viewTests () {
   this.isHidden = !this.isHidden;
   this.isVisible = ! this.isVisible;
+}
+
+// Get percentage for a test
+getTestScore(value: number, maxvalue: number) {
+  let testScore = (value/maxvalue)*100
+  return testScore;
+}
+
+ // Colour depending on score
+ GetClassColor(percentage: number) {
+  if (percentage >= 66) {
+    return 'bg-accent-green-light dark:bg-accent-green'
+  } else if (percentage > 50 && percentage < 66) {
+    return 'bg-accent-orange-light dark:bg-accent-orange'
+  } else {
+    return 'bg-accent-red-light dark:bg-accent-red'
+  }
 }
 
 }
