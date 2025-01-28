@@ -41,8 +41,9 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'register',
+        path: 'admin',
         component: BatchaddComponent,
+        canActivate: [AuthGuard, adminGuard]
     },
 
     {
