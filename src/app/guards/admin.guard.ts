@@ -8,10 +8,10 @@ import { LoginService } from '../shared/login.service';
 export class adminGuard implements CanActivate {
   constructor() { }
   
-  // just check if we have a user and they are logged in otherwise redirect to login page
+  // check sessionstorage for the user if they are an admin let them through
   canActivate(): boolean {
     const user = JSON.parse(sessionStorage.getItem('user')!)
-    if(user.role_id === 2){
+    if(user.role_id === 3){
       return true;
     }
     return false;

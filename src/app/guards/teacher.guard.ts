@@ -8,7 +8,7 @@ import { LoginService } from '../shared/login.service';
 export class teacherGuard implements CanActivate {
   constructor() { }
   
-  // just check if we have a user and they are logged in otherwise redirect to login page
+  // get the user from the sessionstorage if they are a teacher they can go here otherwise they cant
   canActivate(): boolean {
     const user = JSON.parse(sessionStorage.getItem('user')!)
     if(user.role_id === 2){

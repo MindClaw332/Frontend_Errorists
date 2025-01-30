@@ -13,7 +13,7 @@
             <div
                 class="w-1/4 flex justify-center self-center bg-secondary-light dark:bg-secondary text-white rounded-xl shadow-lg hover:bg-tertiary-light dark:hover:bg-tertiary">
                 <button (click)="viewClasses()" [class.hidden]="isHidden" (mouseover)="ishovered = true"
-                    (mouseleave)="ishovered=false">{{ishovered? 'terug' : selectedClass.name}}</button>
+                    (mouseleave)="ishovered=false">{{ishovered? 'terug' : selectedClass.name | capitalizename}}</button>
             </div>
             }
             <div
