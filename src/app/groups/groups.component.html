@@ -15,7 +15,7 @@
                     <select [(ngModel)]="selectedSubject1" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
                         <option value="" disabled selected>Vak</option>
                         @for(course of courses(); track course) {
-                            <option [value]="course.id">{{course.name}}</option>
+                            <option [value]="course.id">{{course.name | capitalizename}}</option>
                         }
                     </select>
                 </div>
@@ -24,7 +24,7 @@
                     <select [(ngModel)]="selectedSubject2" class="m-1 p-2 bg-secondary-light dark:bg-secondary w-full text-white text-center shadow-lg rounded-xl">
                         <option value="" disabled selected>Vak</option>
                         @for(course of courses(); track course) {
-                            <option [value]="course.id">{{course.name}}</option>
+                            <option [value]="course.id">{{course.name | capitalizename}}</option>
                         }
                     </select>
                 </div>
@@ -52,10 +52,10 @@
                             <div class="flex justify-between w-full lg:w-3/5 m-1 p-2 text-center bg-secondary-light dark:bg-secondary shadow-lg rounded-xl">
                                 @for (student of findUser(group.user2_id); track student) {
                                     <div class="flex justify-start">
-                                        {{group.course_name}}
+                                        {{group.course_name | capitalizename}}
                                     </div>
                                     <div class="flex justify-end">
-                                        {{student.firstname}} {{student.lastname}} ({{student.class}})
+                                        {{student.firstname + ' ' + student.lastname | capitalizename}} ({{student.class | capitalizename}})
                                     </div>
                                 }
                                 <div class="flex">

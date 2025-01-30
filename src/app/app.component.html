@@ -9,19 +9,10 @@
         @if (manualUser().role_id === 2) {
         <nav class="fixed top-0 bg-secondary text-white transform transition-transform duration-300 ease-in-out w-screen"
                 [class.translate-x-0]="isMenuOpen()" [class.-translate-x-full]="!isMenuOpen()">
-                <ul class="flex flex-wrap justify-evenly m-8 text-xl md:flex-nowrap md:justify-between pr-5 pl-5">
-
-                        <li>
-                                <a routerLink="/groups" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">groups</a>
-                        </li>
+                <ul class="flex flex-wrap justify-evenly m-8 text-xl md:flex-nowrap md:justify-between pr-7 pl-7">
                         <li>
                                 <a routerLink="/points" routerLinkActive="active" ariaCurrentWhenActive="page"
                                         class="hover:underline">points</a>
-                        </li>
-                        <li>
-                                <a routerLink="/students" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                        class="hover:underline">students</a>
                         </li>
                         <li>
                                 <a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"
@@ -37,7 +28,7 @@
         } @else if (manualUser().role_id === 1) {
         <nav class="fixed top-0  bg-secondary text-white transform transition-transform duration-300 ease-in-out w-screen"
                 [class.translate-x-0]="isMenuOpen()" [class.-translate-x-full]="!isMenuOpen()">
-                <ul class="flex flex-wrap justify-evenly m-8 text-xl md:flex-nowrap md:justify-between pr-5 pl-5">
+                <ul class="flex flex-wrap justify-evenly m-8 text-xl md:flex-nowrap md:justify-between pr-7 pl-7">
                         <li><a [routerLink]="['/groups/', manualUser().user_id]" routerLinkActive="active"
                                         ariaCurrentWhenActive="page" class="hover:underline">groups</a></li>
                         <li><a [routerLink]="['/students/', manualUser().user_id]" routerLinkActive="active"
@@ -46,33 +37,28 @@
                                         class="hover:underline" (click)="logout()">log out</a></li>
                 </ul>
         </nav>
-        } @else if (manualUser().role_id === 1) {
-        <ul>
-                <li>
-                        <a routerLink="/admin" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                class="hover:underline">groups</a>
-                </li>
-                <li>
-                        <a routerLink="/groups" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                class="hover:underline">groups</a>
-                </li>
-                <li>
-                        <a routerLink="/points" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                class="hover:underline">points</a>
-                </li>
-                <li>
-                        <a routerLink="/students" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                class="hover:underline">students</a>
-                </li>
-                <li>
-                        <a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                class="hover:underline">dashboard</a>
-                </li>
-                <li>
-                        <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page"
-                                class="hover:underline" (click)="logout()">log out</a>
-                </li>
-        </ul>
+        } @else if (manualUser().role_id === 3) {
+        <nav class="fixed top-0  bg-secondary text-white transform transition-transform duration-300 ease-in-out w-screen"
+        [class.translate-x-0]="isMenuOpen()" [class.-translate-x-full]="!isMenuOpen()">
+                <ul class="flex flex-wrap justify-evenly m-8 text-xl md:flex-nowrap md:justify-between pr-7 pl-7">
+                        <li>
+                                <a routerLink="/admin" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline">admin panel</a>
+                        </li>
+                        <li>
+                                <a routerLink="/points" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline">points</a>
+                        </li>
+                        <li>
+                                <a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline">dashboard</a>
+                        </li>
+                        <li>
+                                <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page"
+                                        class="hover:underline" (click)="logout()">log out</a>
+                        </li>
+                </ul>
+        </nav>
         }
 
 </div>

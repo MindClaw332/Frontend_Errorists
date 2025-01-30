@@ -6,10 +6,11 @@ import { StudentdataService } from '../shared/studentdata.service';
 import { ClassdataService } from '../shared/classdata.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { CapitalizenamePipe } from '../pipes/capitalizename.pipe';
 
 @Component({
   selector: 'app-teacher',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, CapitalizenamePipe],
   templateUrl: './teacher.component.html',
   styleUrl: './teacher.component.css'
 })
@@ -31,6 +32,9 @@ export class TeacherComponent {
   //visibility
   isHidden = true;
   isVisible = false;
+
+  ishovered = false;
+
 
   // toggle classes off and students on
   viewStudents() {
