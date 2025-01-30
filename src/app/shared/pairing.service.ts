@@ -46,22 +46,28 @@ export class PairingService {
       groupedPerPercent[resultBracket].push(averageForUser);
       return groupedPerPercent;
     }, {});
-
+    // get all keys sort them then reverse to get highest first
     const brackets = Object.keys(groupedAverages).sort().reverse();
     console.log(groupedAverages[brackets[0]], 'should show 90 bracket')
     const potentialTutors: Pairinguser[] = [];
     const backupTutors: Pairinguser[] = [];
+    // loop through all brackets
     outerloop: for (let i = 0; i < brackets.length; i++) {
       let currentkey: number = parseInt(brackets[i]);
       console.log(brackets[i], 'de key waar we door loopen')
+      // loop through values withing the bracket
       for (let j = 0; j < groupedAverages[currentkey].length; j++) {
         console.log(groupedAverages[currentkey][j]);
         console.log(groupedAverages[currentkey][j].groups.length)
         const groupsArray: Array<Pairinggroup> = groupedAverages[currentkey][j].groups;
+        // check if they have groups
         if (groupsArray.length > 0) {
+          //check for open groups
           if (groupsArray.some(group => group?.status === 'PENDING' || group.status === 'ACCEPTED')) {
             console.log('has an open group')
             backupTutors.push(groupedAverages[currentkey][j]);
+            // if they have declined groups check if we are in / if we are and its been longer than 15 days count them otherwise dont
+            // this stops us from getting the same person everytime
           } else if (groupsArray.some(group => group?.status === 'DECLINED')) {
             const declinedGroups = groupsArray.filter(group => group.status === 'DECLINED');
             const myDeclinedGroups = declinedGroups.filter(group => group.user1_id === user.id || group.user2_id === user.id);
@@ -76,19 +82,21 @@ export class PairingService {
             }
 
           }
+          // do we have 5 potentials stop looping
         } else if (potentialTutors.length < 5) {
           potentialTutors.push(groupedAverages[currentkey][j]);
         } else {
           break outerloop;
         }
       }
-    }
+    } // when we dont actually find 5 potentials fill the potentials with backups
     if (potentialTutors.length < 5 && backupTutors.length > 0) {
       while (potentialTutors.length < 5 && backupTutors.length > 0) {
         const tutor: Pairinguser = backupTutors.shift()!;
         potentialTutors.push(tutor);
       }
     }
+    // load the averages and feed them to choosetutor
     await this.loadAverages(proposedCourse_id);
     await this.chooseTutor(potentialTutors, proposedCourse_id);
     const groupId = await this.postGroup(requestedCourse_id, user.firstname);
@@ -113,7 +121,7 @@ export class PairingService {
       return 50;
     }
   }
-
+  // get the averages of all the potentialtutors then sort them and get the person with the lowest score
   chooseTutor(tutors: Array<Pairinguser>, proposedCourse_id: number) {
     const users: Pairinguser[] = this.averagePerUserArray();
     console.log(users, ' choosetutor users')
