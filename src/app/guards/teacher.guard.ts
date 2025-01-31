@@ -11,7 +11,7 @@ export class teacherGuard implements CanActivate {
   // get the user from the sessionstorage if they are a teacher they can go here otherwise they cant
   canActivate(): boolean {
     const user = JSON.parse(sessionStorage.getItem('user')!)
-    if(user.role_id === 2){
+    if(user.role_id === 2 || user.role_id === 3){
       return true;
     }
     return false;
