@@ -1,1 +1,16 @@
-<h1>You are not authorized to be here</h1>
+<div class="flex h-screen w-full items-center justify-center bg-primary-light dark:bg-primary">
+    <div class="max-w-md p-6 bg-secondary-light dark:bg-secondary rounded-2xl shadow-lg text-center">
+      <h1 class="text-4xl font-bold text-red-400">403</h1>
+      <h2 class="mt-2 text-2xl font-semibold text-white">Unauthorized Access</h2>
+      <p class="mt-4 text-white">
+        You do not have permission to view this page. Please check with the administrator.
+      </p>
+      <button 
+        (click)="goBack()" 
+        class="mt-6 px-6 py-2 text-white bg-primary hover:bg-purple-900 rounded-lg transition"
+      >
+        Go Back
+      </button>
+    </div>
+  </div>
+  

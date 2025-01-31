@@ -10,10 +10,17 @@ classes = signal<Class[]>([]);
   constructor() { }
 
   async loadClasses(){
-    const response = await fetch(this.apiurl);
-    const classes = await response.json();
-    if(classes){
-      this.classes.set(classes);
+    try {
+      const response = await fetch(this.apiurl);
+      const classes = await response.json();
+      if(classes){
+        this.classes.set(classes);
+      }
     }
-  }
+    catch (error) {
+      console.log('error making request', error);
+      throw error;
+    }
+
+    } 
 }

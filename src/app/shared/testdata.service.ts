@@ -11,10 +11,15 @@ export class TestdataService {
   constructor() { }
 
   async loadTests() {
-    const response = await fetch(this.apiurl);
-    const tests = await response.json();
-    if (tests) {
-      this.tests.set(tests);
+    try {
+      const response = await fetch(this.apiurl);
+      const tests = await response.json();
+      if (tests) {
+        this.tests.set(tests);
+      }
+    } catch (error) {
+      console.log('error making request', error);
+      throw error;
     }
   }
 
@@ -46,7 +51,7 @@ export class TestdataService {
 
       const result = await response.json();
       return result;
-      
+
     } catch (error) {
       console.error('Error registering test:', error);
       throw new Error('Failed to create test. Please check your connection and try again.');

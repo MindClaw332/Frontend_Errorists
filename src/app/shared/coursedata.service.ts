@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import {Course} from '../interfaces/course'
+import { Course } from '../interfaces/course'
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +10,16 @@ export class CoursedataService {
 
   constructor() { }
 
-  async loadCourses(){
-    const response = await fetch(this.apiurl);
-    const courses = await response.json();
-    if(courses){
-      this.courses.set(courses);
+  async loadCourses() {
+   try {
+      const response = await fetch(this.apiurl);
+      const courses = await response.json();
+      if (courses) {
+        this.courses.set(courses);
+      }
+    } catch(error){
+        console.log('error making request', error);
+        throw error;
     }
   }
 }

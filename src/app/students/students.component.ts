@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnInit, OnDestroy,  ViewChild, forwardRef } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, OnDestroy, ViewChild, forwardRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StudentdataService } from '../shared/studentdata.service';
 import { ResultdataService } from '../shared/resultdata.service';
@@ -13,10 +13,12 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg, EventDragStopArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { PairingService } from '../shared/pairing.service';
+import { CapitalizenamePipe } from '../pipes/capitalizename.pipe';
+import { GroupnamePipe } from '../pipes/groupname.pipe';
 
 @Component({
   selector: 'app-students',
-  imports: [CommonModule,FullCalendarModule],
+  imports: [CommonModule, FullCalendarModule, CapitalizenamePipe, GroupnamePipe],
   templateUrl: './students.component.html',
   styleUrl: './students.component.css'
 })
@@ -26,7 +28,8 @@ export class StudentsComponent implements OnInit, OnDestroy {
   private groupdata = inject(GroupdataService);
   private testresultdata = inject(ResultdataService);
   private pairingdata = inject(PairingService);
-  private routeSub!: Subscription; 
+  private routeSub!: Subscription;
+  showPercent:boolean = false;
 
   id: number = 1;
   student = this.userdata.specificstudent();
@@ -36,10 +39,10 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute) {
   }
-  
 
-  checkedDate: Array<any>= [];
-  
+
+  checkedDate: Array<any> = [];
+
   groupVisibility: { [key: number]: { isHidden: boolean; isVisible: boolean } } = {};
   filteredGroups: any[] = [];
 
@@ -68,13 +71,13 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
     //checks groups for acceptdate and nowdate, all +7 accepted groups -> show pop up
     this.student?.groups.filter(groups => groups.tutor === 1 && groups.accepted_at !== null)
-    .forEach(group => {
-      if (this.pairingdata.calculateCurrentDateDiff(group.accepted_at) >= 7) {
-        console.log('HEYY LANGE GROEP')
-        this.checkedDate?.push(group);
-        console.log(this.checkedDate,'checked date')
-      }
-    });
+      .forEach(group => {
+        if (this.pairingdata.calculateCurrentDateDiff(group.accepted_at) >= 7) {
+          console.log('HEYY LANGE GROEP')
+          this.checkedDate?.push(group);
+          console.log(this.checkedDate, 'checked date')
+        }
+      });
 
     this.checkedDate?.forEach(group => {
       console.log('groupje', group)
@@ -92,8 +95,12 @@ export class StudentsComponent implements OnInit, OnDestroy {
       this.routeSub.unsubscribe();
     }
   }
-  
-  test(){
+
+  togglePercent() {
+    this.showPercent = !this.showPercent;
+  }
+
+  test() {
     console.log(this.student, 'wanneer alles gecalled word');
     console.log(this.testresults, 'wanneer alles gecalled word');
   }
@@ -131,7 +138,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
       tests,
     }));
 
-    console.log(iterableGroupedTests,"hoe groeped tests eruit moet zien");
+    console.log(iterableGroupedTests, "hoe groeped tests eruit moet zien");
 
     return iterableGroupedTests;
   });
@@ -146,7 +153,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   // Get percentage for a test
   getTestScore(value: number, maxvalue: number) {
-    let testScore = (value/maxvalue)*100
+    let testScore = (value / maxvalue) * 100
     return testScore;
   }
 
@@ -190,7 +197,7 @@ export class StudentsComponent implements OnInit, OnDestroy {
   eventsModel: any;
   @ViewChild('fullcalendar') fullcalendar?: FullCalendarComponent;
 
-  selectDate (groupId: number) {
+  selectDate(groupId: number) {
     if (this.checkedDate !== undefined) {
       this.groupVisibility[groupId].isHidden = !this.groupVisibility[groupId].isHidden;
       this.calendarVisible = true;
@@ -221,25 +228,25 @@ export class StudentsComponent implements OnInit, OnDestroy {
   handleDateClick(arg: DateClickArg) {
     const clickedDate = arg.date;
     const today = new Date();
-  
+
     // Prevent selecting dates in the past
     if (clickedDate < today) {
       return;
-    }   
+    }
 
     // If a previous date is selected, deselect it
     if (this.previousDayEl) {
       this.previousDayEl.classList.remove('bg-accent-green');
     }
-  
+
     // If the clicked date is the same as the saved date, deselect it and reset saved date
     if (this.saveDay && this.saveDay.getTime() === clickedDate.getTime()) {
-      this.saveDay = null; 
+      this.saveDay = null;
       this.previousDayEl = null;
     } else {
       // Select and save the date
       arg.dayEl.classList.add('bg-accent-green');
-      this.saveDay = clickedDate; 
+      this.saveDay = clickedDate;
       this.previousDayEl = arg.dayEl;
     }
     console.log(this.saveDay);
@@ -247,9 +254,9 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   formattedDate: string = '';
 
-  async saveTutoringDate (groupId: number, courseName: string) {
+  async saveTutoringDate(groupId: number, courseName: string) {
     // Can only save when a day is selected
-    if (this.saveDay === null){
+    if (this.saveDay === null) {
       return;
     }
     // CourseName get the complementary ID
@@ -269,11 +276,11 @@ export class StudentsComponent implements OnInit, OnDestroy {
       await this.pairingdata.acceptDate(groupId, groupName, courseId, this.formattedDate);
     }
 
-     this. groupVisibility[groupId].isHidden = !this. groupVisibility[groupId].isHidden;
-     this.calendarVisible = false;
+    this.groupVisibility[groupId].isHidden = !this.groupVisibility[groupId].isHidden;
+    this.calendarVisible = false;
   }
 
-  async setLater (groupId: number, courseName: string) {
+  async setLater(groupId: number, courseName: string) {
     // CourseName get the complementary ID
     let course = this.course().find(course => courseName === course.coursename);
     let courseId = course?.id;
@@ -287,25 +294,25 @@ export class StudentsComponent implements OnInit, OnDestroy {
       await this.pairingdata.accept(groupId, groupName, courseId);
     }
 
-    this. groupVisibility[groupId].isHidden = !this. groupVisibility[groupId].isHidden;
-     this.calendarVisible = false;
+    this.groupVisibility[groupId].isHidden = !this.groupVisibility[groupId].isHidden;
+    this.calendarVisible = false;
   }
 
   async declineTutee(groupId: number, courseName: string) {
     // CourseName get the complementary ID
     let course = this.course().find(course => courseName === course.coursename);
     let courseId = course?.id;
-  
+
     // GroupId get the complementary name
     let group = this.groups().find(group => groupId === group.id);
     let groupName = group?.groupname
-  
+
     // Send PUT request
     if (courseId !== undefined && groupName !== undefined) {
       await this.pairingdata.decline(groupId, groupName, courseId);
     }
 
-    this. groupVisibility[groupId].isHidden = !this. groupVisibility[groupId].isHidden;
-     this.calendarVisible = false;
+    this.groupVisibility[groupId].isHidden = !this.groupVisibility[groupId].isHidden;
+    this.calendarVisible = false;
   }
 }

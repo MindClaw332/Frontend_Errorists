@@ -12,10 +12,11 @@ import { PairingService } from '../shared/pairing.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GroupdataService } from '../shared/groupdata.service';
+import { CapitalizenamePipe } from '../pipes/capitalizename.pipe';
 
 @Component({
   selector: 'app-groups',
-  imports: [FormsModule, FullCalendarModule, CommonModule],
+  imports: [FormsModule, FullCalendarModule, CommonModule, CapitalizenamePipe],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.css'
 })
