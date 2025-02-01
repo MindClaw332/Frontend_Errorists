@@ -1,9 +1,6 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { LoginService } from './login.service';
-import { elementAt, retry } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { Pairinggroup } from '../interfaces/pairinggroup';
 import { Pairinguser } from '../interfaces/pairinguser';
-import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +11,10 @@ export class PairingService {
   loggedUser = JSON.parse(sessionStorage.getItem("user")!)
   private apiurl: string = "http://127.0.0.1:8000/api"
   constructor() { }
+
+  setLoggedUser(){
+    this.loggedUser = JSON.parse(sessionStorage.getItem("user")!)
+  }
 
   async loadAverages(course_id: number) {
     const response = await fetch(`${this.apiurl}/pairingusers/${course_id}`);

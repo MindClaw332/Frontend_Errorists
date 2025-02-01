@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Logindata } from '../interfaces/logindata';
 import { BehaviorSubject } from 'rxjs';
+import { PairingService } from './pairing.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,6 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export class LoginService {
   // signals to keep check on state in other components
+  pairing = inject(PairingService)
   isloggedin = signal<boolean>(false);
   currentUser = signal<any>(null);
   private eventSource = new BehaviorSubject<boolean>(false);
@@ -46,6 +48,7 @@ export class LoginService {
         sessionStorage.setItem("user", JSON.stringify(userdata));
         sessionStorage.setItem("isLoggedIn", "true");
         this.sendSignal(true);
+        this.pairing.setLoggedUser();
       }
       return result;
     }
