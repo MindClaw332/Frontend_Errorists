@@ -22,13 +22,11 @@ export class AppComponent implements OnInit{
 
   toggleMenu() {
     this.isMenuOpen.set(!this.isMenuOpen());
-    console.log(this.isMenuOpen())
   }
 
   ngOnInit(): void {
     this.auth.signal$.subscribe((status) => {
       if (status){
-        console.log('signal triggered')
         this.getData();
       }
     });
@@ -39,21 +37,12 @@ export class AppComponent implements OnInit{
     console.log("getting data")
     if (window.sessionStorage.getItem("isLoggedIn") === 'true'){
       this.manualLogIn.set(true);
-      console.log(this.manualLogIn(), "this.manualLogIn")
     }
     if (window.sessionStorage.getItem("user")){
       this.manualUser.set(JSON.parse(window.sessionStorage.getItem("user")!));
-      console.log(this.manualUser(), 'manualuser')
     }
   }
-  //commented out tests
   constructor() {
-    // if (window.sessionStorage.getItem("isLoggedIn") === 'true'){
-    //   this.manualLogIn.set(true);
-    // }
-    // if (JSON.parse(window.sessionStorage.getItem("user")!)){
-    //   this.manualUser.set()
-    // }
   }
   redirectToGroups(){
     const user = JSON.parse(window.sessionStorage.getItem("user")!)
@@ -64,9 +53,4 @@ export class AppComponent implements OnInit{
     this.manualLogIn.set(false);
     this.isMenuOpen.set(false);
   }
-  //  async logintest(){
-  //   await this.auth.login('lambik@tes.com', 'lambikske');
-  //   console.log(this.auth.isloggedin())
-  //   console.log(this.user, 'appcomponent')
-  //  }
 }

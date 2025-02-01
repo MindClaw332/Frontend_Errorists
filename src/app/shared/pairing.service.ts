@@ -18,20 +18,16 @@ export class PairingService {
   async loadAverages(course_id: number) {
     const response = await fetch(`${this.apiurl}/pairingusers/${course_id}`);
     const averages = await response.json();
-    console.log(averages, 'array we set')
     if (averages) {
       this.averagePerUserArray.set(averages);
-      console.log(this.averagePerUserArray(), "set new array");
     }
   }
 //#region pairing
   async pairUser(requestedCourse_id: number, proposedCourse_id: number) {
     // this has to be finished before accessing the signal
     await this.loadAverages(requestedCourse_id);
-    console.log(this.averagePerUserArray(), 'vergelijk users');
     // get the current_user data without extra api call
     const user = this.averagePerUserArray().find(element => element.id === this.loggedUser.user_id);
-    console.log(user)
     // immediately filter out people who are not weighted enough or below in years
     const filteredUsersPerWeight = this.averagePerUserArray().filter(element => element.weight >= user.weight && element.year >= user.year); //add year filter back
 
@@ -48,23 +44,18 @@ export class PairingService {
     }, {});
     // get all keys sort them then reverse to get highest first
     const brackets = Object.keys(groupedAverages).sort().reverse();
-    console.log(groupedAverages[brackets[0]], 'should show 90 bracket')
     const potentialTutors: Pairinguser[] = [];
     const backupTutors: Pairinguser[] = [];
     // loop through all brackets
     outerloop: for (let i = 0; i < brackets.length; i++) {
       let currentkey: number = parseInt(brackets[i]);
-      console.log(brackets[i], 'de key waar we door loopen')
       // loop through values withing the bracket
       for (let j = 0; j < groupedAverages[currentkey].length; j++) {
-        console.log(groupedAverages[currentkey][j]);
-        console.log(groupedAverages[currentkey][j].groups.length)
         const groupsArray: Array<Pairinggroup> = groupedAverages[currentkey][j].groups;
         // check if they have groups
         if (groupsArray.length > 0) {
           //check for open groups
           if (groupsArray.some(group => group?.status === 'PENDING' || group.status === 'ACCEPTED')) {
-            console.log('has an open group')
             backupTutors.push(groupedAverages[currentkey][j]);
             // if they have declined groups check if we are in / if we are and its been longer than 15 days count them otherwise dont
             // this stops us from getting the same person everytime
@@ -100,7 +91,6 @@ export class PairingService {
     await this.loadAverages(proposedCourse_id);
     await this.chooseTutor(potentialTutors, proposedCourse_id);
     const groupId = await this.postGroup(requestedCourse_id, user.firstname);
-    console.log(groupId, "groupid id");
     await this.PostTutee(parseInt(groupId), parseInt(user.id));
     await this.PostTutor(parseInt(groupId), parseInt(this.chosentutor().id));
 
@@ -124,14 +114,12 @@ export class PairingService {
   // get the averages of all the potentialtutors then sort them and get the person with the lowest score
   chooseTutor(tutors: Array<Pairinguser>, proposedCourse_id: number) {
     const users: Pairinguser[] = this.averagePerUserArray();
-    console.log(users, ' choosetutor users')
     const filteredtutors: Pairinguser[] = [];
     for (let i = 0; i < tutors.length; i++) {
       const u_id: number = tutors[i].id;
       filteredtutors.push(users.find(element => element.id === u_id)!);
     }
     const sortedusers = filteredtutors.sort((a, b) => b.average - a.average);
-    console.log(sortedusers, "sortedusers")
     this.chosentutor.set(sortedusers[0])
   }
 //#endregion
@@ -182,7 +170,6 @@ export class PairingService {
   stringToDate(dateString: string) {
     const timeString: string = 'T00:00:00'
     const date = new Date(dateString + timeString);
-    console.log(date, "date string to date")
     return date;
   }
   //#endregion
@@ -205,7 +192,6 @@ export class PairingService {
         body: JSON.stringify(groupdata),
       })
       const result = await response.json();
-      console.log(result)
       return result.id;
     } catch (error) {
       console.error('error posting group', error);
@@ -277,7 +263,6 @@ export class PairingService {
         body: JSON.stringify(groupdata),
       })
       const result = await response.json();
-      console.log(result)
       return result.id;
     } catch (error) {
       console.error('error posting group', error);
@@ -303,7 +288,6 @@ export class PairingService {
         body: JSON.stringify(groupdata),
       })
       const result = await response.json();
-      console.log(result)
       return result.id;
     } catch (error) {
       console.error('error posting group', error);
@@ -329,7 +313,6 @@ export class PairingService {
         body: JSON.stringify(groupdata),
       })
       const result = await response.json();
-      console.log(result)
       return result.id;
     } catch (error) {
       console.error('error posting group', error);
@@ -355,7 +338,6 @@ export class PairingService {
         body: JSON.stringify(groupdata),
       })
       const result = await response.json();
-      console.log(result)
       return result.id;
     } catch (error) {
       console.error('error posting group', error);

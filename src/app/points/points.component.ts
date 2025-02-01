@@ -53,15 +53,6 @@ searchedTests = computed(() => {
 //filter by course
 filter = signal('');
 
-// filterCourses = computed(() => {
-//   const searchquery = this.filter().toLowerCase();
-//   let filteredCourse = this.courses().find(course => 
-//     course.name.toLocaleLowerCase().includes(searchquery));
-//   console.log(filteredCourse);
-
-//   let filteredByCourse = this.tests().filter(test => test.course_id === filteredCourse?.id);
-//   console.log(filteredByCourse);
-// });
 
 // Visibility
 isHidden = true;
