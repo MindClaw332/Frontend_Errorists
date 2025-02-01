@@ -22,7 +22,7 @@ export class PairingService {
       this.averagePerUserArray.set(averages);
     }
   }
-//#region pairing
+  //#region pairing
   async pairUser(requestedCourse_id: number, proposedCourse_id: number) {
     // this has to be finished before accessing the signal
     await this.loadAverages(requestedCourse_id);
@@ -30,7 +30,6 @@ export class PairingService {
     const user = this.averagePerUserArray().find(element => element.id === this.loggedUser.user_id);
     // immediately filter out people who are not weighted enough or below in years
     const filteredUsersPerWeight = this.averagePerUserArray().filter(element => element.weight >= user.weight && element.year >= user.year); //add year filter back
-
     // const filteredUsersPerYear= filteredUsersPerWeight.filter(element => element.year >= user[0].year)// group averages in a bracket we can search through
     const groupedAverages = filteredUsersPerWeight.reduce((groupedPerPercent, averageForUser) => {
       const averageResult = averageForUser.average;
@@ -89,12 +88,10 @@ export class PairingService {
     }
     // load the averages and feed them to choosetutor
     await this.loadAverages(proposedCourse_id);
-    await this.chooseTutor(potentialTutors, proposedCourse_id);
+    await this.chooseTutor(potentialTutors);
     const groupId = await this.postGroup(requestedCourse_id, user.firstname);
     await this.PostTutee(parseInt(groupId), parseInt(user.id));
     await this.PostTutor(parseInt(groupId), parseInt(this.chosentutor().id));
-
-
   }
 
   // check in what bracket the result falls
@@ -112,7 +109,7 @@ export class PairingService {
     }
   }
   // get the averages of all the potentialtutors then sort them and get the person with the lowest score
-  chooseTutor(tutors: Array<Pairinguser>, proposedCourse_id: number) {
+  chooseTutor(tutors: Array<Pairinguser>) {
     const users: Pairinguser[] = this.averagePerUserArray();
     const filteredtutors: Pairinguser[] = [];
     for (let i = 0; i < tutors.length; i++) {
@@ -122,12 +119,12 @@ export class PairingService {
     const sortedusers = filteredtutors.sort((a, b) => b.average - a.average);
     this.chosentutor.set(sortedusers[0])
   }
-//#endregion
+  //#endregion
   //test function you can call to test the service
   async test() {
     this.pairUser(1, 2);
   }
-//#region DateFunctions
+  //#region DateFunctions
   // gets the currentdate and converts it to a datestring
   getDate() {
     // get date
@@ -141,8 +138,8 @@ export class PairingService {
     return formattedDate;
   }
 
-   // gets a date and converts it to a datestring
-   dateToString(chosenDate: Date) {
+  // gets a date and converts it to a datestring
+  dateToString(chosenDate: Date) {
     const year = chosenDate.getFullYear();
     // get month and day and add a leading 0
     const month = String(chosenDate.getMonth() + 1).padStart(2, '0');
@@ -173,7 +170,7 @@ export class PairingService {
     return date;
   }
   //#endregion
-//#region posts
+  //#region posts
   async postGroup(course_id: number, user_name: string) {
     const groupdata = {
       "name": `${user_name}-${this.chosentutor().firstname}`,
@@ -344,7 +341,7 @@ export class PairingService {
       throw error;
     }
   }
-//#endregion
+  //#endregion
 }
 
 
