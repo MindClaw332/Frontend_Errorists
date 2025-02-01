@@ -8,9 +8,9 @@ import { Testresult } from '../interfaces/testresult';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, Calendar, EventClickArg } from '@fullcalendar/core';
+import { CalendarOptions, Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { DateClickArg, EventDragStopArg } from '@fullcalendar/interaction';
+import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { PairingService } from '../shared/pairing.service';
 import { CapitalizenamePipe } from '../pipes/capitalizename.pipe';
@@ -47,24 +47,18 @@ export class StudentsComponent implements OnInit, OnDestroy {
   filteredGroups: any[] = [];
 
   async ngOnInit() {
-    console.log(this.id, 'begin init')
     this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
-      console.log(this.id, 'na sub');
     })
     // refactor to one api call
 
     await this.userdata.loadStudent(this.id);
     this.student = this.userdata.specificstudent();
-    console.log(this.student, 'students na load')
     await this.groupdata.loadGroups();
     this.groups.set(this.groupdata.groups());
-    console.log(this.groups(), 'groups na load');
     this.testresultdata.loadResults(this.id);
-    console.log(this.id);
     await this.userdata.loadUsers();
     this.students.set(this.userdata.users());
-    console.log(this.students(), 'students');
 
     // Filter on ACCEPTED groups from student
     this.filteredGroups = this.student?.groups.filter(group => group.status === 'ACCEPTED') || [];
@@ -73,14 +67,11 @@ export class StudentsComponent implements OnInit, OnDestroy {
     this.student?.groups.filter(groups => groups.tutor === 1 && groups.accepted_at !== null)
       .forEach(group => {
         if (this.pairingdata.calculateCurrentDateDiff(group.accepted_at) >= 7) {
-          console.log('HEYY LANGE GROEP')
           this.checkedDate?.push(group);
-          console.log(this.checkedDate, 'checked date')
         }
       });
 
     this.checkedDate?.forEach(group => {
-      console.log('groupje', group)
       this.groupVisibility[group.group_id] = {
         isHidden: true,  // Initial state: true
         isVisible: false // Initial state: false
@@ -98,11 +89,6 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
   togglePercent() {
     this.showPercent = !this.showPercent;
-  }
-
-  test() {
-    console.log(this.student, 'wanneer alles gecalled word');
-    console.log(this.testresults, 'wanneer alles gecalled word');
   }
 
   findUser(id: number) {
@@ -137,8 +123,6 @@ export class StudentsComponent implements OnInit, OnDestroy {
       coursename,
       tests,
     }));
-
-    console.log(iterableGroupedTests, "hoe groeped tests eruit moet zien");
 
     return iterableGroupedTests;
   });
@@ -249,7 +233,6 @@ export class StudentsComponent implements OnInit, OnDestroy {
       this.saveDay = clickedDate;
       this.previousDayEl = arg.dayEl;
     }
-    console.log(this.saveDay);
   }
 
   formattedDate: string = '';
@@ -269,7 +252,6 @@ export class StudentsComponent implements OnInit, OnDestroy {
 
     // The selected date gets transformed into the correct format
     this.formattedDate = this.pairingdata.dateToString(this.saveDay);
-    console.log(`gekozen dag: ${this.formattedDate}, groep-id: ${groupId}`);
 
     // Send PUT request
     if (courseId !== undefined && groupName !== undefined) {

@@ -11,7 +11,7 @@ import { PairingService } from '../shared/pairing.service';
   styleUrl: './login.component.css'
 })
 
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   // testing
   pairing = inject(PairingService);
   //variables
@@ -30,14 +30,10 @@ export class LoginComponent implements OnInit {
     password: new FormControl(''),
   });
 
-  ngOnInit(): void {
-    console.log('initialized');
-  }
   //when you press the submit button this will login (still add when login is correct redirect when it isnt show it to user)
   async handleSubmit() {
     const result = await this.auth.login(this.loginform.value.email!, this.loginform.value.password!);
     const user = await JSON.parse(sessionStorage.getItem('user')!)
-    console.log(JSON.parse(sessionStorage.getItem('user')!), ' sessionStorage')
     if (result.message === 'valid credentials') {
       this.redirect(user.role_id, user.user_id);
 

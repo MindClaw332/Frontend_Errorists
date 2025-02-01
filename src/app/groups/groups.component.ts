@@ -1,9 +1,9 @@
-import { Component, inject, signal, ChangeDetectorRef, OnInit, ViewChild, forwardRef } from '@angular/core';
+import { Component, inject, ViewChild, forwardRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CoursedataService } from '../shared/coursedata.service';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
-import { CalendarOptions, Calendar, EventClickArg } from '@fullcalendar/core';
+import { CalendarOptions, Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg, EventDragStopArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
@@ -61,8 +61,6 @@ constructor (private route: ActivatedRoute) {
     this.pairingdata.pairUser(this.selectedSubject1, this.selectedSubject2);
 
     // Check for selectedSubject 1 and 2
-    console.log('Request tutoring for:', this.selectedSubject1, 'Offer for giving tutoring', this.selectedSubject2);
-
     // Makes the form return to the original state
     this.isRequestMod = false;
     this.requestTutor = !this.requestTutor;
@@ -84,19 +82,13 @@ filteredGroups: any[] = [];
 // On load
 async ngOnInit() {
   // Load the student info
-  console.log(this.id, 'begin init');
   this.routeSub = this.route.params.subscribe(params => {
       this.id = params['id'];
-      console.log(this.id, 'na sub');
   })
   await this.studentdata.loadStudent(this.id);
-  console.log(this.student, 'students na load');
   this.student = this.studentdata.specificstudent();
-  console.log(this.student, 'test');
   await this.studentdata.loadUsers();
   this.students.set(this.studentdata.users());
-  console.log(this.students(), 'students');
-
   // Filter on status pending and tutor
   this.filteredGroups = this.student?.groups.filter(group => group.status === 'PENDING' || group.status === 'ACCEPTED')
   .filter(group => group.tutor === 1 && group.date === null) || [];
@@ -186,7 +178,6 @@ acceptedGroups(id: number, status: string) {
       this.saveDay = clickedDate; 
       this.previousDayEl = arg.dayEl;
     }
-    console.log(this.saveDay);
   }
 
   // Needs: method for accept button that permenantly saves the date -> database
@@ -207,7 +198,6 @@ acceptedGroups(id: number, status: string) {
 
     // The selected date gets transformed into the correct format
     this.formattedDate = this.pairingdata.dateToString(this.saveDay);
-    console.log(`gekozen dag: ${this.formattedDate}, groep-id: ${groupId}`);
 
     // Send PUT request
     if (courseId !== undefined && groupName !== undefined) {
@@ -230,7 +220,6 @@ acceptedGroups(id: number, status: string) {
       this.previousDayEl.style.background = '';
       this.saveDay = null; 
     }
-    console.log(this.saveDay);
   }
 
 
